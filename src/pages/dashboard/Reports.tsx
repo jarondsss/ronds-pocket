@@ -91,7 +91,7 @@ export default function Reports() {
     <div className="flex flex-col gap-5">
       <header>
         <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Rekap keuangan
+          Rekap uangmu
         </h1>
         <p className="text-sm text-muted-foreground">
           Lihat ke mana uangmu pergi bulan ini.
@@ -110,10 +110,10 @@ export default function Reports() {
             <div className="flex items-baseline justify-between gap-3">
               <div>
                 <h3 className="font-display text-base font-extrabold">
-                  Tren 6 bulan
+                  Tren enam bulan
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Pemasukan vs pengeluaran
+                  Masuk dan keluar, dari bulan ke bulan
                 </p>
               </div>
               <div className="flex items-center gap-3 text-[11px] font-bold text-muted-foreground">
@@ -181,7 +181,7 @@ export default function Reports() {
             title="Pengeluaran per kategori"
             subtitle="Bulan yang dipilih"
             slices={summary.expenseByCategory}
-            emptyLabel="Belum ada pengeluaran bulan ini 🎉"
+            emptyLabel="Belum ada pengeluaran bulan ini. Mantap! 🎉"
           />
 
           <CategoryChart
@@ -203,7 +203,7 @@ export default function Reports() {
             <dl className="mt-4 grid gap-3 sm:grid-cols-3">
               <div className="clay-sunken rounded-2xl px-4 py-3">
                 <dt className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Transaksi
+                  Jumlah catatan
                 </dt>
                 <dd className="mt-1 font-display text-lg font-extrabold">
                   {highlight.count}

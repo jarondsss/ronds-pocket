@@ -16,7 +16,7 @@ import { NavLink, Outlet, useNavigate } from "react-router";
 const NAV_ITEMS = [
   { to: "/dashboard", label: "Catatan", icon: Receipt, end: true },
   { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie, end: false },
-  { to: "/dashboard/partner", label: "Partner", icon: Users, end: false },
+  { to: "/dashboard/partner", label: "Sharing", icon: Users, end: false },
 ];
 
 function NavItems({ variant }: { variant: "sidebar" | "bottom" }) {
@@ -122,7 +122,7 @@ function Shell() {
       />
       <div
         aria-hidden
-        className="pointer-events-none fixed -right-24 top-1/3 size-72 rounded-full bg-accent/25 blur-3xl"
+        className="pointer-events-none fixed -right-24 top-1/3 size-72 rounded-full bg-accent/50 blur-3xl"
       />
 
       <div className="relative mx-auto flex w-full max-w-6xl gap-6 px-4 pb-28 pt-4 sm:px-6 lg:pb-10">
@@ -152,10 +152,10 @@ function Shell() {
           ) : activeBook === null ? (
             <div className="clay p-8 text-center">
               <p className="font-display text-lg font-extrabold">
-                Menyiapkan buku kas pertama kamu...
+                Menyiapkan kantong pertamamu...
               </p>
               <p className="mt-2 text-sm text-muted-foreground">
-                Tunggu sebentar, buku kas default sedang dibuat.
+                Sebentar ya, kantong utamamu sedang kami siapkan.
               </p>
             </div>
           ) : (

@@ -28,14 +28,14 @@ async function loadTransactions(
 
 function cleanAmount(amount: number) {
   if (!Number.isFinite(amount)) {
-    throw new Error("Nominal tidak valid.");
+    throw new Error("Nominalnya sepertinya tidak valid.");
   }
   const rounded = Math.round(amount);
   if (rounded <= 0) {
-    throw new Error("Nominal harus lebih dari 0.");
+    throw new Error("Nominalnya harus lebih dari 0 ya.");
   }
   if (rounded > MAX_AMOUNT) {
-    throw new Error("Nominal terlalu besar.");
+    throw new Error("Nominalnya kegedean. Cek lagi ya.");
   }
   return rounded;
 }
@@ -164,7 +164,7 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const existing = await ctx.db.get(args.id);
     if (existing === null) {
-      throw new Error("Transaksi tidak ditemukan.");
+      throw new Error("Catatannya tidak ketemu.");
     }
     await requireMember(ctx, existing.book_id);
     await ctx.db.patch(args.id, {
@@ -182,7 +182,7 @@ export const remove = mutation({
   handler: async (ctx, { id }) => {
     const existing = await ctx.db.get(id);
     if (existing === null) {
-      throw new Error("Transaksi tidak ditemukan.");
+      throw new Error("Catatannya tidak ketemu.");
     }
     await requireMember(ctx, existing.book_id);
     await ctx.db.delete(id);

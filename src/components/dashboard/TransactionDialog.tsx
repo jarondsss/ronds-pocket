@@ -104,7 +104,7 @@ export function TransactionDialog({
 
   const handleSubmit = async () => {
     if (amount <= 0) {
-      toast.error("Nominal harus lebih dari 0.");
+      toast.error("Nominalnya harus lebih dari 0 ya.");
       return;
     }
     setSaving(true);
@@ -118,15 +118,15 @@ export function TransactionDialog({
       };
       if (transaction) {
         await updateTransaction({ id: transaction._id, ...payload });
-        toast.success("Transaksi diperbarui.");
+        toast.success("Catatanmu sudah diperbarui.");
       } else {
         await createTransaction({ bookId, ...payload });
-        toast.success("Transaksi tersimpan.");
+        toast.success("Tersimpan! Catatanmu sudah masuk.");
       }
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Gagal menyimpan transaksi.",
+        error instanceof Error ? error.message : "Catatannya gagal disimpan.",
       );
     } finally {
       setSaving(false);
@@ -138,12 +138,12 @@ export function TransactionDialog({
     setSaving(true);
     try {
       await removeTransaction({ id: transaction._id });
-      toast.success("Transaksi dihapus.");
+      toast.success("Catatan sudah dihapus.");
       setConfirmDelete(false);
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Gagal menghapus transaksi.",
+        error instanceof Error ? error.message : "Catatannya gagal dihapus.",
       );
     } finally {
       setSaving(false);
@@ -156,12 +156,12 @@ export function TransactionDialog({
         <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="font-display text-xl">
-              {isEdit ? "Ubah transaksi" : "Catat transaksi"}
+              {isEdit ? "Ubah catatan" : "Catat uang"}
             </DialogTitle>
             <DialogDescription>
               {isEdit
                 ? "Perbarui detail catatan ini."
-                : "Isi nominal, kategori, dan tanggal transaksi."}
+                : "Isi nominalnya dulu, sisanya bisa menyusul."}
             </DialogDescription>
           </DialogHeader>
 
@@ -318,10 +318,9 @@ export function TransactionDialog({
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Hapus transaksi ini?</AlertDialogTitle>
+            <AlertDialogTitle>Hapus catatan ini?</AlertDialogTitle>
             <AlertDialogDescription>
-              Tindakan ini tidak bisa dibatalkan. Catatan akan hilang dari buku
-              kas untuk kamu dan partner.
+              Catatan ini akan hilang dan tidak bisa dikembalikan lagi.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

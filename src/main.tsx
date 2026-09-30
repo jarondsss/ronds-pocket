@@ -131,8 +131,8 @@ createRoot(document.getElementById("root")!).render(
                 path="/dashboard"
                 element={
                   <RequireAuth
-                    title="Masuk untuk membuka buku kasmu"
-                    description="Catatan keuanganmu hanya bisa dilihat olehmu dan partner yang kamu undang."
+                    title="Masuk untuk membuka kantongmu"
+                    description="Catatan uangmu tersimpan rapi di dalam. Cukup masuk sebentar, lalu lanjut mencatat."
                   >
                     <Dashboard />
                   </RequireAuth>

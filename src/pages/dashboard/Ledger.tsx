@@ -79,8 +79,8 @@ export default function Ledger() {
           </h1>
           <p className="text-sm text-muted-foreground">
             {activeBook.role === "owner"
-              ? "Kamu pemilik buku kas ini"
-              : "Kamu partner di buku kas ini"}
+              ? "Kantong ini punyamu 👋"
+              : "Kamu ikut mencatat di kantong ini"}
           </p>
         </div>
         <Button
@@ -89,7 +89,7 @@ export default function Ledger() {
           onClick={openNew}
         >
           <Plus className="size-4" />
-          Catat transaksi
+          Catat uang
         </Button>
       </header>
 
@@ -130,12 +130,12 @@ export default function Ledger() {
           transactions={visible}
           onEdit={openEdit}
           emptyTitle={
-            filter === "all" ? "Belum ada catatan bulan ini" : "Tidak ada data"
+            filter === "all" ? "Bulan ini masih kosong" : "Belum ada isinya"
           }
           emptyDescription={
             filter === "all"
-              ? "Catat pengeluaran atau pemasukan pertama di bulan ini supaya saldo terlihat."
-              : "Coba ganti filter atau pilih bulan lain."
+              ? "Catat pengeluaran atau pemasukan pertamamu, nanti sisanya kami hitung."
+              : "Coba ganti filternya atau pilih bulan lain ya."
           }
           onEmptyAction={filter === "all" ? openNew : undefined}
         />
@@ -147,7 +147,7 @@ export default function Ledger() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.15, type: "spring", stiffness: 320, damping: 22 }}
         onClick={openNew}
-        aria-label="Catat transaksi"
+        aria-label="Catat uang"
         className="clay-primary fixed bottom-24 right-5 z-40 grid size-14 place-items-center lg:hidden"
       >
         <Plus className="size-7" />

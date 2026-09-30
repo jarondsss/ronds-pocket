@@ -1,0 +1,164 @@
+import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
+import { SummaryHero } from "@/components/dashboard/SummaryHero";
+import {
+  TransactionDialog,
+  type EditableTransaction,
+} from "@/components/dashboard/TransactionDialog";
+import {
+  TransactionList,
+  type LedgerTransaction,
+} from "@/components/dashboard/TransactionList";
+import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
+import { useBooks } from "@/lib/book-context";
+import { monthRange, toMonthKey } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import { useQuery } from "convex/react";
+import { motion } from "framer-motion";
+import { Loader2, Plus } from "lucide-react";
+import { useMemo, useState } from "react";
+
+type Filter = "all" | "expense" | "income";
+
+const FILTERS: { value: Filter; label: string }[] = [
+  { value: "all", label: "Semua" },
+  { value: "expense", label: "Keluar" },
+  { value: "income", label: "Masuk" },
+];
+
+export default function Ledger() {
+  const { activeBook } = useBooks();
+  const [monthKey, setMonthKey] = useState(() => toMonthKey(Date.now()));
+  const [filter, setFilter] = useState<Filter>("all");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<EditableTransaction | null>(null);
+
+  const range = useMemo(() => monthRange(monthKey), [monthKey]);
+  const bookId = activeBook?._id;
+
+  const summary = useQuery(
+    api.transactions.summary,
+    bookId ? { bookId, ...range } : "skip",
+  );
+  const transactions = useQuery(
+    api.transactions.list,
+    bookId ? { bookId, ...range } : "skip",
+  );
+
+  const visible = useMemo(() => {
+    const rows: LedgerTransaction[] = transactions ?? [];
+    if (filter === "all") return rows;
+    return rows.filter((row) => row.type === filter);
+  }, [transactions, filter]);
+
+  if (!activeBook || !bookId) return null;
+
+  const openNew = () => {
+    setEditing(null);
+    setDialogOpen(true);
+  };
+
+  const openEdit = (transaction: LedgerTransaction) => {
+    setEditing({
+      _id: transaction._id,
+      type: transaction.type,
+      amount: transaction.amount,
+      category: transaction.category,
+      note: transaction.note,
+      occurred_at: transaction.occurred_at,
+    });
+    setDialogOpen(true);
+  };
+
+  return (
+    <div className="flex flex-col gap-5">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+            {activeBook.name}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {activeBook.role === "owner"
+              ? "Kamu pemilik buku kas ini"
+              : "Kamu partner di buku kas ini"}
+          </p>
+        </div>
+        <Button
+          type="button"
+          className="hidden sm:inline-flex"
+          onClick={openNew}
+        >
+          <Plus className="size-4" />
+          Catat transaksi
+        </Button>
+      </header>
+
+      <MonthNavigator monthKey={monthKey} onChange={setMonthKey} />
+
+      {summary === undefined ? (
+        <div className="grid min-h-[24vh] place-items-center">
+          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      ) : (
+        <SummaryHero summary={summary} />
+      )}
+
+      <div className="clay-sunken flex items-center gap-1.5 p-1.5">
+        {FILTERS.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            onClick={() => setFilter(item.value)}
+            className={cn(
+              "relative flex-1 rounded-2xl px-3 py-2 text-xs font-bold transition-colors sm:text-sm",
+              filter === item.value
+                ? "clay-primary"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      {transactions === undefined ? (
+        <div className="grid min-h-[24vh] place-items-center">
+          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+        </div>
+      ) : (
+        <TransactionList
+          transactions={visible}
+          onEdit={openEdit}
+          emptyTitle={
+            filter === "all" ? "Belum ada catatan bulan ini" : "Tidak ada data"
+          }
+          emptyDescription={
+            filter === "all"
+              ? "Catat pengeluaran atau pemasukan pertama di bulan ini supaya saldo terlihat."
+              : "Coba ganti filter atau pilih bulan lain."
+          }
+          onEmptyAction={filter === "all" ? openNew : undefined}
+        />
+      )}
+
+      <motion.button
+        type="button"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.15, type: "spring", stiffness: 320, damping: 22 }}
+        onClick={openNew}
+        aria-label="Catat transaksi"
+        className="clay-primary fixed bottom-24 right-5 z-40 grid size-14 place-items-center lg:hidden"
+      >
+        <Plus className="size-7" />
+      </motion.button>
+
+      <TransactionDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        bookId={bookId}
+        transaction={editing}
+      />
+    </div>
+  );
+}

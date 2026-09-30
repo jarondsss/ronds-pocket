@@ -1,3 +1,4 @@
+import { AiComposer } from "@/components/dashboard/AiComposer";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import { SummaryHero } from "@/components/dashboard/SummaryHero";
 import {
@@ -10,6 +11,7 @@ import {
 } from "@/components/dashboard/TransactionList";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
+import type { AiDraft } from "@/convex/ai";
 import { useBooks } from "@/lib/book-context";
 import { monthRange, toMonthKey } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -32,6 +34,7 @@ export default function Ledger() {
   const [filter, setFilter] = useState<Filter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<EditableTransaction | null>(null);
+  const [draft, setDraft] = useState<AiDraft | null>(null);
 
   const range = useMemo(() => monthRange(monthKey), [monthKey]);
   const bookId = activeBook?._id;
@@ -60,10 +63,18 @@ export default function Ledger() {
 
   const openNew = () => {
     setEditing(null);
+    setDraft(null);
+    setDialogOpen(true);
+  };
+
+  const openDraft = (nextDraft: AiDraft) => {
+    setEditing(null);
+    setDraft(nextDraft);
     setDialogOpen(true);
   };
 
   const openEdit = (transaction: LedgerTransaction) => {
+    setDraft(null);
     setEditing({
       _id: transaction._id,
       type: transaction.type,
@@ -98,6 +109,8 @@ export default function Ledger() {
           Catat uang
         </Button>
       </header>
+
+      <AiComposer bookId={bookId} onDraft={openDraft} />
 
       <MonthNavigator monthKey={monthKey} onChange={setMonthKey} />
 
@@ -166,6 +179,7 @@ export default function Ledger() {
         wallets={walletData?.wallets ?? []}
         categories={categories ?? []}
         transaction={editing}
+        draft={draft}
       />
     </div>
   );

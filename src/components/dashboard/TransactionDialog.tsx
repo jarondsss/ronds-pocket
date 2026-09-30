@@ -28,6 +28,7 @@ import {
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { api } from "@/convex/_generated/api";
+import type { AiDraft } from "@/convex/ai";
 import type { Id } from "@/convex/_generated/dataModel";
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/categories";
 import { formatRupiah, fromDateInput, toDateInput } from "@/lib/format";
@@ -61,6 +62,7 @@ export function TransactionDialog({
   wallets,
   categories,
   transaction,
+  draft,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -68,6 +70,7 @@ export function TransactionDialog({
   wallets: WalletRow[];
   categories: CategoryRow[];
   transaction?: EditableTransaction | null;
+  draft?: AiDraft | null;
 }) {
   const isEdit = Boolean(transaction);
   const createTransaction = useMutation(api.transactions.create);
@@ -93,6 +96,13 @@ export function TransactionDialog({
       setWalletId(transaction.wallet_id ?? NO_WALLET);
       setNote(transaction.note ?? "");
       setDateValue(toDateInput(transaction.occurred_at));
+    } else if (draft) {
+      setType(draft.type);
+      setAmount(draft.amount);
+      setCategory(draft.category);
+      setWalletId(draft.wallet_id ?? NO_WALLET);
+      setNote(draft.note);
+      setDateValue(toDateInput(draft.occurred_at));
     } else {
       setType("expense");
       setAmount(0);
@@ -101,7 +111,7 @@ export function TransactionDialog({
       setNote("");
       setDateValue(toDateInput(Date.now()));
     }
-  }, [open, transaction, wallets]);
+  }, [open, transaction, draft, wallets]);
 
   const suggestions = categories
     .filter((item) => item.type === type)
@@ -177,7 +187,9 @@ export function TransactionDialog({
             <DialogDescription>
               {isEdit
                 ? "Perbarui detail catatan ini."
-                : "Isi nominalnya dulu, sisanya bisa menyusul."}
+                : draft
+                  ? "AI sudah mengisi drafnya. Cek dulu, baru simpan ya."
+                  : "Isi nominalnya dulu, sisanya bisa menyusul."}
             </DialogDescription>
           </DialogHeader>
 

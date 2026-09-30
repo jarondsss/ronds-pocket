@@ -27,12 +27,12 @@ import {
 } from "@/components/ui/select";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
+import { CategoryCombobox } from "@/components/dashboard/CategoryCombobox";
 import { DatePicker } from "@/components/dashboard/DatePicker";
 import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
 import { api } from "@/convex/_generated/api";
 import type { AiDraft } from "@/convex/ai";
 import type { Id } from "@/convex/_generated/dataModel";
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/categories";
 import { formatRupiah, fromDateInput, toDateInput } from "@/lib/format";
 import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow, WalletRow } from "@/lib/types";
@@ -114,12 +114,9 @@ function TransactionForm({
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const suggestions = categories
+  const options = categories
     .filter((item) => item.type === type)
     .map((item) => item.name);
-  const datalist = suggestions.length
-    ? suggestions
-    : [...(type === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES)];
 
   const handleTypeChange = (next: TxType) => {
     if (next === type) return;
@@ -254,22 +251,13 @@ function TransactionForm({
           </Select>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="tx-category">Kategori</Label>
-          <Input
-            id="tx-category"
-            list="tx-category-options"
-            value={category}
-            onChange={(event) => setCategory(event.target.value)}
-            placeholder="Pilih atau tulis kategori"
-            maxLength={40}
-          />
-          <datalist id="tx-category-options">
-            {datalist.map((item) => (
-              <option key={item} value={item} />
-            ))}
-          </datalist>
-        </div>
+        <CategoryCombobox
+          id="tx-category"
+          label="Kategori"
+          value={category}
+          onChange={setCategory}
+          options={options}
+        />
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="tx-note">Catatan</Label>

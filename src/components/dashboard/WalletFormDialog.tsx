@@ -19,18 +19,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
+import { ChoiceChips } from "@/components/dashboard/ChoiceChips";
 import { TonePicker } from "@/components/dashboard/TonePicker";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useSaveTracker } from "@/lib/save-status";
 import type { WalletRow } from "@/lib/types";
 import { WALLET_TYPES, walletTypeOf } from "@/lib/palette";
-import { cn } from "@/lib/utils";
 import { Dialog } from "@/components/ui/dialog";
 import { useMutation } from "convex/react";
 import { Loader2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+const TYPE_OPTIONS = WALLET_TYPES.map((option) => ({
+  value: option.key,
+  label: option.label,
+  icon: option.icon,
+}));
+
+const ICON_OPTIONS = WALLET_TYPES.map((option) => ({
+  value: option.icon,
+  label: option.label,
+  icon: option.icon,
+}));
 
 export function WalletFormDialog({
   open,
@@ -166,44 +178,25 @@ export function WalletFormDialog({
 
             <div className="flex flex-col gap-2">
               <Label>Tipe dompet</Label>
-              <div className="flex flex-wrap gap-2">
-                {WALLET_TYPES.map((option) => (
-                  <button
-                    key={option.key}
-                    type="button"
-                    onClick={() => handleType(option.key)}
-                    className={cn(
-                      "clay-sm clay-press flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-colors",
-                      type === option.key
-                        ? "text-primary"
-                        : "text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    <span className="text-sm">{option.icon}</span>
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+              <ChoiceChips
+                options={TYPE_OPTIONS}
+                value={type}
+                onChange={handleType}
+              />
             </div>
 
             <div className="flex flex-col gap-2">
               <Label>Ikon</Label>
-              <div className="flex flex-wrap gap-2">
-                {WALLET_TYPES.map((option) => (
-                  <button
-                    key={option.key}
-                    type="button"
-                    aria-label={option.label}
-                    onClick={() => setIcon(option.icon)}
-                    className={cn(
-                      "clay-sm clay-press grid size-10 place-items-center rounded-2xl text-lg",
-                      icon === option.icon && "ring-2 ring-primary/60",
-                    )}
-                  >
-                    {option.icon}
-                  </button>
-                ))}
-              </div>
+              <ChoiceChips
+                options={ICON_OPTIONS}
+                value={icon}
+                onChange={setIcon}
+                iconOnly
+              />
+              <p className="text-xs text-muted-foreground">
+                Ganti tipe biasanya mengganti ikonnya juga, tapi ikon bebas kamu
+                ubah lagi di sini.
+              </p>
             </div>
 
             <div className="flex flex-col gap-2">

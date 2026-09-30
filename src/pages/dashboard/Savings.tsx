@@ -1,4 +1,6 @@
 import { SavingsDialog } from "@/components/dashboard/SavingsDialog";
+import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
+import { DatePicker } from "@/components/dashboard/DatePicker";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import {
@@ -19,7 +21,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import { useBooks } from "@/lib/book-context";
@@ -117,28 +118,14 @@ function MoveDialog({
         </DialogHeader>
 
         <div className="flex flex-col gap-5">
-          <div className="clay-sunken grid grid-cols-2 gap-2 p-2">
-            {(
-              [
-                { value: "deposit", label: "Setor" },
-                { value: "withdraw", label: "Tarik" },
-              ] as const
-            ).map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => setDirection(option.value)}
-                className={cn(
-                  "rounded-2xl px-3 py-2.5 text-sm font-bold transition-colors",
-                  direction === option.value
-                    ? "clay-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+          <SegmentedChips
+            options={[
+              { value: "deposit", label: "Setor", tone: "income" },
+              { value: "withdraw", label: "Tarik", tone: "expense" },
+            ]}
+            value={direction}
+            onChange={setDirection}
+          />
 
           <div className="flex flex-col gap-2">
             <Label htmlFor="savings-amount">Nominal</Label>
@@ -149,15 +136,12 @@ function MoveDialog({
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="savings-date">Tanggal</Label>
-            <Input
-              id="savings-date"
-              type="date"
-              value={dateValue}
-              onChange={(event) => setDateValue(event.target.value)}
-            />
-          </div>
+          <DatePicker
+            id="savings-date"
+            label="Tanggal"
+            value={dateValue}
+            onChange={setDateValue}
+          />
         </div>
 
         <DialogFooter>

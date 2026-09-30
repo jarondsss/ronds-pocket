@@ -1,3 +1,5 @@
+import { ChoiceChips } from "@/components/dashboard/ChoiceChips";
+import { DatePicker } from "@/components/dashboard/DatePicker";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,11 +18,16 @@ import { fromDateInput, toDateInput } from "@/lib/format";
 import { SAVING_KINDS } from "@/lib/palette";
 import { useSaveTracker } from "@/lib/save-status";
 import type { SavingsRow } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+const KIND_OPTIONS = SAVING_KINDS.map((kind) => ({
+  value: kind.key,
+  label: kind.label,
+  icon: kind.icon,
+}));
 
 export function SavingsDialog({
   open,
@@ -137,24 +144,7 @@ export function SavingsDialog({
 
           <div className="flex flex-col gap-2">
             <Label>Jenis</Label>
-            <div className="flex flex-wrap gap-2">
-              {SAVING_KINDS.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  onClick={() => setKind(option.key)}
-                  className={cn(
-                    "clay-sm clay-press flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-colors",
-                    kind === option.key
-                      ? "text-primary"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  <span className="text-sm">{option.icon}</span>
-                  {option.label}
-                </button>
-              ))}
-            </div>
+            <ChoiceChips options={KIND_OPTIONS} value={kind} onChange={setKind} />
           </div>
 
           <div className="flex flex-col gap-2">
@@ -182,15 +172,12 @@ export function SavingsDialog({
             </p>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="savings-start">Mulai sejak</Label>
-            <Input
-              id="savings-start"
-              type="date"
-              value={started}
-              onChange={(event) => setStarted(event.target.value)}
-            />
-          </div>
+          <DatePicker
+            id="savings-start"
+            label="Mulai sejak"
+            value={started}
+            onChange={setStarted}
+          />
         </div>
 
         <DialogFooter>

@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "@/components/dashboard/DatePicker";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { api } from "@/convex/_generated/api";
@@ -138,15 +139,12 @@ export function GoalDialog({
             <RupiahInput id="goal-saved" value={saved} onChange={setSaved} />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="goal-deadline">Target tanggal</Label>
-            <Input
-              id="goal-deadline"
-              type="date"
-              value={deadline}
-              onChange={(event) => setDeadline(event.target.value)}
-            />
-          </div>
+          <DatePicker
+            id="goal-deadline"
+            label="Target tanggal"
+            value={deadline}
+            onChange={setDeadline}
+          />
         </div>
 
         <DialogFooter>

@@ -15,6 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DatePicker } from "@/components/dashboard/DatePicker";
+import {
+  SegmentedChips,
+  type SegmentedOption,
+} from "@/components/dashboard/ChoiceChips";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { api } from "@/convex/_generated/api";
@@ -22,7 +27,6 @@ import type { Id } from "@/convex/_generated/dataModel";
 import { fromDateInput, toDateInput } from "@/lib/format";
 import { useSaveTracker } from "@/lib/save-status";
 import type { WalletRow } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -30,20 +34,22 @@ import { toast } from "sonner";
 
 export type MoveMode = "transfer" | "add" | "subtract";
 
-const MODES: { key: MoveMode; label: string; hint: string }[] = [
+const MODES: (SegmentedOption<MoveMode> & { hint: string })[] = [
   {
-    key: "transfer",
+    value: "transfer",
     label: "Pindah dompet",
     hint: "Memindahkan uang dari satu dompet ke dompet lain.",
   },
   {
-    key: "add",
+    value: "add",
     label: "Tambah saldo",
+    tone: "income",
     hint: "Menambah uang dari luar, misalnya temuan atau utang dibayar.",
   },
   {
-    key: "subtract",
+    value: "subtract",
     label: "Kurangi saldo",
+    tone: "expense",
     hint: "Mengurangi saldo tanpa masuk catatan pengeluaran.",
   },
 ];
@@ -82,7 +88,7 @@ export function WalletMoveDialog({
     setTo(wallets[1]?._id ?? wallets[0]?._id ?? "");
   }, [open, initialMode, wallets]);
 
-  const activeMode = MODES.find((item) => item.key === mode) ?? MODES[0];
+  const activeMode = MODES.find((item) => item.value === mode) ?? MODES[0];
 
   const handleSubmit = async () => {
     if (amount <= 0) {
@@ -140,23 +146,15 @@ export function WalletMoveDialog({
         </DialogHeader>
 
         <div className="flex flex-col gap-5">
-          <div className="clay-sunken grid grid-cols-3 gap-1.5 p-1.5">
-            {MODES.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                onClick={() => setMode(item.key)}
-                className={cn(
-                  "rounded-2xl px-2 py-2 text-[11px] font-bold transition-colors sm:text-xs",
-                  mode === item.key
-                    ? "clay-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
+          <SegmentedChips
+            options={MODES.map(({ value, label, tone }) => ({
+              value,
+              label,
+              tone,
+            }))}
+            value={mode}
+            onChange={setMode}
+          />
 
           {mode !== "add" && (
             <div className="flex flex-col gap-2">
@@ -216,15 +214,12 @@ export function WalletMoveDialog({
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="move-date">Tanggal</Label>
-            <Input
-              id="move-date"
-              type="date"
-              value={dateValue}
-              onChange={(event) => setDateValue(event.target.value)}
-            />
-          </div>
+          <DatePicker
+            id="move-date"
+            label="Tanggal"
+            value={dateValue}
+            onChange={setDateValue}
+          />
         </div>
 
         <DialogFooter>

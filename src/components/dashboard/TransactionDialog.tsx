@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/select";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
+import { DatePicker } from "@/components/dashboard/DatePicker";
+import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
 import { api } from "@/convex/_generated/api";
 import type { AiDraft } from "@/convex/ai";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -34,7 +36,6 @@ import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/categories";
 import { formatRupiah, fromDateInput, toDateInput } from "@/lib/format";
 import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow, WalletRow } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -189,33 +190,15 @@ function TransactionForm({
               ? "AI sudah mengisi drafnya. Cek dulu, baru simpan ya."
               : "Isi nominalnya dulu, sisanya bisa menyusul."}
         </DialogDescription>
-      </DialogHeader>
-
-      <div className="flex flex-col gap-5">
-        <div className="clay-sunken grid grid-cols-2 gap-2 p-2">
-          {(
-            [
-              { value: "expense", label: "Pengeluaran" },
-              { value: "income", label: "Pemasukan" },
-            ] as const
-          ).map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => handleTypeChange(option.value)}
-              className={cn(
-                "rounded-2xl px-3 py-2.5 text-sm font-bold transition-all",
-                type === option.value
-                  ? option.value === "expense"
-                    ? "bg-expense text-white"
-                    : "bg-income text-white"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+      </DialogHeader>        <div className="flex flex-col gap-5">
+          <SegmentedChips
+            options={[
+              { value: "expense", label: "Pengeluaran", tone: "expense" },
+              { value: "income", label: "Pemasukan", tone: "income" },
+            ]}
+            value={type}
+            onChange={handleTypeChange}
+          />
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="tx-amount">Nominal (Rp)</Label>
@@ -299,15 +282,12 @@ function TransactionForm({
           />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="tx-date">Tanggal</Label>
-          <Input
-            id="tx-date"
-            type="date"
-            value={dateValue}
-            onChange={(event) => setDateValue(event.target.value)}
-          />
-        </div>
+        <DatePicker
+          id="tx-date"
+          label="Tanggal"
+          value={dateValue}
+          onChange={setDateValue}
+        />
       </div>
 
       <DialogFooter className="gap-2 sm:justify-between">

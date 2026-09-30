@@ -1,3 +1,4 @@
+import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +15,6 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -112,30 +112,14 @@ export function CategoryDialog({
           {!isEdit && (
             <div className="flex flex-col gap-2">
               <Label>Jenis</Label>
-              <div className="clay-sunken grid grid-cols-2 gap-2 p-2">
-                {(
-                  [
-                    { value: "expense", label: "Pengeluaran" },
-                    { value: "income", label: "Pemasukan" },
-                  ] as const
-                ).map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setType(option.value)}
-                    className={cn(
-                      "rounded-2xl px-3 py-2.5 text-sm font-bold transition-colors",
-                      type === option.value
-                        ? option.value === "expense"
-                          ? "bg-expense text-white"
-                          : "bg-income text-white"
-                        : "text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+              <SegmentedChips
+                options={[
+                  { value: "expense", label: "Pengeluaran", tone: "expense" },
+                  { value: "income", label: "Pemasukan", tone: "income" },
+                ]}
+                value={type}
+                onChange={setType}
+              />
             </div>
           )}
 

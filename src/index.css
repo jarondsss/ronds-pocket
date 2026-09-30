@@ -327,6 +327,45 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Field tanggal bergaya clay. Ditulis di luar @layer supaya padding-nya menang
+   dari utility px-3 bawaan Input. Indikator kalender bawaan WebKit dipindah
+   pas di atas ikon dekoratif lalu dibuat transparan — klik tetap membuka
+   kalender bawaan browser. Firefox tidak bisa di-styling, jadi ikon
+   dekoratifnya cuma ditampilkan di browser yang punya indikator WebKit.
+--------------------------------------------------------------------------- */
+.clay-date {
+  color-scheme: light;
+  padding-right: 2.5rem;
+  min-height: 2.75rem;
+}
+.dark .clay-date {
+  color-scheme: dark;
+}
+.clay-date::-webkit-datetime-edit {
+  color: var(--foreground);
+}
+.clay-date::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+.clay-date::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset-block: 0;
+  right: 0.75rem;
+  width: 2rem;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.clay-date-icon {
+  display: none;
+}
+@supports selector(::-webkit-calendar-picker-indicator) {
+  .clay-date-icon {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Modal meluncur dari bawah di HP. Ditulis di luar @layer supaya menang dari
    animasi bawaan komponen Dialog tanpa perlu !important.
 --------------------------------------------------------------------------- */

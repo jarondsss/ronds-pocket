@@ -44,6 +44,11 @@ export default function Ledger() {
     api.transactions.list,
     bookId ? { bookId, ...range } : "skip",
   );
+  const walletData = useQuery(api.wallets.list, bookId ? { bookId } : "skip");
+  const categories = useQuery(
+    api.categories.list,
+    bookId ? { bookId } : "skip",
+  );
 
   const visible = useMemo(() => {
     const rows: LedgerTransaction[] = transactions ?? [];
@@ -66,6 +71,7 @@ export default function Ledger() {
       category: transaction.category,
       note: transaction.note,
       occurred_at: transaction.occurred_at,
+      wallet_id: transaction.wallet_id,
     });
     setDialogOpen(true);
   };
@@ -157,6 +163,8 @@ export default function Ledger() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         bookId={bookId}
+        wallets={walletData?.wallets ?? []}
+        categories={categories ?? []}
         transaction={editing}
       />
     </div>

@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useBooks } from "@/lib/book-context";
+import { useSaveTracker } from "@/lib/save-status";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
@@ -45,6 +46,7 @@ export default function Partner() {
   const createInvite = useMutation(api.books.createInvite);
   const removeMember = useMutation(api.books.removeMember);
   const redeemInvite = useMutation(api.books.redeemInvite);
+  const save = useSaveTracker();
 
   const [code, setCode] = useState("");
   const [joining, setJoining] = useState(false);
@@ -70,7 +72,7 @@ export default function Partner() {
   const handleCreateInvite = async () => {
     setCreating(true);
     try {
-      const generated = await createInvite({ bookId });
+      const generated = await save(() => createInvite({ bookId }));
       await copyCode(generated);
       toast.success(`Kode ${generated} siap dibagikan.`);
     } catch (error) {
@@ -90,7 +92,7 @@ export default function Partner() {
     }
     setJoining(true);
     try {
-      const joinedId = await redeemInvite({ code: clean });
+      const joinedId = await save(() => redeemInvite({ code: clean }));
       setActiveBookId(joinedId);
       setCode("");
       toast.success("Berhasil bergabung! Kantongnya sudah muncul di daftarmu.");
@@ -104,7 +106,7 @@ export default function Partner() {
   const handleRemove = async () => {
     if (!removing) return;
     try {
-      await removeMember({ bookId, userId: removing.userId });
+      await save(() => removeMember({ bookId, userId: removing.userId }));
       toast.success(`${removing.name} sudah dikeluarkan dari kantong ini.`);
       setRemoving(null);
     } catch (error) {

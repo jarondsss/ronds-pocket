@@ -1,26 +1,18 @@
 import { categoryEmoji, toneFor } from "@/lib/categories";
 import { formatRupiah } from "@/lib/format";
+import { toneValue } from "@/lib/palette";
 import { motion } from "framer-motion";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-
-const FALLBACK_TONES = [
-  "oklch(0.585 0.2 288)",
-  "oklch(0.74 0.16 55)",
-  "oklch(0.72 0.13 176)",
-  "oklch(0.68 0.19 12)",
-  "oklch(0.7 0.13 238)",
-  "oklch(0.66 0.15 320)",
-];
 
 export interface CategorySlice {
   category: string;
   total: number;
+  /** Tone key dari kategori yang dipilih pengguna, kalau ada. */
+  color?: string | null;
 }
 
-function sliceColor(category: string, index: number) {
-  return index < FALLBACK_TONES.length
-    ? FALLBACK_TONES[index]
-    : toneFor(category);
+function sliceColor(slice: CategorySlice) {
+  return slice.color ? toneValue(slice.color) : toneFor(slice.category);
 }
 
 export function CategoryChart({
@@ -70,11 +62,8 @@ export function CategoryChart({
                   startAngle={90}
                   endAngle={-270}
                 >
-                  {slices.map((slice, index) => (
-                    <Cell
-                      key={slice.category}
-                      fill={sliceColor(slice.category, index)}
-                    />
+                  {slices.map((slice) => (
+                    <Cell key={slice.category} fill={sliceColor(slice)} />
                   ))}
                 </Pie>
               </PieChart>
@@ -119,7 +108,7 @@ export function CategoryChart({
                         className="h-full rounded-full"
                         style={{
                           width: `${Math.max(percent, 4)}%`,
-                          backgroundColor: sliceColor(slice.category, index),
+                          backgroundColor: sliceColor(slice),
                         }}
                       />
                     </div>

@@ -63,6 +63,7 @@ const schema = defineSchema(
 
     transactions: defineTable({
       book_id: v.id("books"),
+      wallet_id: v.optional(v.id("wallets")),
       type: transactionTypeValidator,
       amount: v.number(), // integer rupiah
       category: v.string(),
@@ -82,6 +83,84 @@ const schema = defineSchema(
       created_at: v.number(),
     })
       .index("by_code", ["code"])
+      .index("by_book", ["book_id"]),
+
+    // Dompet: tempat uang fisik/digital disimpan
+    wallets: defineTable({
+      book_id: v.id("books"),
+      name: v.string(),
+      type: v.string(), // cash | bank | ewallet | credit | investment | saving | other
+      icon: v.string(), // emoji
+      color: v.string(), // tone key
+      opening_balance: v.number(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    }).index("by_book", ["book_id"]),
+
+    // Perpindahan uang antar dompet, plus tambah/kurangi saldo manual.
+    // from kosong = uang masuk dari luar; to kosong = uang keluar.
+    wallet_transfers: defineTable({
+      book_id: v.id("books"),
+      from_wallet_id: v.optional(v.id("wallets")),
+      to_wallet_id: v.optional(v.id("wallets")),
+      amount: v.number(),
+      note: v.string(),
+      occurred_at: v.number(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    }).index("by_book", ["book_id"]),
+
+    categories: defineTable({
+      book_id: v.id("books"),
+      name: v.string(),
+      type: transactionTypeValidator,
+      color: v.string(), // tone key
+      created_at: v.number(),
+    })
+      .index("by_book", ["book_id"])
+      .index("by_book_type", ["book_id", "type"]),
+
+    // Anggaran bulanan per kategori
+    budgets: defineTable({
+      book_id: v.id("books"),
+      category: v.string(),
+      amount: v.number(),
+      updated_at: v.number(),
+    })
+      .index("by_book", ["book_id"])
+      .index("by_book_category", ["book_id", "category"]),
+
+    goals: defineTable({
+      book_id: v.id("books"),
+      name: v.string(),
+      target_amount: v.number(),
+      saved_amount: v.number(),
+      deadline: v.number(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    }).index("by_book", ["book_id"]),
+
+    savings: defineTable({
+      book_id: v.id("books"),
+      name: v.string(),
+      kind: v.string(), // umum | deposito | reksa_dana | emas | lainnya
+      principal: v.number(), // saldo awal
+      interest_rate: v.number(), // persen per tahun
+      started_at: v.number(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    }).index("by_book", ["book_id"]),
+
+    savings_entries: defineTable({
+      book_id: v.id("books"),
+      savings_id: v.id("savings"),
+      type: v.union(v.literal("deposit"), v.literal("withdraw")),
+      amount: v.number(),
+      occurred_at: v.number(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    })
+      .index("by_savings", ["savings_id"])
       .index("by_book", ["book_id"]),
   },
   {

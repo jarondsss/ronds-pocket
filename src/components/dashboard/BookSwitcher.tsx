@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import { useBooks } from "@/lib/book-context";
 import { cn } from "@/lib/utils";
+import { useSaveTracker } from "@/lib/save-status";
 import { useMutation } from "convex/react";
 import { Check, ChevronDown, Loader2, Plus, Users } from "lucide-react";
 import { useState } from "react";
@@ -28,6 +29,7 @@ import { toast } from "sonner";
 export function BookSwitcher({ className }: { className?: string }) {
   const { books, activeBook, setActiveBookId } = useBooks();
   const createBook = useMutation(api.books.create);
+  const save = useSaveTracker();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
@@ -40,7 +42,7 @@ export function BookSwitcher({ className }: { className?: string }) {
     }
     setSaving(true);
     try {
-      const bookId = await createBook({ name: clean });
+      const bookId = await save(() => createBook({ name: clean }));
       setActiveBookId(bookId);
       toast.success(`Kantong "${clean}" siap dipakai.`);
       setName("");
@@ -115,7 +117,7 @@ export function BookSwitcher({ className }: { className?: string }) {
       </DropdownMenu>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-sm">
+        <SlideUpDialogContent className="sm:max-w-sm">
           <DialogHeader>
             <DialogTitle className="font-display text-xl">
               Kantong baru
@@ -154,7 +156,7 @@ export function BookSwitcher({ className }: { className?: string }) {
               )}
             </Button>
           </DialogFooter>
-        </DialogContent>
+        </SlideUpDialogContent>
       </Dialog>
     </>
   );

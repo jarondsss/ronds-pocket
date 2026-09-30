@@ -1,0 +1,212 @@
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RupiahInput } from "@/components/RupiahInput";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
+import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
+import { fromDateInput, toDateInput } from "@/lib/format";
+import { SAVING_KINDS } from "@/lib/palette";
+import { useSaveTracker } from "@/lib/save-status";
+import type { SavingsRow } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { useMutation } from "convex/react";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+export function SavingsDialog({
+  open,
+  onOpenChange,
+  bookId,
+  account,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  bookId: Id<"books">;
+  account?: SavingsRow | null;
+}) {
+  const isEdit = Boolean(account);
+  const createSavings = useMutation(api.savings.create);
+  const updateSavings = useMutation(api.savings.update);
+  const save = useSaveTracker();
+
+  const [name, setName] = useState("");
+  const [kind, setKind] = useState("umum");
+  const [principal, setPrincipal] = useState(0);
+  const [rate, setRate] = useState("0");
+  const [started, setStarted] = useState(toDateInput(Date.now()));
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    if (account) {
+      setName(account.name);
+      setKind(account.kind);
+      setPrincipal(account.principal);
+      setRate(`${account.interest_rate}`);
+      setStarted(toDateInput(account.started_at));
+    } else {
+      setName("");
+      setKind("umum");
+      setPrincipal(0);
+      setRate("0");
+      setStarted(toDateInput(Date.now()));
+    }
+  }, [open, account]);
+
+  const handleSubmit = async () => {
+    const clean = name.trim();
+    if (!clean) {
+      toast.error("Beri nama tabungannya dulu ya.");
+      return;
+    }
+    const interest = Number(rate.replace(",", "."));
+    if (!Number.isFinite(interest) || interest < 0 || interest > 100) {
+      toast.error("Bunganya diisi antara 0 sampai 100 persen ya.");
+      return;
+    }
+    setSaving(true);
+    try {
+      if (account) {
+        await save(() =>
+          updateSavings({
+            id: account._id,
+            name: clean,
+            kind,
+            principal,
+            interest_rate: interest,
+            started_at: fromDateInput(started),
+          }),
+        );
+        toast.success("Tabungannya sudah diperbarui.");
+      } else {
+        await save(() =>
+          createSavings({
+            bookId,
+            name: clean,
+            kind,
+            principal,
+            interest_rate: interest,
+            started_at: fromDateInput(started),
+          }),
+        );
+        toast.success("Tabungan barunya sudah dibuat.");
+      }
+      onOpenChange(false);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Tabungannya gagal disimpan.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <SlideUpDialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl">
+            {isEdit ? "Ubah tabungan" : "Tabungan baru"}
+          </DialogTitle>
+          <DialogDescription>
+            Deposito, reksa dana, emas, atau tabungan biasa — catat semuanya di
+            satu tempat.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="savings-name">Nama tabungan</Label>
+            <Input
+              id="savings-name"
+              value={name}
+              maxLength={60}
+              placeholder="Deposito BCA"
+              onChange={(event) => setName(event.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label>Jenis</Label>
+            <div className="flex flex-wrap gap-2">
+              {SAVING_KINDS.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  onClick={() => setKind(option.key)}
+                  className={cn(
+                    "clay-sm clay-press flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-colors",
+                    kind === option.key
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <span className="text-sm">{option.icon}</span>
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="savings-principal">Saldo awal</Label>
+            <RupiahInput
+              id="savings-principal"
+              value={principal}
+              onChange={setPrincipal}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="savings-rate">Bunga per tahun (%)</Label>
+            <Input
+              id="savings-rate"
+              inputMode="decimal"
+              value={rate}
+              placeholder="4.5"
+              onChange={(event) =>
+                setRate(event.target.value.replace(/[^\d.,]/g, ""))
+              }
+            />
+            <p className="text-xs text-muted-foreground">
+              Isi 0 kalau tabungannya tidak berbunga.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="savings-start">Mulai sejak</Label>
+            <Input
+              id="savings-start"
+              type="date"
+              value={started}
+              onChange={(event) => setStarted(event.target.value)}
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={saving}
+          >
+            Batal
+          </Button>
+          <Button type="button" onClick={handleSubmit} disabled={saving}>
+            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+          </Button>
+        </DialogFooter>
+      </SlideUpDialogContent>
+    </Dialog>
+  );
+}

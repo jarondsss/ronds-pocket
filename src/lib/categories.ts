@@ -1,3 +1,5 @@
+import { TONES, toneValue } from "@/lib/palette";
+
 export const EXPENSE_CATEGORIES = [
   "Makan & Minum",
   "Transportasi",
@@ -34,6 +36,8 @@ const EMOJI: Record<string, string> = {
   Investasi: "📈",
   Hadiah: "🤝",
   Lainnya: "✨",
+  Tabungan: "🐖",
+  "Kopi & Jajan": "☕",
 };
 
 export function categoryEmoji(category: string): string {
@@ -41,23 +45,26 @@ export function categoryEmoji(category: string): string {
   return EMOJI[category] ?? "🧾";
 }
 
-const AVATAR_TONES = [
-  "oklch(0.62 0.15 168)",
-  "oklch(0.66 0.17 42)",
-  "oklch(0.585 0.2 288)",
-  "oklch(0.7 0.13 238)",
-  "oklch(0.68 0.19 12)",
-];
-
-export function toneFor(seed: string): string {
-  let hash = 0;
+function hash(seed: string): number {
+  let value = 0;
   for (let i = 0; i < seed.length; i += 1) {
-    hash = (hash * 31 + seed.charCodeAt(i)) % 997;
+    value = (value * 31 + seed.charCodeAt(i)) % 9973;
   }
-  return AVATAR_TONES[hash % AVATAR_TONES.length];
+  return value;
 }
 
-/** Soft pastel wash of the category tone, used behind transaction icons. */
-export function toneBackground(seed: string, strength = 18): string {
-  return `color-mix(in oklab, ${toneFor(seed)} ${strength}%, transparent)`;
+/** Warna tetap untuk kategori yang belum punya warna sendiri. */
+export function categoryTone(seed: string): string {
+  if (!seed) return TONES[0].key;
+  return TONES[hash(seed) % TONES.length].key;
+}
+
+/** Warna mentah untuk seed apa pun, dipakai grafik. */
+export function toneFor(seed: string): string {
+  return toneValue(categoryTone(seed));
+}
+
+/** Latar pastel lembut dari sebuah tone key. */
+export function toneBackground(toneKey: string, strength = 20): string {
+  return `color-mix(in oklab, ${toneValue(toneKey)} ${strength}%, transparent)`;
 }

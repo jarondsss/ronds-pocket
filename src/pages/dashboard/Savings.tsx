@@ -213,7 +213,7 @@ function HistoryDialog({
             Belum ada setoran atau penarikan.
           </p>
         ) : (
-          <ul className="clay-scroll flex max-h-80 flex-col gap-2 overflow-y-auto">
+          <ul className="flex max-h-80 flex-col gap-2 overflow-y-auto">
             {entries.map((entry) => (
               <li
                 key={entry._id}

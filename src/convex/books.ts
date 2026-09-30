@@ -6,14 +6,14 @@ import { mutation, query } from "./_generated/server";
 
 type Ctx = QueryCtx | MutationCtx;
 
-const DEFAULT_BOOK_NAME = "Buku Kas Saya";
+const DEFAULT_BOOK_NAME = "Kantong Utamaku";
 const INVITE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 /** Every request must resolve to a signed-in user. */
 export async function requireUserId(ctx: Ctx): Promise<Id<"users">> {
   const userId = await getAuthUserId(ctx);
   if (userId === null) {
-    throw new Error("Anda perlu masuk terlebih dahulu.");
+    throw new Error("Kamu perlu masuk dulu ya.");
   }
   return userId;
 }
@@ -39,7 +39,7 @@ export async function requireMember(ctx: Ctx, bookId: Id<"books">) {
   const userId = await requireUserId(ctx);
   const membership = await getMembership(ctx, bookId, userId);
   if (membership === null) {
-    throw new Error("Anda tidak punya akses ke buku kas ini.");
+    throw new Error("Kantong ini bukan punyamu.");
   }
   return { userId, role: membership.role };
 }
@@ -47,7 +47,7 @@ export async function requireMember(ctx: Ctx, bookId: Id<"books">) {
 async function requireOwner(ctx: Ctx, bookId: Id<"books">) {
   const { userId, role } = await requireMember(ctx, bookId);
   if (role !== "owner") {
-    throw new Error("Hanya pemilik buku yang boleh melakukan ini.");
+    throw new Error("Cuma pemilik kantong yang bisa melakukan ini.");
   }
   return userId;
 }
@@ -171,15 +171,15 @@ export const create = mutation({
     const userId = await requireUserId(ctx);
     const clean = name.trim();
     if (!clean) {
-      throw new Error("Nama buku tidak boleh kosong.");
+      throw new Error("Nama kantongnya jangan dikosongkan ya.");
     }
     return await createBookFor(ctx, userId, clean.slice(0, 60));
   },
 });
 
 /**
- * Called once when a signed-in user lands with no books at all, so registering
- * always leaves the user with a default book they own.
+ * Called once when a signed-in user lands with no pockets at all, so signing up
+ * always leaves the user with a default pocket they own.
  */
 export const ensureDefault = mutation({
   args: {},
@@ -200,7 +200,7 @@ export const rename = mutation({
     await requireOwner(ctx, bookId);
     const clean = name.trim();
     if (!clean) {
-      throw new Error("Nama buku tidak boleh kosong.");
+      throw new Error("Nama kantongnya jangan dikosongkan ya.");
     }
     await ctx.db.patch(bookId, { name: clean.slice(0, 60) });
   },
@@ -226,7 +226,7 @@ export const createInvite = mutation({
       });
       return code;
     }
-    throw new Error("Gagal membuat kode undangan. Coba lagi.");
+    throw new Error("Kode undangannya gagal dibuat. Coba sekali lagi ya.");
   },
 });
 
@@ -237,7 +237,7 @@ export const redeemInvite = mutation({
     const userId = await requireUserId(ctx);
     const clean = code.trim().toUpperCase();
     if (!clean) {
-      throw new Error("Masukkan kode undangan terlebih dahulu.");
+      throw new Error("Isi kode undangannya dulu ya.");
     }
 
     const invite = await ctx.db
@@ -245,15 +245,15 @@ export const redeemInvite = mutation({
       .withIndex("by_code", (q) => q.eq("code", clean))
       .unique();
     if (invite === null) {
-      throw new Error("Kode undangan tidak ditemukan.");
+      throw new Error("Kode undangannya tidak ketemu. Cek lagi hurufnya ya.");
     }
     if (invite.accepted_by !== undefined) {
-      throw new Error("Kode undangan ini sudah dipakai.");
+      throw new Error("Kode ini sudah dipakai orang lain.");
     }
 
     const existing = await getMembership(ctx, invite.book_id, userId);
     if (existing !== null) {
-      throw new Error("Anda sudah tergabung di buku kas ini.");
+      throw new Error("Kamu sudah ada di kantong ini.");
     }
 
     await ctx.db.insert("book_members", {
@@ -273,10 +273,10 @@ export const removeMember = mutation({
     await requireOwner(ctx, bookId);
     const membership = await getMembership(ctx, bookId, userId);
     if (membership === null) {
-      throw new Error("Anggota ini tidak ditemukan di buku kas.");
+      throw new Error("Orang ini tidak ada di kantong ini.");
     }
     if (membership.role === "owner") {
-      throw new Error("Pemilik buku tidak bisa dihapus.");
+      throw new Error("Pemilik kantong tidak bisa dihapus.");
     }
     await ctx.db.delete(membership._id);
   },

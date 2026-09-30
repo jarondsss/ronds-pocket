@@ -75,7 +75,7 @@ export default function Partner() {
       toast.success(`Kode ${generated} siap dibagikan.`);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Gagal membuat kode undangan.",
+        error instanceof Error ? error.message : "Kodenya gagal dibuat. Coba lagi ya.",
       );
     } finally {
       setCreating(false);
@@ -85,7 +85,7 @@ export default function Partner() {
   const handleRedeem = async () => {
     const clean = code.trim().toUpperCase();
     if (!clean) {
-      toast.error("Masukkan kode undangan dulu ya.");
+      toast.error("Isi kode undangannya dulu ya.");
       return;
     }
     setJoining(true);
@@ -93,9 +93,9 @@ export default function Partner() {
       const joinedId = await redeemInvite({ code: clean });
       setActiveBookId(joinedId);
       setCode("");
-      toast.success("Berhasil bergabung sebagai partner!");
+      toast.success("Berhasil bergabung! Kantongnya sudah muncul di daftarmu.");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Kode tidak valid.");
+      toast.error(error instanceof Error ? error.message : "Kodenya sepertinya salah.");
     } finally {
       setJoining(false);
     }
@@ -105,11 +105,11 @@ export default function Partner() {
     if (!removing) return;
     try {
       await removeMember({ bookId, userId: removing.userId });
-      toast.success(`${removing.name} dihapus dari buku kas.`);
+      toast.success(`${removing.name} sudah dikeluarkan dari kantong ini.`);
       setRemoving(null);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Gagal menghapus anggota.",
+        error instanceof Error ? error.message : "Gagal mengeluarkan orang ini.",
       );
     }
   };
@@ -118,10 +118,11 @@ export default function Partner() {
     <div className="flex flex-col gap-5">
       <header>
         <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Partner buku kas
+          Bagikan kantongmu
         </h1>
         <p className="text-sm text-muted-foreground">
-          Bagikan catatan keuangan ini dengan orang yang kamu percaya.
+          Opsional banget. Kalau nanti mau mencatat bareng orang lain, undang
+          mereka ke kantong ini.
         </p>
       </header>
 
@@ -131,7 +132,7 @@ export default function Partner() {
             <Users className="size-4" />
           </span>
           <h3 className="font-display text-base font-extrabold">
-            Anggota ({members?.length ?? 0})
+            Siapa saja di kantong ini ({members?.length ?? 0})
           </h3>
         </div>
 
@@ -168,12 +169,12 @@ export default function Partner() {
                 ) : (
                   <Users className="size-3" />
                 )}
-                {member.role === "owner" ? "Pemilik" : "Partner"}
+                {member.role === "owner" ? "Pemilik" : "Teman"}
               </span>
               {isOwner && member.role === "partner" && (
                 <button
                   type="button"
-                  aria-label={`Hapus ${member.name}`}
+                  aria-label={`Keluarkan ${member.name}`}
                   onClick={() =>
                     setRemoving({ userId: member.userId, name: member.name })
                   }
@@ -196,10 +197,10 @@ export default function Partner() {
               </span>
               <div>
                 <h3 className="font-display text-base font-extrabold">
-                  Undang partner
+                  Bikin kode undangan
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Buat kode, lalu kirim ke pasanganmu.
+                  Buat kode, lalu kirim ke orang yang mau kamu ajak.
                 </p>
               </div>
             </div>
@@ -254,13 +255,12 @@ export default function Partner() {
           <span className="grid size-9 place-items-center rounded-xl bg-income/15 text-income">
             <UserPlus className="size-4" />
           </span>
-          <div>
-            <h3 className="font-display text-base font-extrabold">
-              Gabung buku kas lain
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              Pakai kode undangan dari pasanganmu.
-            </p>
+          <div>                <h3 className="font-display text-base font-extrabold">
+                  Gabung ke kantong orang lain
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Punya kode undangan? Tempel di sini.
+                </p>
           </div>
         </div>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -301,11 +301,11 @@ export default function Partner() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Hapus {removing?.name} dari buku ini?
+              Keluarkan {removing?.name} dari kantong ini?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Partner ini tidak akan bisa lagi melihat atau mencatat transaksi
-              di buku kas ini. Catatan yang sudah ada tetap tersimpan.
+              Setelah dikeluarkan, dia tidak bisa lagi melihat atau menambah
+              catatan di kantong ini. Catatan yang sudah ada tetap aman.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

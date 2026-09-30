@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Link } from "react-router";
 
-/** Clay coin mark + wordmark for Buku Kas. */
+/** Clay coin mark + wordmark for Ronds Pocket. */
 export function Brand({
   to = "/",
   compact = false,
@@ -15,18 +15,18 @@ export function Brand({
     <Link
       to={to}
       className={cn("group flex items-center gap-3", className)}
-      aria-label="Buku Kas"
+      aria-label="Ronds Pocket"
     >
-      <span className="clay-primary clay-press grid size-11 shrink-0 place-items-center rounded-2xl text-lg font-extrabold">
+      <span className="clay-primary grid size-11 shrink-0 place-items-center rounded-2xl text-lg font-extrabold">
         Rp
       </span>
       {!compact && (
         <span className="flex flex-col leading-none">
           <span className="font-display text-lg font-extrabold tracking-tight text-foreground">
-            Buku Kas
+            Ronds Pocket
           </span>
           <span className="text-[11px] font-medium text-muted-foreground">
-            Catatan keuangan bersama
+            Kantong kecil buat uangmu
           </span>
         </span>
       )}

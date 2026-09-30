@@ -31,14 +31,14 @@ export function SummaryHero({ summary }: { summary: Summary }) {
         <div className="relative flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-white/75">
-              Saldo periode ini
+              Sisa uang bulan ini
             </p>
             <p className="mt-2 font-display text-3xl font-extrabold leading-none sm:text-4xl">
               {formatRupiah(summary.balance)}
             </p>
             <p className="mt-3 text-xs font-medium text-white/80">
-              {summary.count} transaksi tercatat
-              {positive ? " · aman 👍" : " · pengeluaran lebih besar"}
+              {summary.count} catatan
+              {positive ? " · masih aman 👍" : " · pengeluaran lebih besar 😅"}
             </p>
           </div>
           <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/20 text-white">

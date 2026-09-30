@@ -30,13 +30,13 @@ interface BooksContextValue {
   isOwner: boolean;
 }
 
-const STORAGE_KEY = "bukukas.active-book";
+const STORAGE_KEY = "rondspocket.active-pocket";
 
 const BooksContext = createContext<BooksContextValue | null>(null);
 
 /**
- * Owns the list of books the user can see and which one is currently open.
- * Convex subscriptions keep the list live, so a newly joined book appears
+ * Owns the list of pockets the user can see and which one is currently open.
+ * Convex subscriptions keep the list live, so a newly shared pocket shows up
  * without a refresh.
  */
 export function BooksProvider({ children }: { children: ReactNode }) {
@@ -51,7 +51,7 @@ export function BooksProvider({ children }: { children: ReactNode }) {
   });
   const requestedDefault = useRef(false);
 
-  // A brand new account has no book yet — give it the default one.
+  // A brand new account has no pocket yet — give it the default one.
   useEffect(() => {
     if (books === undefined) return;
     if (books.length > 0) {
@@ -101,7 +101,7 @@ export function BooksProvider({ children }: { children: ReactNode }) {
 export function useBooks(): BooksContextValue {
   const ctx = useContext(BooksContext);
   if (ctx === null) {
-    throw new Error("useBooks harus dipakai di dalam <BooksProvider>.");
+    throw new Error("useBooks cuma bisa dipakai di dalam <BooksProvider>.");
   }
   return ctx;
 }

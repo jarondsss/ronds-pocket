@@ -17,9 +17,9 @@ interface AuthProps {
 }
 
 const PERKS = [
-  "Buku kas pertama dibuat otomatis",
-  "Undang partner pakai kode unik",
-  "Saldo & rekap per bulan langsung terlihat",
+  "Kantong pertamamu langsung disiapkan",
+  "Catat pengeluaran dalam tiga detik",
+  "Rekap bulanan tersusun otomatis",
 ];
 
 function resolveRedirectAfterAuth(
@@ -64,7 +64,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       setError(
         caught instanceof Error
           ? caught.message
-          : "Gagal mengirim kode verifikasi. Coba lagi ya.",
+          : "Kodenya gagal dikirim. Coba sekali lagi ya.",
       );
     } finally {
       setIsLoading(false);
@@ -81,7 +81,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       navigate(redirect);
     } catch (caught) {
       console.error("OTP verification error:", caught);
-      setError("Kode verifikasi salah. Coba periksa lagi ya.");
+      setError("Kodenya belum cocok. Coba periksa lagi ya.");
       setOtp("");
       setIsLoading(false);
     }
@@ -95,7 +95,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       navigate(redirect);
     } catch (caught) {
       console.error("Guest login error:", caught);
-      setError("Gagal masuk sebagai tamu. Pakai email saja ya.");
+      setError("Masuk sebagai tamu gagal. Pakai email saja ya.");
       setIsLoading(false);
     }
   };
@@ -108,7 +108,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       />
       <div
         aria-hidden
-        className="pointer-events-none fixed -right-24 bottom-0 size-72 rounded-full bg-accent/30 blur-3xl"
+        className="pointer-events-none fixed -right-24 bottom-0 size-72 rounded-full bg-accent/50 blur-3xl"
       />
 
       <div className="relative mx-auto grid w-full max-w-5xl items-center gap-8 lg:grid-cols-2 lg:gap-14">
@@ -120,12 +120,12 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
         >
           <Brand />
           <h1 className="mt-8 font-display text-4xl font-extrabold leading-tight tracking-tight">
-            Buku kas untuk
-            <span className="text-primary"> kamu dan partner.</span>
+            Kantong kecil
+            <span className="text-primary"> buat uangmu.</span>
           </h1>
           <p className="mt-4 max-w-md text-muted-foreground">
-            Satu tempat untuk mencatat pengeluaran dan pemasukan berdua, tanpa
-            spreadsheet dan tanpa ribet.
+            Satu tempat untuk menampung semua catatan uangmu, dari uang jajan
+            sampai gajian. Tanpa spreadsheet, tanpa pusing.
           </p>
           <ul className="mt-8 flex flex-col gap-3">
             {PERKS.map((perk) => (
@@ -156,8 +156,8 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                 Masuk atau daftar
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Masukkan emailmu. Kami kirim kode 6 digit untuk masuk — akun
-                baru langsung dibuat kalau belum ada.
+                Masukkan emailmu. Kalau belum punya akun, kami buatkan sekalian —
+                daftar dan masuk lewat pintu yang sama.
               </p>
 
               <form onSubmit={handleEmailSubmit} className="mt-6">
@@ -207,21 +207,21 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                   disabled={isLoading}
                 >
                   <UserX className="size-4" />
-                  Lanjut sebagai tamu
+                  Coba dulu sebagai tamu
                 </Button>
               </form>
             </>
           ) : (
             <>
               <h2 className="mt-6 font-display text-2xl font-extrabold tracking-tight lg:mt-0">
-                Cek email kamu
+                Cek emailmu
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Kami kirim kode ke{" "}
+                Kami kirim kode enam digit ke{" "}
                 <span className="font-semibold text-foreground">
                   {step.email}
                 </span>
-                .
+                . Masukkan di bawah ya.
               </p>
 
               <form onSubmit={handleOtpSubmit} className="mt-6">
@@ -266,7 +266,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                   className="mt-6 w-full"
                   disabled={isLoading || otp.length !== 6}
                 >
-                  Verifikasi kode
+                  Masuk ke kantongku
                 </Button>
                 <Button
                   type="button"
@@ -287,7 +287,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
 
           <p className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-secondary/60 px-3 py-2.5 text-[11px] font-semibold text-muted-foreground">
             <ShieldCheck className="size-3.5 text-income" />
-            Data keuanganmu hanya bisa diakses kamu dan partner di buku kas.
+            Cuma kamu yang bisa membuka kantongmu.
           </p>
         </motion.div>
       </div>

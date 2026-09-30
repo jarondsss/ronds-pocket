@@ -7,12 +7,11 @@ import {
   ArrowRight,
   ChartPie,
   Check,
-  CloudLightning,
   HandCoins,
   Loader2,
+  PiggyBank,
   ShieldCheck,
   Sparkles,
-  Users,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -24,49 +23,49 @@ const fadeUp = {
 const FEATURES = [
   {
     icon: HandCoins,
-    title: "Catat dalam 5 detik",
-    body: "Nominal, kategori, tanggal. Tanpa kolom ribet, tanpa buku yang harus dicari.",
+    title: "Catat secepat bales chat",
+    body: "Nominal, kategori, tanggal. Selesai sebelum lampu lalu lintas berubah hijau.",
     tone: "bg-primary/12 text-primary",
   },
   {
-    icon: Users,
-    title: "Berdua, satu buku kas",
-    body: "Undang pasanganmu pakai kode unik. Kalian berdua bisa mencatat di buku yang sama.",
+    icon: PiggyBank,
+    title: "Kantong sebanyak yang kamu mau",
+    body: "Pisahkan uang harian, tabungan, dan dana liburan jadi beberapa kantong.",
     tone: "bg-income/15 text-income",
   },
   {
     icon: ChartPie,
-    title: "Rekap yang jelas",
-    body: "Grafik kategori dan tren enam bulan supaya kelihatan uang pergi ke mana.",
+    title: "Rekap yang gampang dibaca",
+    body: "Grafik kategori dan tren enam bulan bikin kelihatan uangmu pergi ke mana.",
     tone: "bg-expense/15 text-expense",
   },
   {
     icon: ShieldCheck,
-    title: "Aman & privat",
-    body: "Setiap akses buku dicek ulang. Orang lain tidak bisa mengintip catatanmu.",
-    tone: "bg-accent/50 text-accent-foreground",
+    title: "Punyamu sendiri",
+    body: "Cuma kamu yang bisa membuka kantongmu. Tidak ada yang bisa mengintip.",
+    tone: "bg-accent/60 text-accent-foreground",
   },
 ];
 
 const MOCK_ROWS = [
-  { emoji: "🍜", label: "Makan & Minum", note: "kopi pagi", amount: -35000 },
+  { emoji: "🍜", label: "Makan & Minum", note: "sarapan di warung", amount: -35000 },
   { emoji: "💼", label: "Gaji", note: "gajian bulan ini", amount: 5000000 },
   { emoji: "🛵", label: "Transportasi", note: "ojek ke kantor", amount: -18000 },
-  { emoji: "🛍️", label: "Belanja", note: "belanja mingguan", amount: -215000 },
+  { emoji: "🛍️", label: "Belanja", note: "stok sabun & sampo", amount: -215000 },
 ];
 
 const STEPS = [
   {
-    title: "Daftar & masuk",
-    body: "Sekali daftar, buku kas pertamamu langsung dibuat otomatis.",
+    title: "Daftar sebentar",
+    body: "Masukkan email, kami kirim kode enam digit. Akunnya langsung jadi kalau belum ada.",
   },
   {
-    title: "Undang partner",
-    body: "Buat kode undangan, kirim ke pasanganmu, mereka langsung bisa ikut mencatat.",
+    title: "Beri nama kantongmu",
+    body: "Kantong pertama sudah disiapkan otomatis. Ganti namanya sesuka kamu.",
   },
   {
-    title: "Catat & pantau",
-    body: "Semua transaksi langsung muncul di HP kalian berdua secara real-time.",
+    title: "Mulai catat",
+    body: "Setiap pengeluaran dan pemasukan langsung muncul di ringkasan bulan ini.",
   },
 ];
 
@@ -87,9 +86,16 @@ function MockPreview() {
       transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
       className="clay relative w-full max-w-sm p-4"
     >
+      <span
+        aria-hidden
+        className="clay-float absolute -top-4 -right-3 grid size-12 place-items-center rounded-2xl bg-accent text-2xl"
+      >
+        👛
+      </span>
+
       <div className="clay-primary p-4">
         <p className="text-[10px] font-bold uppercase tracking-wider text-white/75">
-          Saldo bulan ini
+          Sisa uang bulan ini
         </p>
         <p className="mt-1.5 font-display text-2xl font-extrabold">
           {formatRupiah(income - expense)}
@@ -122,12 +128,7 @@ function MockPreview() {
             </span>
             <span
               className="shrink-0 text-xs font-extrabold"
-              style={{
-                color:
-                  row.amount > 0
-                    ? "var(--income)"
-                    : "var(--expense)",
-              }}
+              style={{ color: row.amount > 0 ? "var(--income)" : "var(--expense)" }}
             >
               {row.amount > 0 ? "+" : "−"}
               {formatRupiah(Math.abs(row.amount))}
@@ -139,7 +140,7 @@ function MockPreview() {
       <div className="mt-3 flex items-center gap-2 rounded-2xl bg-secondary/70 px-3 py-2.5">
         <Sparkles className="size-4 shrink-0 text-primary" />
         <p className="text-[11px] font-semibold text-foreground/80">
-          "kopi 35rb tadi pagi" → tercatat otomatis
+          Uang keluar-masuk, sisanya kami hitung ✨
         </p>
       </div>
     </motion.div>
@@ -150,7 +151,7 @@ export default function Landing() {
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const primaryHref = isAuthenticated ? "/dashboard" : "/auth";
-  const primaryLabel = isAuthenticated ? "Buka Buku Kas" : "Mulai catat gratis";
+  const primaryLabel = isAuthenticated ? "Buka kantongku" : "Daftar gratis";
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
@@ -160,7 +161,7 @@ export default function Landing() {
       />
       <div
         aria-hidden
-        className="pointer-events-none fixed -right-28 top-40 size-80 rounded-full bg-accent/30 blur-3xl"
+        className="pointer-events-none fixed -right-28 top-40 size-80 rounded-full bg-accent/50 blur-3xl"
       />
 
       <div className="relative">
@@ -172,10 +173,10 @@ export default function Landing() {
                 Fitur
               </a>
               <a href="#cara" className="transition-colors hover:text-primary">
-                Cara kerja
+                Cara pakai
               </a>
-              <a href="#privasi" className="transition-colors hover:text-primary">
-                Privasi
+              <a href="#kantong" className="transition-colors hover:text-primary">
+                Kantong
               </a>
             </nav>
             <Button
@@ -186,7 +187,7 @@ export default function Landing() {
               {isLoading ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : isAuthenticated ? (
-                "Dashboard"
+                "Buka kantongku"
               ) : (
                 "Masuk"
               )}
@@ -205,17 +206,17 @@ export default function Landing() {
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
               <span className="clay-sm inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-primary">
-                <CloudLightning className="size-3.5" />
-                Buku kas digital untuk berdua
+                <Sparkles className="size-3.5" />
+                Kantong digital buat uangmu
               </span>
               <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-                Catat uang berdua,
-                <span className="text-primary"> tanpa ribet.</span>
+                Uangmu, rapi
+                <span className="text-primary"> di satu kantong.</span>
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Buku Kas adalah catatan keuangan sederhana untuk kamu dan
-                pasangan. Tulis pengeluaran dan pemasukan, lihat saldo serta
-                rekapnya langsung — semua dalam satu buku yang sama.
+                Ronds Pocket menampung semua catatan uangmu — uang jajan, gaji,
+                sampai pengeluaran kecil yang biasanya bikin lupa. Kamu tulis
+                tiga detik, sisa hitung-hitungannya biar kami yang urus.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Button
@@ -232,14 +233,16 @@ export default function Landing() {
                 </Button>
               </div>
               <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-muted-foreground">
-                {["Gratis untuk dipakai berdua", "Tanpa kartu kredit", "Mobile friendly"].map(
-                  (item) => (
-                    <li key={item} className="flex items-center gap-1.5">
-                      <Check className="size-3.5 text-income" />
-                      {item}
-                    </li>
-                  ),
-                )}
+                {[
+                  "Gratis, tanpa kartu kredit",
+                  "Enak dipakai di HP",
+                  "Catatanmu cuma punyamu",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-1.5">
+                    <Check className="size-3.5 text-income" />
+                    {item}
+                  </li>
+                ))}
               </ul>
             </motion.div>
 
@@ -251,9 +254,9 @@ export default function Landing() {
           {/* Stats strip */}
           <section className="clay grid grid-cols-3 gap-2 p-4 text-center sm:p-6">
             {[
-              { value: "1 buku", label: "untuk kamu & partner" },
-              { value: "3 detik", label: "catat satu transaksi" },
-              { value: "100%", label: "data tersimpan aman" },
+              { value: "3 detik", label: "catat satu pengeluaran" },
+              { value: "Nol ribet", label: "tanpa rumus, tanpa kolom" },
+              { value: "Tiap bulan", label: "rekap tersusun sendiri" },
             ].map((stat) => (
               <motion.div
                 key={stat.label}
@@ -284,11 +287,11 @@ export default function Landing() {
               className="max-w-xl"
             >
               <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Semua yang dibutuhkan, tidak lebih
+                Simpel, tapi nggak nyisa
               </h2>
               <p className="mt-3 text-muted-foreground">
-                Dibuat supaya kamu benar-benar mencatat tiap hari, bukan
-                menyerah di tengah jalan.
+                Semua yang kamu butuhkan untuk rajin mencatat, tanpa fitur yang
+                bikin bingung.
               </p>
             </motion.div>
 
@@ -328,6 +331,10 @@ export default function Landing() {
             <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
               Mulai dalam tiga langkah
             </h2>
+            <p className="mt-3 max-w-xl text-muted-foreground">
+              Nggak ada setup panjang. Kantong pertamamu sudah menunggu begitu
+              kamu masuk.
+            </p>
             <div className="mt-8 grid gap-5 md:grid-cols-3">
               {STEPS.map((step, index) => (
                 <motion.div
@@ -353,8 +360,8 @@ export default function Landing() {
             </div>
           </section>
 
-          {/* Privacy / partner callout */}
-          <section id="privasi" className="scroll-mt-28 py-14">
+          {/* Pockets + privacy */}
+          <section id="kantong" className="scroll-mt-28 py-14">
             <motion.div
               variants={fadeUp}
               initial="hidden"
@@ -365,25 +372,25 @@ export default function Landing() {
             >
               <div>
                 <span className="clay-sm inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-income">
-                  <ShieldCheck className="size-3.5" />
-                  Privasi dijaga
+                  <PiggyBank className="size-3.5" />
+                  Kantongmu, aturanmu
                 </span>
                 <h2 className="mt-4 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-                  Cuma kamu dan partner yang bisa lihat
+                  Satu aplikasi, banyak kantong
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Setiap permintaan ke buku kas diperiksa ulang: kalau kamu bukan
-                  anggota buku itu, datanya tidak bisa dibaca maupun diubah.
-                  Hanya pemilik buku yang bisa mengatur kode undangan dan
-                  menghapus partner.
+                  Pisahkan uang harian dari tabungan, atau bikin kantong khusus
+                  buat dana liburan. Tiap kantong punya catatan dan rekapnya
+                  sendiri, jadi kelihatan mana yang masih aman dan mana yang
+                  perlu ditahan.
                 </p>
               </div>
               <ul className="flex flex-col gap-3">
                 {[
-                  "Pemilik & partner sama-sama bisa mencatat transaksi",
-                  "Hanya pemilik yang mengelola akses partner",
-                  "Ringkasan saldo dan grafik per kategori",
-                  "Filter per bulan untuk melihat riwayat",
+                  "Tambah kantong baru kapan pun kamu mau",
+                  "Pindah kantong cukup dari satu dropdown",
+                  "Sisa uang dan rekap dihitung otomatis",
+                  "Ada kode undangan kalau nanti mau catat bareng orang lain",
                 ].map((item) => (
                   <li
                     key={item}
@@ -412,11 +419,11 @@ export default function Landing() {
                 className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-white/20 blur-2xl"
               />
               <h2 className="relative font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Mulai buku kas kalian hari ini
+                Bikin kantong pertamamu
               </h2>
               <p className="relative mx-auto mt-3 max-w-md text-sm text-white/85 sm:text-base">
-                Daftar sekali, buku kas pertama langsung dibuat. Undang
-                pasanganmu dan mulai mencatat bersama.
+                Daftar dengan email, dan mulai catat pengeluaran hari ini. Gratis
+                dan tanpa syarat aneh-aneh.
               </p>
               <div className="relative mt-7 flex justify-center">
                 <Button
@@ -438,7 +445,7 @@ export default function Landing() {
           <div className="clay mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-4 px-6 py-6 text-center sm:flex-row sm:text-left">
             <Brand />
             <p className="text-xs text-muted-foreground">
-              Buku Kas — catatan keuangan sederhana untuk berdua.
+              Dibuat buat kamu yang pengin rapi tanpa ribet.
             </p>
           </div>
         </footer>

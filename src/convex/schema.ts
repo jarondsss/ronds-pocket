@@ -16,7 +16,7 @@ export const roleValidator = v.union(
 );
 export type Role = Infer<typeof roleValidator>;
 
-// Buku Kas domain validators
+// Ronds Pocket domain validators
 export const bookRoleValidator = v.union(
   v.literal("owner"),
   v.literal("partner"),
@@ -45,7 +45,7 @@ const schema = defineSchema(
       role: v.optional(roleValidator), // role of the user. do not remove
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
-    // ---- Buku Kas ----
+    // ---- Ronds Pocket: pockets, members, transactions, invites ----
     books: defineTable({
       name: v.string(),
       created_by: v.id("users"),

@@ -35,19 +35,19 @@ export function BookSwitcher({ className }: { className?: string }) {
   const handleCreate = async () => {
     const clean = name.trim();
     if (!clean) {
-      toast.error("Beri nama buku kasnya dulu ya.");
+      toast.error("Beri nama kantongnya dulu ya.");
       return;
     }
     setSaving(true);
     try {
       const bookId = await createBook({ name: clean });
       setActiveBookId(bookId);
-      toast.success(`Buku "${clean}" dibuat.`);
+      toast.success(`Kantong "${clean}" siap dipakai.`);
       setName("");
       setOpen(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Gagal membuat buku baru.",
+        error instanceof Error ? error.message : "Kantong barunya gagal dibuat.",
       );
     } finally {
       setSaving(false);
@@ -70,10 +70,10 @@ export function BookSwitcher({ className }: { className?: string }) {
             </span>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-bold">
-                {activeBook?.name ?? "Memuat buku..."}
+                {activeBook?.name ?? "Memuat kantong..."}
               </span>
               <span className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground">
-                {activeBook?.role === "owner" ? "Pemilik" : "Partner"}
+                {activeBook?.role === "owner" ? "Pemilik" : "Teman"}
                 <Users className="size-3" />
                 {activeBook?.memberCount ?? 1}
               </span>
@@ -82,7 +82,7 @@ export function BookSwitcher({ className }: { className?: string }) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64">
-          <DropdownMenuLabel>Buku kas kamu</DropdownMenuLabel>
+          <DropdownMenuLabel>Kantong kamu</DropdownMenuLabel>
           {books.map((book) => (
             <DropdownMenuItem
               key={book._id}
@@ -109,7 +109,7 @@ export function BookSwitcher({ className }: { className?: string }) {
             className="gap-2 font-semibold"
           >
             <Plus className="size-4" />
-            Buku kas baru
+            Kantong baru
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -118,19 +118,19 @@ export function BookSwitcher({ className }: { className?: string }) {
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
             <DialogTitle className="font-display text-xl">
-              Buku kas baru
+              Kantong baru
             </DialogTitle>
             <DialogDescription>
-              Misalnya "Kas Rumah" atau "Usaha Kopi".
+              Misalnya "Uang Harian" atau "Tabungan Liburan".
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="book-name">Nama buku</Label>
+            <Label htmlFor="book-name">Nama kantong</Label>
             <Input
               id="book-name"
               value={name}
               maxLength={60}
-              placeholder="Kas Rumah"
+              placeholder="Uang Harian"
               onChange={(event) => setName(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter") void handleCreate();
@@ -147,7 +147,11 @@ export function BookSwitcher({ className }: { className?: string }) {
               Batal
             </Button>
             <Button type="button" onClick={handleCreate} disabled={saving}>
-              {saving ? <Loader2 className="size-4 animate-spin" /> : "Buat buku"}
+              {saving ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "Buat kantong"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

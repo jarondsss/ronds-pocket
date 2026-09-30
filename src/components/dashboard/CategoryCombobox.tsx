@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
@@ -46,35 +47,39 @@ export function CategoryCombobox({
     <div className="flex flex-col gap-2">
       <Label htmlFor={id}>{label}</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <div className="relative" data-combobox-field>
-          <Input
-            id={id}
-            value={value}
-            maxLength={maxLength}
-            placeholder={placeholder}
-            autoComplete="off"
-            onChange={(event) => {
-              onChange(event.target.value);
-              setOpen(true);
-            }}
-            onFocus={() => setOpen(true)}
-            className="pr-11"
-          />
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              aria-label="Buka pilihan kategori"
-              className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <ChevronsUpDown className="size-4" />
-            </button>
-          </PopoverTrigger>
-        </div>
+        {/* Anchor = satu baris field, supaya popup selebar input — bukan
+            selebar tombol chevron kecil di ujungnya. */}
+        <PopoverAnchor asChild>
+          <div className="relative" data-combobox-field>
+            <Input
+              id={id}
+              value={value}
+              maxLength={maxLength}
+              placeholder={placeholder}
+              autoComplete="off"
+              onChange={(event) => {
+                onChange(event.target.value);
+                setOpen(true);
+              }}
+              onFocus={() => setOpen(true)}
+              className="pr-11"
+            />
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                aria-label="Buka pilihan kategori"
+                className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <ChevronsUpDown className="size-4" />
+              </button>
+            </PopoverTrigger>
+          </div>
+        </PopoverAnchor>
 
         <PopoverContent
           align="start"
           sideOffset={6}
-          className="w-[var(--radix-popover-trigger-width)] p-1.5"
+          className="w-[var(--radix-popover-anchor-width)] p-1.5"
           onOpenAutoFocus={(event) => event.preventDefault()}
           onInteractOutside={(event) => {
             // Klik balik ke input tidak menutup daftar, biar lanjut ngetik.

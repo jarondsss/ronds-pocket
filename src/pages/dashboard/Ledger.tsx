@@ -4,6 +4,7 @@ import { SummaryHero } from "@/components/dashboard/SummaryHero";
 import {
   TransactionDialog,
   type EditableTransaction,
+  type EditorSession,
 } from "@/components/dashboard/TransactionDialog";
 import {
   TransactionList,
@@ -13,12 +14,12 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import type { AiDraft } from "@/convex/ai";
 import { useBooks } from "@/lib/book-context";
-import { monthRange, toMonthKey } from "@/lib/format";
+import { monthRange, toDateInput, toMonthKey } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { Loader2, Plus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 type Filter = "all" | "expense" | "income";
 
@@ -33,8 +34,8 @@ export default function Ledger() {
   const [monthKey, setMonthKey] = useState(() => toMonthKey(Date.now()));
   const [filter, setFilter] = useState<Filter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<EditableTransaction | null>(null);
-  const [draft, setDraft] = useState<AiDraft | null>(null);
+  const [session, setSession] = useState<EditorSession | null>(null);
+  const sessionKey = useRef(0);
 
   const range = useMemo(() => monthRange(monthKey), [monthKey]);
   const bookId = activeBook?._id;
@@ -61,31 +62,43 @@ export default function Ledger() {
 
   if (!activeBook || !bookId) return null;
 
-  const openNew = () => {
-    setEditing(null);
-    setDraft(null);
-    setDialogOpen(true);
-  };
-
-  const openDraft = (nextDraft: AiDraft) => {
-    setEditing(null);
-    setDraft(nextDraft);
-    setDialogOpen(true);
-  };
-
-  const openEdit = (transaction: LedgerTransaction) => {
-    setDraft(null);
-    setEditing({
-      _id: transaction._id,
-      type: transaction.type,
-      amount: transaction.amount,
-      category: transaction.category,
-      note: transaction.note,
-      occurred_at: transaction.occurred_at,
-      wallet_id: transaction.wallet_id,
+  // Sesi dibuat di event handler: `Date.now()` boleh dipanggil di sini, dan
+  // `key` yang naik bikin form di dialog ter-remount dengan nilai awal segar.
+  const startSession = (
+    mode: EditorSession["mode"],
+    transaction: EditableTransaction | null,
+    draft: AiDraft | null,
+  ) => {
+    sessionKey.current += 1;
+    setSession({
+      key: sessionKey.current,
+      mode,
+      today: toDateInput(Date.now()),
+      transaction,
+      draft,
     });
     setDialogOpen(true);
   };
+
+  const openNew = () => startSession("new", null, null);
+
+  const openDraft = (nextDraft: AiDraft) =>
+    startSession("new", null, nextDraft);
+
+  const openEdit = (transaction: LedgerTransaction) =>
+    startSession(
+      "edit",
+      {
+        _id: transaction._id,
+        type: transaction.type,
+        amount: transaction.amount,
+        category: transaction.category,
+        note: transaction.note,
+        occurred_at: transaction.occurred_at,
+        wallet_id: transaction.wallet_id,
+      },
+      null,
+    );
 
   return (
     <div className="flex flex-col gap-5">
@@ -178,8 +191,7 @@ export default function Ledger() {
         bookId={bookId}
         wallets={walletData?.wallets ?? []}
         categories={categories ?? []}
-        transaction={editing}
-        draft={draft}
+        session={session}
       />
     </div>
   );

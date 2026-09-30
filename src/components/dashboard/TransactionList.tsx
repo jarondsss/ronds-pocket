@@ -1,5 +1,5 @@
 import type { Id } from "@/convex/_generated/dataModel";
-import { categoryEmoji, toneBackground } from "@/lib/categories";
+import { categoryEmoji, categoryTone, toneBackground } from "@/lib/categories";
 import { formatDay, formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -16,6 +16,9 @@ export interface LedgerTransaction {
   created_by: Id<"users">;
   created_at: number;
   createdByName: string;
+  wallet_id: Id<"wallets"> | null;
+  walletName: string | null;
+  walletIcon: string | null;
 }
 
 function startOfDay(ts: number) {
@@ -118,7 +121,7 @@ export function TransactionList({
                       className="grid size-11 shrink-0 place-items-center rounded-2xl text-lg"
                       style={{
                         backgroundColor: toneBackground(
-                          tx.category || tx.type,
+                          categoryTone(tx.category || tx.type),
                         ),
                       }}
                     >
@@ -129,7 +132,10 @@ export function TransactionList({
                         {tx.category || "Tanpa kategori"}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
-                        {tx.note || "Tanpa catatan"} · {tx.createdByName}
+                        {tx.walletName
+                          ? `${tx.walletIcon ?? "👛"} ${tx.walletName}`
+                          : "Tanpa dompet"}{" "}
+                        · {tx.note || "Tanpa catatan"}
                       </span>
                     </span>
                     <span

@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -19,18 +18,23 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RupiahInput } from "@/components/RupiahInput";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/categories";
-import {
-  formatNumber,
-  formatRupiah,
-  fromDateInput,
-  toDateInput,
-} from "@/lib/format";
+import { formatRupiah, fromDateInput, toDateInput } from "@/lib/format";
+import { useSaveTracker } from "@/lib/save-status";
+import type { CategoryRow, WalletRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
-import { motion } from "framer-motion";
 import { Loader2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -42,35 +46,39 @@ export interface EditableTransaction {
   category: string;
   note: string;
   occurred_at: number;
+  wallet_id: Id<"wallets"> | null;
 }
 
 type TxType = "income" | "expense";
 
 const QUICK_AMOUNTS = [5_000, 10_000, 25_000, 50_000, 100_000];
-
-function firstCategory(type: TxType) {
-  return type === "expense" ? EXPENSE_CATEGORIES[0] : INCOME_CATEGORIES[0];
-}
+const NO_WALLET = "none";
 
 export function TransactionDialog({
   open,
   onOpenChange,
   bookId,
+  wallets,
+  categories,
   transaction,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   bookId: Id<"books">;
+  wallets: WalletRow[];
+  categories: CategoryRow[];
   transaction?: EditableTransaction | null;
 }) {
   const isEdit = Boolean(transaction);
   const createTransaction = useMutation(api.transactions.create);
   const updateTransaction = useMutation(api.transactions.update);
   const removeTransaction = useMutation(api.transactions.remove);
+  const save = useSaveTracker();
 
   const [type, setType] = useState<TxType>("expense");
-  const [digits, setDigits] = useState("");
-  const [category, setCategory] = useState<string>(firstCategory("expense"));
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState("");
+  const [walletId, setWalletId] = useState<string>(NO_WALLET);
   const [note, setNote] = useState("");
   const [dateValue, setDateValue] = useState(toDateInput(Date.now()));
   const [saving, setSaving] = useState(false);
@@ -80,26 +88,32 @@ export function TransactionDialog({
     if (!open) return;
     if (transaction) {
       setType(transaction.type);
-      setDigits(`${transaction.amount}`);
-      setCategory(transaction.category || firstCategory(transaction.type));
+      setAmount(transaction.amount);
+      setCategory(transaction.category);
+      setWalletId(transaction.wallet_id ?? NO_WALLET);
       setNote(transaction.note ?? "");
       setDateValue(toDateInput(transaction.occurred_at));
     } else {
       setType("expense");
-      setDigits("");
-      setCategory(firstCategory("expense"));
+      setAmount(0);
+      setCategory("");
+      setWalletId(wallets[0]?._id ?? NO_WALLET);
       setNote("");
       setDateValue(toDateInput(Date.now()));
     }
-  }, [open, transaction]);
+  }, [open, transaction, wallets]);
 
-  const amount = Number(digits || "0");
-  const categories = type === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+  const suggestions = categories
+    .filter((item) => item.type === type)
+    .map((item) => item.name);
+  const datalist = suggestions.length
+    ? suggestions
+    : [...(type === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES)];
 
   const handleTypeChange = (next: TxType) => {
     if (next === type) return;
     setType(next);
-    setCategory(firstCategory(next));
+    setCategory("");
   };
 
   const handleSubmit = async () => {
@@ -115,12 +129,14 @@ export function TransactionDialog({
         category: category.trim(),
         note: note.trim(),
         occurred_at: fromDateInput(dateValue),
+        wallet_id:
+          walletId === NO_WALLET ? undefined : (walletId as Id<"wallets">),
       };
       if (transaction) {
-        await updateTransaction({ id: transaction._id, ...payload });
+        await save(() => updateTransaction({ id: transaction._id, ...payload }));
         toast.success("Catatanmu sudah diperbarui.");
       } else {
-        await createTransaction({ bookId, ...payload });
+        await save(() => createTransaction({ bookId, ...payload }));
         toast.success("Tersimpan! Catatanmu sudah masuk.");
       }
       onOpenChange(false);
@@ -137,7 +153,7 @@ export function TransactionDialog({
     if (!transaction) return;
     setSaving(true);
     try {
-      await removeTransaction({ id: transaction._id });
+      await save(() => removeTransaction({ id: transaction._id }));
       toast.success("Catatan sudah dihapus.");
       setConfirmDelete(false);
       onOpenChange(false);
@@ -153,7 +169,7 @@ export function TransactionDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-md">
+        <SlideUpDialogContent>
           <DialogHeader>
             <DialogTitle className="font-display text-xl">
               {isEdit ? "Ubah catatan" : "Catat uang"}
@@ -193,40 +209,27 @@ export function TransactionDialog({
 
             <div className="flex flex-col gap-2">
               <Label htmlFor="tx-amount">Nominal (Rp)</Label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-muted-foreground">
-                  Rp
-                </span>
-                <Input
-                  id="tx-amount"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  placeholder="0"
-                  value={digits ? formatNumber(Number(digits)) : ""}
-                  onChange={(event) => {
-                    const raw = event.target.value.replace(/\D/g, "");
-                    setDigits(raw.replace(/^0+(?=\d)/, "").slice(0, 12));
-                  }}
-                  className="h-14 pl-11 font-display text-2xl font-extrabold"
-                />
-              </div>
+              <RupiahInput
+                id="tx-amount"
+                value={amount}
+                onChange={setAmount}
+                size="lg"
+              />
               <div className="flex flex-wrap gap-2">
                 {QUICK_AMOUNTS.map((value) => (
                   <button
                     key={value}
                     type="button"
-                    onClick={() =>
-                      setDigits(`${(Number(digits || "0") + value).toString()}`)
-                    }
+                    onClick={() => setAmount(amount + value)}
                     className="clay-sm clay-press px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-primary"
                   >
-                    +{formatNumber(value)}
+                    +{value / 1000}rb
                   </button>
                 ))}
-                {digits && (
+                {amount > 0 && (
                   <button
                     type="button"
-                    onClick={() => setDigits("")}
+                    onClick={() => setAmount(0)}
                     className="px-2 py-1.5 text-xs font-bold text-muted-foreground underline decoration-dotted hover:text-destructive"
                   >
                     kosongkan
@@ -241,6 +244,24 @@ export function TransactionDialog({
             </div>
 
             <div className="flex flex-col gap-2">
+              <Label>Dompet</Label>
+              <Select value={walletId} onValueChange={setWalletId}>
+                <SelectTrigger className="h-11 w-full">
+                  <SelectValue placeholder="Pilih dompet" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NO_WALLET}>Tanpa dompet</SelectItem>
+                  {wallets.map((wallet) => (
+                    <SelectItem key={wallet._id} value={wallet._id}>
+                      <span className="mr-1.5">{wallet.icon}</span>
+                      {wallet.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-2">
               <Label htmlFor="tx-category">Kategori</Label>
               <Input
                 id="tx-category"
@@ -251,7 +272,7 @@ export function TransactionDialog({
                 maxLength={40}
               />
               <datalist id="tx-category-options">
-                {categories.map((item) => (
+                {datalist.map((item) => (
                   <option key={item} value={item} />
                 ))}
               </datalist>
@@ -304,15 +325,11 @@ export function TransactionDialog({
                 Batal
               </Button>
               <Button type="button" onClick={handleSubmit} disabled={saving}>
-                {saving ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : (
-                  <motion.span whileTap={{ scale: 0.96 }}>Simpan</motion.span>
-                )}
+                {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
               </Button>
             </div>
           </DialogFooter>
-        </DialogContent>
+        </SlideUpDialogContent>
       </Dialog>
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
@@ -333,11 +350,7 @@ export function TransactionDialog({
               disabled={saving}
               className="bg-destructive text-white hover:bg-destructive/90"
             >
-              {saving ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                "Ya, hapus"
-              )}
+              {saving ? <Loader2 className="size-4 animate-spin" /> : "Ya, hapus"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

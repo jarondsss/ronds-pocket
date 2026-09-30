@@ -1,79 +1,143 @@
 import { Brand } from "@/components/Brand";
 import { BookSwitcher } from "@/components/dashboard/BookSwitcher";
-import { BooksProvider, useBooks } from "@/lib/book-context";
-import { cn } from "@/lib/utils";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SaveBadge } from "@/components/SaveBadge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
-import { motion } from "framer-motion";
+import { BooksProvider, useBooks } from "@/lib/book-context";
+import { formatRupiah } from "@/lib/format";
+import { SaveStatusProvider } from "@/lib/save-status";
+import { cn } from "@/lib/utils";
+import { useMutation, useQuery } from "convex/react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ChartPie,
-  Loader2,
+  HandCoins,
   LogOut,
+  MoreHorizontal,
+  PiggyBank,
   Receipt,
+  Target,
   Users,
+  Wallet,
 } from "lucide-react";
-import { NavLink, Outlet, useNavigate } from "react-router";
+import { useEffect, useRef } from "react";
+import {
+  NavLink,
+  useLocation,
+  useNavigate,
+  useOutlet,
+} from "react-router";
 
-const NAV_ITEMS = [
-  { to: "/dashboard", label: "Catatan", icon: Receipt, end: true },
-  { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie, end: false },
-  { to: "/dashboard/partner", label: "Sharing", icon: Users, end: false },
+const PRIMARY_TABS = [
+  { to: "/dashboard", label: "Transaksi", icon: Receipt, end: true },
+  { to: "/dashboard/dompet", label: "Dompet", icon: Wallet, end: false },
+  { to: "/dashboard/anggaran", label: "Anggaran", icon: HandCoins, end: false },
+  { to: "/dashboard/goals", label: "Goals", icon: Target, end: false },
+  { to: "/dashboard/tabungan", label: "Tabungan", icon: PiggyBank, end: false },
 ];
 
-function NavItems({ variant }: { variant: "sidebar" | "bottom" }) {
+const SECONDARY_TABS = [
+  { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie },
+  { to: "/dashboard/partner", label: "Sharing", icon: Users },
+];
+
+function BottomNav() {
+  return (
+    <nav className="clay fixed bottom-3 left-1/2 z-40 flex w-[min(96vw,30rem)] -translate-x-1/2 items-center gap-0.5 p-1.5 lg:hidden">
+      {PRIMARY_TABS.map((tab) => {
+        const Icon = tab.icon;
+        return (
+          <NavLink
+            key={tab.to}
+            to={tab.to}
+            end={tab.end}
+            className={({ isActive }) =>
+              cn(
+                "flex flex-1 flex-col items-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-bold transition-colors",
+                isActive
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground",
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <motion.span
+                  animate={{ y: isActive ? -2 : 0 }}
+                  transition={{ type: "spring", stiffness: 420, damping: 18 }}
+                  className={cn(
+                    "grid size-9 place-items-center rounded-xl transition-all",
+                    isActive && "clay-primary",
+                  )}
+                >
+                  <Icon className="size-5" />
+                </motion.span>
+                {tab.label}
+              </>
+            )}
+          </NavLink>
+        );
+      })}
+    </nav>
+  );
+}
+
+function SidebarNav() {
   return (
     <>
-      {NAV_ITEMS.map((item) => {
-        const Icon = item.icon;
-        if (variant === "bottom") {
+      <nav className="flex flex-col gap-2">
+        {PRIMARY_TABS.map((tab) => {
+          const Icon = tab.icon;
           return (
             <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
+              key={tab.to}
+              to={tab.to}
+              end={tab.end}
               className={({ isActive }) =>
                 cn(
-                  "flex flex-1 flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-bold transition-colors",
+                  "clay-press flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition-all",
+                  isActive
+                    ? "clay-primary"
+                    : "clay-sm text-muted-foreground hover:text-foreground",
+                )
+              }
+            >
+              <Icon className="size-5 shrink-0" />
+              {tab.label}
+            </NavLink>
+          );
+        })}
+      </nav>
+      <nav className="flex flex-col gap-1.5 border-t border-border/70 pt-3">
+        {SECONDARY_TABS.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <NavLink
+              key={tab.to}
+              to={tab.to}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-colors",
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground",
                 )
               }
             >
-              {({ isActive }) => (
-                <>
-                  <span
-                    className={cn(
-                      "grid size-9 place-items-center rounded-xl transition-all",
-                      isActive && "clay-primary",
-                    )}
-                  >
-                    <Icon className="size-5" />
-                  </span>
-                  {item.label}
-                </>
-              )}
+              <Icon className="size-4 shrink-0" />
+              {tab.label}
             </NavLink>
           );
-        }
-        return (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.end}
-            className={({ isActive }) =>
-              cn(
-                "clay-press flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition-all",
-                isActive
-                  ? "clay-primary"
-                  : "clay-sm text-muted-foreground hover:text-foreground",
-              )
-            }
-          >
-            <Icon className="size-5 shrink-0" />
-            {item.label}
-          </NavLink>
-        );
-      })}
+        })}
+      </nav>
     </>
   );
 }
@@ -110,12 +174,57 @@ function UserCard() {
   );
 }
 
+function TotalBalance({ total, wide }: { total: number; wide?: boolean }) {
+  return (
+    <div
+      className={cn(
+        "clay-sm flex items-center gap-3 p-3",
+        wide && "py-3.5",
+      )}
+    >
+      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-income/15 text-base">
+        👛
+      </span>
+      <span className="min-w-0">
+        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          Total saldo
+        </span>
+        <span className="block font-display text-sm font-extrabold">
+          {formatRupiah(total)}
+        </span>
+      </span>
+    </div>
+  );
+}
+
 function Shell() {
   const { activeBook, isLoading } = useBooks();
+  const location = useLocation();
+  const outlet = useOutlet();
+  const bookId = activeBook?._id;
+
+  const walletData = useQuery(
+    api.wallets.list,
+    bookId ? { bookId } : "skip",
+  );
+  const ensureDefaults = useMutation(api.setup.ensurePocketDefaults);
+  const seededFor = useRef<string | null>(null);
+
+  // Kantong baru selalu dapat dompet + kategori bawaan.
+  useEffect(() => {
+    if (!bookId || walletData === undefined) return;
+    if (walletData.wallets.length > 0) return;
+    if (seededFor.current === bookId) return;
+    seededFor.current = bookId;
+    void ensureDefaults({ bookId }).catch(() => {
+      seededFor.current = null;
+    });
+  }, [bookId, walletData, ensureDefaults]);
+
+  const total = walletData?.total ?? 0;
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      {/* soft clay background blobs */}
       <div
         aria-hidden
         className="pointer-events-none fixed -left-24 -top-24 size-72 rounded-full bg-primary/15 blur-3xl"
@@ -129,25 +238,67 @@ function Shell() {
         <aside className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-6 flex flex-col gap-4">
             <Brand />
+            <TotalBalance total={total} wide />
             <BookSwitcher />
-            <nav className="flex flex-col gap-2">
-              <NavItems variant="sidebar" />
-            </nav>
+            <SidebarNav />
             <UserCard />
           </div>
         </aside>
 
         <main className="min-w-0 flex-1">
-          <header className="mb-4 flex items-center justify-between gap-3 lg:hidden">
-            <Brand compact />
-            <div className="w-48">
-              <BookSwitcher />
+          <header className="mb-4 flex flex-col gap-3 lg:hidden">
+            <div className="flex items-center justify-between gap-2">
+              <Brand compact />
+              <div className="flex items-center gap-2">
+                <SaveBadge />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label="Menu lainnya"
+                      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground"
+                    >
+                      <MoreHorizontal className="size-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-44">
+                    <DropdownMenuLabel>Lainnya</DropdownMenuLabel>
+                    {SECONDARY_TABS.map((tab) => {
+                      const Icon = tab.icon;
+                      return (
+                        <DropdownMenuItem
+                          key={tab.to}
+                          asChild
+                          className="gap-2 font-semibold"
+                        >
+                          <NavLink to={tab.to}>
+                            <Icon className="size-4" />
+                            {tab.label}
+                          </NavLink>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+            <div className="flex items-stretch gap-2">
+              <div className="min-w-0 flex-1">
+                <BookSwitcher />
+              </div>
+              <TotalBalance total={total} />
             </div>
           </header>
 
+          <div className="mb-3 hidden justify-end lg:flex">
+            <SaveBadge />
+          </div>
+
           {isLoading ? (
             <div className="grid min-h-[50vh] place-items-center">
-              <Loader2 className="size-6 animate-spin text-muted-foreground" />
+              <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                Memuat kantongmu...
+              </span>
             </div>
           ) : activeBook === null ? (
             <div className="clay p-8 text-center">
@@ -159,21 +310,22 @@ function Shell() {
               </p>
             </div>
           ) : (
-            <motion.div
-              key={activeBook._id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <Outlet />
-            </motion.div>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                <ErrorBoundary>{outlet}</ErrorBoundary>
+              </motion.div>
+            </AnimatePresence>
           )}
         </main>
       </div>
 
-      <nav className="clay fixed bottom-3 left-1/2 z-40 flex w-[min(94vw,26rem)] -translate-x-1/2 items-center gap-1 p-1.5 lg:hidden">
-        <NavItems variant="bottom" />
-      </nav>
+      <BottomNav />
     </div>
   );
 }
@@ -181,7 +333,9 @@ function Shell() {
 export default function Dashboard() {
   return (
     <BooksProvider>
-      <Shell />
+      <SaveStatusProvider>
+        <Shell />
+      </SaveStatusProvider>
     </BooksProvider>
   );
 }

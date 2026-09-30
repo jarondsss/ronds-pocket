@@ -16,6 +16,10 @@ const Dashboard = lazy(() => import("./pages/Dashboard.tsx"));
 const Ledger = lazy(() => import("./pages/dashboard/Ledger.tsx"));
 const Reports = lazy(() => import("./pages/dashboard/Reports.tsx"));
 const Partner = lazy(() => import("./pages/dashboard/Partner.tsx"));
+const Wallet = lazy(() => import("./pages/dashboard/Wallet.tsx"));
+const Budget = lazy(() => import("./pages/dashboard/Budget.tsx"));
+const Goals = lazy(() => import("./pages/dashboard/Goals.tsx"));
+const Savings = lazy(() => import("./pages/dashboard/Savings.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 // Simple loading fallback for route transitions
@@ -139,6 +143,10 @@ createRoot(document.getElementById("root")!).render(
                 }
               >
                 <Route index element={<Ledger />} />
+                <Route path="dompet" element={<Wallet />} />
+                <Route path="anggaran" element={<Budget />} />
+                <Route path="goals" element={<Goals />} />
+                <Route path="tabungan" element={<Savings />} />
                 <Route path="rekap" element={<Reports />} />
                 <Route path="partner" element={<Partner />} />
               </Route>

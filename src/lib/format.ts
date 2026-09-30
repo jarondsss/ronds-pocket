@@ -94,6 +94,21 @@ export function monthShortLabel(monthKey: string): string {
   );
 }
 
+/** Jumlah hari menuju sebuah tanggal (0 = hari ini, negatif = sudah lewat). */
+export function daysUntil(ts: number): number {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(ts);
+  target.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - today.getTime()) / 86_400_000);
+}
+
+export function describeDaysLeft(days: number): string {
+  if (days === 0) return "Jatuh tempo hari ini";
+  if (days < 0) return `Lewat ${Math.abs(days)} hari`;
+  return `Sisa ${days} hari`;
+}
+
 /** Two-letter weekday initials for the date badge. */
 export function weekdayShort(ts: number): string {
   return new Intl.DateTimeFormat("id-ID", { weekday: "short" }).format(ts);

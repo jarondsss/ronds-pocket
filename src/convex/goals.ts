@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember } from "./books";
+import { requireMember, requireOwnerOrCreator } from "./books";
 
 function cleanTarget(value: number) {
   if (!Number.isFinite(value)) {
@@ -73,7 +73,7 @@ export const update = mutation({
     if (goal === null) {
       throw new Error("Targetnya tidak ketemu.");
     }
-    await requireMember(ctx, goal.book_id);
+    await requireOwnerOrCreator(ctx, goal.book_id, goal.created_by);
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama targetnya jangan dikosongkan ya.");
@@ -92,7 +92,7 @@ export const remove = mutation({
   handler: async (ctx, { id }) => {
     const goal = await ctx.db.get(id);
     if (goal === null) return null;
-    await requireMember(ctx, goal.book_id);
+    await requireOwnerOrCreator(ctx, goal.book_id, goal.created_by);
     await ctx.db.delete(id);
     return null;
   },
@@ -113,7 +113,7 @@ export const adjustFunds = mutation({
     if (goal === null) {
       throw new Error("Targetnya tidak ketemu.");
     }
-    const { userId } = await requireMember(ctx, goal.book_id);
+    const { userId } = await requireOwnerOrCreator(ctx, goal.book_id, goal.created_by);
 
     if (!Number.isFinite(args.amount) || args.amount === 0) {
       throw new Error("Isi nominalnya dulu ya.");

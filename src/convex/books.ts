@@ -8,6 +8,10 @@ type Ctx = QueryCtx | MutationCtx;
 
 const DEFAULT_BOOK_NAME = "Kantong Utamaku";
 const INVITE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const INVITE_CODE_LENGTH = 8;
+const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // satu minggu
+const REDEEM_WINDOW_MS = 15 * 60 * 1000;
+const REDEEM_MAX_ATTEMPTS = 8;
 
 /** Every request must resolve to a signed-in user. */
 export async function requireUserId(ctx: Ctx): Promise<Id<"users">> {
@@ -52,10 +56,36 @@ async function requireOwner(ctx: Ctx, bookId: Id<"books">) {
   return userId;
 }
 
+/**
+ * Pemilip boleh mengubah/menghapus apa saja di kantornya. Selain itu, seorang
+ * anggota hanya boleh mengelola baris yang dia buat sendiri.
+ */
+export async function requireOwnerOrCreator(
+  ctx: Ctx,
+  bookId: Id<"books">,
+  createdBy: Id<"users"> | undefined,
+) {
+  const { userId, role } = await requireMember(ctx, bookId);
+  if (role === "owner") return { userId, role };
+  if (createdBy !== undefined && createdBy === userId) return { userId, role };
+  throw new Error("Ini punya orang lain, jadi cuma pembuatnya yang boleh diubah.");
+}
+
+/** Angka acak yang diacak dari sumber kriptografis bila tersedia. */
+function randomInt(max: number) {
+  const source = globalThis.crypto;
+  if (source && typeof source.getRandomValues === "function") {
+    const buffer = new Uint32Array(1);
+    source.getRandomValues(buffer);
+    return buffer[0] % max;
+  }
+  return Math.floor(Math.random() * max);
+}
+
 function makeInviteCode() {
   let code = "";
-  for (let i = 0; i < 6; i += 1) {
-    code += INVITE_ALPHABET[Math.floor(Math.random() * INVITE_ALPHABET.length)];
+  for (let i = 0; i < INVITE_CODE_LENGTH; i += 1) {
+    code += INVITE_ALPHABET[randomInt(INVITE_ALPHABET.length)];
   }
   return code;
 }
@@ -119,7 +149,7 @@ export const listMine = query({
 export const members = query({
   args: { bookId: v.id("books") },
   handler: async (ctx, { bookId }) => {
-    await requireMember(ctx, bookId);
+    const { role } = await requireMember(ctx, bookId);
     const rows = await ctx.db
       .query("book_members")
       .withIndex("by_book", (q) => q.eq("book_id", bookId))
@@ -133,7 +163,8 @@ export const members = query({
           userId: row.user_id,
           role: row.role,
           name: user?.name ?? (email ? email.split("@")[0] : "Pengguna"),
-          email,
+          // Email hanya perlu dilihat pemilik; teman cukup tahu namanya.
+          email: role === "owner" ? email : null,
         };
       }),
     );
@@ -154,13 +185,16 @@ export const invites = query({
       .withIndex("by_book", (q) => q.eq("book_id", bookId))
       .collect();
 
+    const now = Date.now();
     return rows
-      .filter((row) => row.accepted_by === undefined)
+      .filter((row) => row.accepted_by === undefined && row.revoked_at === undefined)
       .sort((a, b) => b.created_at - a.created_at)
       .map((row) => ({
         _id: row._id,
         code: row.code,
         created_at: row.created_at,
+        expires_at: row.expires_at ?? null,
+        expired: row.expires_at !== undefined && row.expires_at < now,
       }));
   },
 });
@@ -223,6 +257,7 @@ export const createInvite = mutation({
         code,
         invited_by: userId,
         created_at: Date.now(),
+        expires_at: Date.now() + INVITE_TTL_MS,
       });
       return code;
     }
@@ -230,7 +265,45 @@ export const createInvite = mutation({
   },
 });
 
-/** Any signed-in user can join a book by redeeming an owner's invite code. */
+/** Owner-only: mencabut kode undangan yang belum dipakai. */
+export const revokeInvite = mutation({
+  args: { bookId: v.id("books"), inviteId: v.id("invites") },
+  handler: async (ctx, { bookId, inviteId }) => {
+    await requireOwner(ctx, bookId);
+    const invite = await ctx.db.get(inviteId);
+    if (invite === null || invite.book_id !== bookId) {
+      throw new Error("Kode undangannya tidak ketemu.");
+    }
+    if (invite.accepted_by !== undefined) {
+      throw new Error("Kode ini sudah dipakai, jadi tidak bisa dicabut.");
+    }
+    await ctx.db.patch(inviteId, { revoked_at: Date.now() });
+    return null;
+  },
+});
+
+/** Buang percobaan lama milik seorang user, kembalikan sisa yang masih dihitung. */
+async function countRecentAttempts(ctx: MutationCtx, userId: Id<"users">, now: number) {
+  const rows = await ctx.db
+    .query("invite_attempts")
+    .withIndex("by_user", (q) => q.eq("user_id", userId))
+    .collect();
+  let active = 0;
+  for (const row of rows) {
+    if (now - row.at > REDEEM_WINDOW_MS) {
+      await ctx.db.delete(row._id);
+    } else {
+      active += 1;
+    }
+  }
+  return active;
+}
+
+/**
+ * Any signed-in user can join a book by redeeming an owner's invite code.
+ * Percobaan dibatasi supaya kode tidak bisa ditebak, dan kodenya sendiri punya
+ * masa berlaku serta bisa dicabut oleh pemilik.
+ */
 export const redeemInvite = mutation({
   args: { code: v.string() },
   handler: async (ctx, { code }) => {
@@ -240,20 +313,36 @@ export const redeemInvite = mutation({
       throw new Error("Isi kode undangannya dulu ya.");
     }
 
+    const now = Date.now();
+    if ((await countRecentAttempts(ctx, userId, now)) >= REDEEM_MAX_ATTEMPTS) {
+      throw new Error("Terlalu banyak percobaan. Tunggu 15 menit lalu coba lagi ya.");
+    }
+
+    const fail = async (message: string): Promise<never> => {
+      await ctx.db.insert("invite_attempts", { user_id: userId, at: now });
+      throw new Error(message);
+    };
+
     const invite = await ctx.db
       .query("invites")
       .withIndex("by_code", (q) => q.eq("code", clean))
       .unique();
     if (invite === null) {
-      throw new Error("Kode undangannya tidak ketemu. Cek lagi hurufnya ya.");
+      return await fail("Kode undangannya tidak ketemu. Cek lagi hurufnya ya.");
+    }
+    if (invite.revoked_at !== undefined) {
+      return await fail("Kode undangannya sudah dicabut oleh pemiliknya.");
+    }
+    if (invite.expires_at !== undefined && invite.expires_at < now) {
+      return await fail("Kode undangannya sudah kedaluwarsa. Minta kode baru ya.");
     }
     if (invite.accepted_by !== undefined) {
-      throw new Error("Kode ini sudah dipakai orang lain.");
+      return await fail("Kode ini sudah dipakai orang lain.");
     }
 
     const existing = await getMembership(ctx, invite.book_id, userId);
     if (existing !== null) {
-      throw new Error("Kamu sudah ada di kantong ini.");
+      return await fail("Kamu sudah ada di kantong ini.");
     }
 
     await ctx.db.insert("book_members", {
@@ -263,6 +352,21 @@ export const redeemInvite = mutation({
     });
     await ctx.db.patch(invite._id, { accepted_by: userId });
     return invite.book_id;
+  },
+});
+
+/** Teman boleh keluar sendiri; pemilik tidak bisa meninggalkan kantornya. */
+export const leaveBook = mutation({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, { bookId }) => {
+    const { userId, role } = await requireMember(ctx, bookId);
+    if (role === "owner") {
+      throw new Error("Pemilik nggak bisa keluar sendiri. Minta pemilik lainnya ya.");
+    }
+    const membership = await getMembership(ctx, bookId, userId);
+    if (membership === null) return null;
+    await ctx.db.delete(membership._id);
+    return null;
   },
 });
 

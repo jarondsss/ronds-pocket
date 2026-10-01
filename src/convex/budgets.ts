@@ -84,7 +84,11 @@ export const list = query({
   },
 });
 
-/** Upsert: menulis 0 berarti anggarannya dihapus. */
+/**
+ * Upsert: menulis 0 berarti anggarannya dihapus.
+ * Anggaran sengaja boleh disentuh semua anggota karena sifatnya sudah disepakati
+ * berdua, jadi tidak dikunci ke pembuatnya seperti dompet atau catatan.
+ */
 export const setAmount = mutation({
   args: {
     bookId: v.id("books"),

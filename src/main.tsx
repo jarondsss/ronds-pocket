@@ -16,6 +16,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard.tsx"));
 const Ledger = lazy(() => import("./pages/dashboard/Ledger.tsx"));
 const Reports = lazy(() => import("./pages/dashboard/Reports.tsx"));
 const Partner = lazy(() => import("./pages/dashboard/Partner.tsx"));
+const Activity = lazy(() => import("./pages/dashboard/Activity.tsx"));
 const Wallet = lazy(() => import("./pages/dashboard/Wallet.tsx"));
 const Budget = lazy(() => import("./pages/dashboard/Budget.tsx"));
 const Goals = lazy(() => import("./pages/dashboard/Goals.tsx"));
@@ -148,6 +149,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="goals" element={<Goals />} />
                 <Route path="tabungan" element={<Savings />} />
                 <Route path="rekap" element={<Reports />} />
+                <Route path="riwayat" element={<Activity />} />
                 <Route path="partner" element={<Partner />} />
               </Route>
               <Route path="*" element={<NotFound />} />

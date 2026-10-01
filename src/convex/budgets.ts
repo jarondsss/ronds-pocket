@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember } from "./books";
+import { logActivity, requireMember, rupiah } from "./books";
 
 /**
  * Anggaran bulanan per kategori. `spent` dihitung dari pengeluaran pada
@@ -96,12 +96,20 @@ export const setAmount = mutation({
     amount: v.number(),
   },
   handler: async (ctx, args) => {
-    await requireMember(ctx, args.bookId);
+    const { userId } = await requireMember(ctx, args.bookId);
     const category = args.category.trim();
     if (!category) {
       throw new Error("Pilih kategorinya dulu ya.");
     }
     const amount = Math.max(0, Math.round(args.amount));
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: amount === 0 ? "delete" : "update",
+      target: "anggaran",
+      label: category,
+      detail: amount === 0 ? "Anggaran dihapus" : `Jadi ${rupiah(amount)} / bulan`,
+    });
 
     const existing = await ctx.db
       .query("budgets")
@@ -134,7 +142,15 @@ export const remove = mutation({
   handler: async (ctx, { id }) => {
     const budget = await ctx.db.get(id);
     if (budget === null) return null;
-    await requireMember(ctx, budget.book_id);
+    const { userId } = await requireMember(ctx, budget.book_id);
+    await logActivity(ctx, {
+      bookId: budget.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "anggaran",
+      label: budget.category,
+      detail: `${rupiah(budget.amount)} / bulan`,
+    });
     await ctx.db.delete(id);
     return null;
   },

@@ -1,6 +1,10 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember, requireOwnerOrCreator } from "./books";
+import {
+  logActivity,
+  requireMember,
+  requireOwnerOrCreator,
+} from "./books";
 
 export const list = query({
   args: { bookId: v.id("books") },
@@ -43,6 +47,13 @@ export const create = mutation({
     if (existing.some((row) => row.name.toLowerCase() === name.toLowerCase())) {
       throw new Error("Kategori dengan nama itu sudah ada.");
     }
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: "create",
+      target: "kategori",
+      label: name.slice(0, 40),
+    });
     return await ctx.db.insert("categories", {
       book_id: args.bookId,
       name: name.slice(0, 40),
@@ -65,11 +76,22 @@ export const update = mutation({
     if (category === null) {
       throw new Error("Kategorinya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, category.book_id, category.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      category.book_id,
+      category.created_by,
+    );
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama kategorinya jangan dikosongkan ya.");
     }
+    await logActivity(ctx, {
+      bookId: category.book_id,
+      actorId: userId,
+      action: "update",
+      target: "kategori",
+      label: category.name,
+    });
     await ctx.db.patch(args.id, {
       name: name.slice(0, 40),
       color: args.color,
@@ -84,7 +106,18 @@ export const remove = mutation({
     if (category === null) {
       throw new Error("Kategorinya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, category.book_id, category.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      category.book_id,
+      category.created_by,
+    );
+    await logActivity(ctx, {
+      bookId: category.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "kategori",
+      label: category.name,
+    });
 
     // Anggaran yang menempel di kategori ini ikut dibersihkan.
     const budgets = await ctx.db

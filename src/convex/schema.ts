@@ -29,6 +29,14 @@ export const transactionTypeValidator = v.union(
 );
 export type TransactionType = Infer<typeof transactionTypeValidator>;
 
+export const activityActionValidator = v.union(
+  v.literal("create"),
+  v.literal("update"),
+  v.literal("delete"),
+  v.literal("share"),
+);
+export type ActivityAction = Infer<typeof activityActionValidator>;
+
 const schema = defineSchema(
   {
     // default auth tables using convex auth.
@@ -93,6 +101,20 @@ const schema = defineSchema(
       user_id: v.id("users"),
       at: v.number(),
     }).index("by_user", ["user_id"]),
+
+    // Jejak perubahan supaya zusammen tahu siapa ngapain, termasuk yang dihapus.
+    activity: defineTable({
+      book_id: v.id("books"),
+      actor_id: v.id("users"),
+      actor_name: v.string(), // disimpan sebagai salinan, biar tetap terbaca
+      action: activityActionValidator,
+      target: v.string(), // "transaksi", "dompet", "kategori", ...
+      label: v.string(), // nama objeknya, misal "Kopi susu"
+      detail: v.optional(v.string()),
+      created_at: v.number(),
+    })
+      .index("by_book", ["book_id"])
+      .index("by_book_created", ["book_id", "created_at"]),
 
     // Dompet: tempat uang fisik/digital disimpan
     wallets: defineTable({
@@ -175,7 +197,7 @@ const schema = defineSchema(
       .index("by_book", ["book_id"]),
   },
   {
-    schemaValidation: false,
+    schemaValidation: true,
   },
 );
 

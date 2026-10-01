@@ -2,7 +2,12 @@ import { v } from "convex/values";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
-import { requireMember, requireOwnerOrCreator } from "./books";
+import {
+  logActivity,
+  requireMember,
+  requireOwnerOrCreator,
+  rupiah,
+} from "./books";
 
 type Ctx = QueryCtx | MutationCtx;
 
@@ -168,6 +173,13 @@ export const create = mutation({
       throw new Error("Nama dompetnya jangan dikosongkan ya.");
     }
     const opening = Math.round(args.opening_balance ?? 0);
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: "create",
+      target: "dompet",
+      label: name.slice(0, 40),
+    });
     return await ctx.db.insert("wallets", {
       book_id: args.bookId,
       name: name.slice(0, 40),
@@ -195,11 +207,22 @@ export const update = mutation({
     if (wallet === null) {
       throw new Error("Dompetnya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, wallet.book_id, wallet.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      wallet.book_id,
+      wallet.created_by,
+    );
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama dompetnya jangan dikosongkan ya.");
     }
+    await logActivity(ctx, {
+      bookId: wallet.book_id,
+      actorId: userId,
+      action: "update",
+      target: "dompet",
+      label: wallet.name,
+    });
     await ctx.db.patch(args.id, {
       name: name.slice(0, 40),
       type: args.type,
@@ -217,7 +240,19 @@ export const remove = mutation({
     if (wallet === null) {
       throw new Error("Dompetnya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, wallet.book_id, wallet.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      wallet.book_id,
+      wallet.created_by,
+    );
+    await logActivity(ctx, {
+      bookId: wallet.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "dompet",
+      label: wallet.name,
+      detail: `Saldo awal ${rupiah(wallet.opening_balance)}`,
+    });
     await ctx.db.delete(id);
   },
 });
@@ -248,6 +283,15 @@ export const transfer = mutation({
     if (from) await requireWalletInBook(ctx, args.bookId, from);
     if (to) await requireWalletInBook(ctx, args.bookId, to);
 
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: "create",
+      target: "perpindahan",
+      label: args.note?.trim() || (from && to ? "Pindah antar dompet" : "Set saldo"),
+      detail: rupiah(cleanAmount(args.amount)),
+    });
+
     return await ctx.db.insert("wallet_transfers", {
       book_id: args.bookId,
       from_wallet_id: from,
@@ -268,7 +312,19 @@ export const removeTransfer = mutation({
     if (move === null) {
       throw new Error("Catatan perpindahannya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, move.book_id, move.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      move.book_id,
+      move.created_by,
+    );
+    await logActivity(ctx, {
+      bookId: move.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "perpindahan",
+      label: move.note || "Perpindahan saldo",
+      detail: rupiah(move.amount),
+    });
     await ctx.db.delete(id);
   },
 });

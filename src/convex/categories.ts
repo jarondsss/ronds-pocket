@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember } from "./books";
+import { requireMember, requireOwnerOrCreator } from "./books";
 
 export const list = query({
   args: { bookId: v.id("books") },
@@ -29,7 +29,7 @@ export const create = mutation({
     color: v.string(),
   },
   handler: async (ctx, args) => {
-    await requireMember(ctx, args.bookId);
+    const { userId } = await requireMember(ctx, args.bookId);
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama kategorinya jangan dikosongkan ya.");
@@ -48,6 +48,7 @@ export const create = mutation({
       name: name.slice(0, 40),
       type: args.type,
       color: args.color,
+      created_by: userId,
       created_at: Date.now(),
     });
   },
@@ -64,7 +65,7 @@ export const update = mutation({
     if (category === null) {
       throw new Error("Kategorinya tidak ketemu.");
     }
-    await requireMember(ctx, category.book_id);
+    await requireOwnerOrCreator(ctx, category.book_id, category.created_by);
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama kategorinya jangan dikosongkan ya.");
@@ -83,7 +84,7 @@ export const remove = mutation({
     if (category === null) {
       throw new Error("Kategorinya tidak ketemu.");
     }
-    await requireMember(ctx, category.book_id);
+    await requireOwnerOrCreator(ctx, category.book_id, category.created_by);
 
     // Anggaran yang menempel di kategori ini ikut dibersihkan.
     const budgets = await ctx.db

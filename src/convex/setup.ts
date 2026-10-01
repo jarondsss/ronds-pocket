@@ -45,6 +45,7 @@ export const ensurePocketDefaults = mutation({
           name: category.name,
           type: category.type,
           color: category.color,
+          created_by: userId,
           created_at: now,
         });
         created += 1;

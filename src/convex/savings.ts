@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember } from "./books";
+import { requireMember, requireOwnerOrCreator } from "./books";
 
 function cleanMoney(value: number, label: string) {
   if (!Number.isFinite(value)) {
@@ -146,7 +146,7 @@ export const update = mutation({
     if (account === null) {
       throw new Error("Tabungannya tidak ketemu.");
     }
-    await requireMember(ctx, account.book_id);
+    await requireOwnerOrCreator(ctx, account.book_id, account.created_by);
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama tabungannya jangan dikosongkan ya.");
@@ -166,7 +166,7 @@ export const remove = mutation({
   handler: async (ctx, { id }) => {
     const account = await ctx.db.get(id);
     if (account === null) return null;
-    await requireMember(ctx, account.book_id);
+    await requireOwnerOrCreator(ctx, account.book_id, account.created_by);
     const rows = await ctx.db
       .query("savings_entries")
       .withIndex("by_savings", (q) => q.eq("savings_id", id))
@@ -190,7 +190,7 @@ export const deposit = mutation({
     if (account === null) {
       throw new Error("Tabungannya tidak ketemu.");
     }
-    const { userId } = await requireMember(ctx, account.book_id);
+    const { userId } = await requireOwnerOrCreator(ctx, account.book_id, account.created_by);
     const amount = Math.round(args.amount);
     if (!Number.isFinite(amount) || amount <= 0) {
       throw new Error("Nominal setornya harus lebih dari 0 ya.");
@@ -219,7 +219,7 @@ export const withdraw = mutation({
     if (account === null) {
       throw new Error("Tabungannya tidak ketemu.");
     }
-    const { userId } = await requireMember(ctx, account.book_id);
+    const { userId } = await requireOwnerOrCreator(ctx, account.book_id, account.created_by);
     const amount = Math.round(args.amount);
     if (!Number.isFinite(amount) || amount <= 0) {
       throw new Error("Nominal tariknya harus lebih dari 0 ya.");
@@ -255,7 +255,7 @@ export const removeEntry = mutation({
   handler: async (ctx, { id }) => {
     const entry = await ctx.db.get(id);
     if (entry === null) return null;
-    await requireMember(ctx, entry.book_id);
+    await requireOwnerOrCreator(ctx, entry.book_id, entry.created_by);
     await ctx.db.delete(id);
     return null;
   },

@@ -81,9 +81,18 @@ const schema = defineSchema(
       invited_by: v.id("users"),
       accepted_by: v.optional(v.id("users")),
       created_at: v.number(),
+      // opsional supaya kode lama yang sudah terlanjur tersimpan tetap terbaca
+      expires_at: v.optional(v.number()),
+      revoked_at: v.optional(v.number()),
     })
       .index("by_code", ["code"])
       .index("by_book", ["book_id"]),
+
+    // Percobaan menebak kode undangan, buat membatasi brute force per akun.
+    invite_attempts: defineTable({
+      user_id: v.id("users"),
+      at: v.number(),
+    }).index("by_user", ["user_id"]),
 
     // Dompet: tempat uang fisik/digital disimpan
     wallets: defineTable({
@@ -115,6 +124,8 @@ const schema = defineSchema(
       name: v.string(),
       type: transactionTypeValidator,
       color: v.string(), // tone key
+      // diisi mulai sekarang; kategori lama dianggap milik pemilik
+      created_by: v.optional(v.id("users")),
       created_at: v.number(),
     })
       .index("by_book", ["book_id"])

@@ -24,9 +24,11 @@ import {
   Crown,
   KeyRound,
   Loader2,
+  LogOut,
   UserMinus,
   UserPlus,
   Users,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -44,14 +46,17 @@ export default function Partner() {
     bookId && isOwner ? { bookId } : "skip",
   );
   const createInvite = useMutation(api.books.createInvite);
+  const revokeInvite = useMutation(api.books.revokeInvite);
   const removeMember = useMutation(api.books.removeMember);
   const redeemInvite = useMutation(api.books.redeemInvite);
+  const leaveBook = useMutation(api.books.leaveBook);
   const save = useSaveTracker();
 
   const [code, setCode] = useState("");
   const [joining, setJoining] = useState(false);
   const [creating, setCreating] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+  const [leaving, setLeaving] = useState(false);
   const [removing, setRemoving] = useState<{
     userId: Id<"users">;
     name: string;
@@ -103,6 +108,31 @@ export default function Partner() {
     }
   };
 
+  const handleRevoke = async (inviteId: Id<"invites">) => {
+    try {
+      await save(() => revokeInvite({ bookId, inviteId }));
+      toast.success("Kodenya dicabut, nggak bisa dipakai lagi.");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Gagal mencabut kode ini.",
+      );
+    }
+  };
+
+  const handleLeave = async () => {
+    setLeaving(true);
+    try {
+      await save(() => leaveBook({ bookId }));
+      setLeaving(false);
+      toast.success("Kamu sudah keluar dari kantong ini.");
+    } catch (error) {
+      setLeaving(false);
+      toast.error(
+        error instanceof Error ? error.message : "Gagal keluar dari sini.",
+      );
+    }
+  };
+
   const handleRemove = async () => {
     if (!removing) return;
     try {
@@ -124,7 +154,8 @@ export default function Partner() {
         </h1>
         <p className="text-sm text-muted-foreground">
           Opsional banget. Kalau nanti mau mencatat bareng orang lain, undang
-          mereka ke kantong ini.
+          mereka ke kantong ini. Teman boleh menambah catatan sendiri, tapi yang
+          bukan miliknya cuma bisa disentuh pemiliknya.
         </p>
       </header>
 
@@ -155,7 +186,7 @@ export default function Partner() {
                   {member.name}
                 </span>
                 <span className="block truncate text-xs text-muted-foreground">
-                  {member.email ?? "Tidak ada email"}
+                  {member.email ?? (isOwner ? "Tidak ada email" : "Temanmu")}
                 </span>
               </span>
               <span
@@ -188,6 +219,28 @@ export default function Partner() {
             </motion.li>
           ))}
         </ul>
+
+        {!isOwner && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-border px-4 py-3">
+            <p className="text-xs text-muted-foreground">
+              Kamu masuk sebagai teman di pocket ini. Mau berhenti catatan
+              bareng? Keluar saja, catatan yang sudah ada tetap milik
+              pemilik.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => void handleLeave()}
+              disabled={leaving}
+            >
+              {leaving ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <LogOut className="size-4" />
+              )}
+              Keluar dari Pocket            </Button>
+          </div>
+        )}
       </section>
 
       {isOwner && (
@@ -227,13 +280,31 @@ export default function Partner() {
                   key={invite._id}
                   className="clay-sunken flex items-center gap-3 rounded-2xl px-4 py-3"
                 >
-                  <span className="font-display flex-1 text-lg font-extrabold tracking-[0.35em]">
-                    {invite.code}
+                  <span className="min-w-0 flex-1">
+                    <span
+                      className={cn(
+                        "font-display block text-lg font-extrabold tracking-[0.35em]",
+                        invite.expired && "text-muted-foreground line-through",
+                      )}
+                    >
+                      {invite.code}
+                    </span>
+                    <span className="block text-[11px] font-medium text-muted-foreground">
+                      {invite.expired
+                        ? "Kedaluwarsa, buat kode baru ya"
+                        : `Berlaku sampai ${new Date(
+                            invite.expires_at ?? invite.created_at,
+                          ).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "short",
+                          })}`}
+                    </span>
                   </span>
                   <button
                     type="button"
                     onClick={() => copyCode(invite.code)}
-                    className="clay-sm clay-press flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-primary"
+                    disabled={invite.expired}
+                    className="clay-sm clay-press flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-primary disabled:opacity-50"
                   >
                     {copied === invite.code ? (
                       <>
@@ -244,6 +315,14 @@ export default function Partner() {
                         <Copy className="size-3.5" /> Salin
                       </>
                     )}
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={`Cabut kode ${invite.code}`}
+                    onClick={() => void handleRevoke(invite._id)}
+                    className="grid size-8 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-destructive"
+                  >
+                    <X className="size-4" />
                   </button>
                 </li>
               ))
@@ -273,8 +352,8 @@ export default function Partner() {
             <Input
               id="invite-code"
               value={code}
-              maxLength={6}
-              placeholder="ABC123"
+              maxLength={8}
+              placeholder="ABCDEFGH"
               onChange={(event) =>
                 setCode(event.target.value.toUpperCase().replace(/\s/g, ""))
               }

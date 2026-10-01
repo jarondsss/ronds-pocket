@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
-import { requireMember } from "./books";
+import { requireMember, requireOwnerOrCreator } from "./books";
 
 type Ctx = QueryCtx | MutationCtx;
 
@@ -195,7 +195,7 @@ export const update = mutation({
     if (wallet === null) {
       throw new Error("Dompetnya tidak ketemu.");
     }
-    await requireMember(ctx, wallet.book_id);
+    await requireOwnerOrCreator(ctx, wallet.book_id, wallet.created_by);
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama dompetnya jangan dikosongkan ya.");
@@ -217,7 +217,7 @@ export const remove = mutation({
     if (wallet === null) {
       throw new Error("Dompetnya tidak ketemu.");
     }
-    await requireMember(ctx, wallet.book_id);
+    await requireOwnerOrCreator(ctx, wallet.book_id, wallet.created_by);
     await ctx.db.delete(id);
   },
 });
@@ -268,7 +268,7 @@ export const removeTransfer = mutation({
     if (move === null) {
       throw new Error("Catatan perpindahannya tidak ketemu.");
     }
-    await requireMember(ctx, move.book_id);
+    await requireOwnerOrCreator(ctx, move.book_id, move.created_by);
     await ctx.db.delete(id);
   },
 });

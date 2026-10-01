@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
-import { requireMember } from "./books";
+import { requireMember, requireOwnerOrCreator } from "./books";
 
 const MAX_AMOUNT = 1_000_000_000_000; // 1 triliun rupiah, guard against typos
 
@@ -208,7 +208,7 @@ export const update = mutation({
     if (existing === null) {
       throw new Error("Catatannya tidak ketemu.");
     }
-    await requireMember(ctx, existing.book_id);
+    await requireOwnerOrCreator(ctx, existing.book_id, existing.created_by);
     await assertWalletInBook(ctx, existing.book_id, args.wallet_id);
     await ctx.db.patch(args.id, {
       wallet_id: args.wallet_id,
@@ -228,7 +228,7 @@ export const remove = mutation({
     if (existing === null) {
       throw new Error("Catatannya tidak ketemu.");
     }
-    await requireMember(ctx, existing.book_id);
+    await requireOwnerOrCreator(ctx, existing.book_id, existing.created_by);
     await ctx.db.delete(id);
   },
 });

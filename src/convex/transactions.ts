@@ -2,7 +2,20 @@ import { v } from "convex/values";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
-import { requireMember, requireOwnerOrCreator } from "./books";
+import {
+  logActivity,
+  requireMember,
+  requireOwnerOrCreator,
+  rupiah,
+} from "./books";
+
+/** Nama singkat buat jejak riwayat: catatannya dulu, lalu kategorinya. */
+function describeTransaction(category?: string, note?: string) {
+  const cleanNote = (note ?? "").trim();
+  if (cleanNote) return cleanNote;
+  const cleanCategory = (category ?? "").trim();
+  return cleanCategory || "Transaksi";
+}
 
 const MAX_AMOUNT = 1_000_000_000_000; // 1 triliun rupiah, guard against typos
 
@@ -179,6 +192,14 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const { userId } = await requireMember(ctx, args.bookId);
     await assertWalletInBook(ctx, args.bookId, args.wallet_id);
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: "create",
+      target: "transaksi",
+      label: describeTransaction(args.category, args.note),
+      detail: `${args.type === "income" ? "Masuk" : "Keluar"} ${rupiah(args.amount)}`,
+    });
     return await ctx.db.insert("transactions", {
       book_id: args.bookId,
       wallet_id: args.wallet_id,
@@ -208,8 +229,20 @@ export const update = mutation({
     if (existing === null) {
       throw new Error("Catatannya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, existing.book_id, existing.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      existing.book_id,
+      existing.created_by,
+    );
     await assertWalletInBook(ctx, existing.book_id, args.wallet_id);
+    await logActivity(ctx, {
+      bookId: existing.book_id,
+      actorId: userId,
+      action: "update",
+      target: "transaksi",
+      label: describeTransaction(existing.category, existing.note),
+      detail: `Jadi ${rupiah(args.amount)}`,
+    });
     await ctx.db.patch(args.id, {
       wallet_id: args.wallet_id,
       type: args.type,
@@ -228,7 +261,19 @@ export const remove = mutation({
     if (existing === null) {
       throw new Error("Catatannya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, existing.book_id, existing.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      existing.book_id,
+      existing.created_by,
+    );
+    await logActivity(ctx, {
+      bookId: existing.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "transaksi",
+      label: describeTransaction(existing.category, existing.note),
+      detail: rupiah(existing.amount),
+    });
     await ctx.db.delete(id);
   },
 });

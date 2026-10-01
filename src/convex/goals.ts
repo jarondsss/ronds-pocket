@@ -1,6 +1,11 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember, requireOwnerOrCreator } from "./books";
+import {
+  logActivity,
+  requireMember,
+  requireOwnerOrCreator,
+  rupiah,
+} from "./books";
 
 function cleanTarget(value: number) {
   if (!Number.isFinite(value)) {
@@ -48,6 +53,14 @@ export const create = mutation({
     if (!name) {
       throw new Error("Nama targetnya jangan dikosongkan ya.");
     }
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: "create",
+      target: "target",
+      label: name.slice(0, 60),
+      detail: `Target ${rupiah(cleanTarget(args.target_amount))}`,
+    });
     return await ctx.db.insert("goals", {
       book_id: args.bookId,
       name: name.slice(0, 60),
@@ -73,11 +86,23 @@ export const update = mutation({
     if (goal === null) {
       throw new Error("Targetnya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, goal.book_id, goal.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      goal.book_id,
+      goal.created_by,
+    );
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama targetnya jangan dikosongkan ya.");
     }
+    await logActivity(ctx, {
+      bookId: goal.book_id,
+      actorId: userId,
+      action: "update",
+      target: "target",
+      label: goal.name,
+      detail: `Target jadi ${rupiah(cleanTarget(args.target_amount))}`,
+    });
     await ctx.db.patch(args.id, {
       name: name.slice(0, 60),
       target_amount: cleanTarget(args.target_amount),
@@ -92,7 +117,19 @@ export const remove = mutation({
   handler: async (ctx, { id }) => {
     const goal = await ctx.db.get(id);
     if (goal === null) return null;
-    await requireOwnerOrCreator(ctx, goal.book_id, goal.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      goal.book_id,
+      goal.created_by,
+    );
+    await logActivity(ctx, {
+      bookId: goal.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "target",
+      label: goal.name,
+      detail: `Terkumpul ${rupiah(goal.saved_amount)}`,
+    });
     await ctx.db.delete(id);
     return null;
   },
@@ -125,6 +162,15 @@ export const adjustFunds = mutation({
     }
 
     await ctx.db.patch(args.id, { saved_amount: nextSaved });
+
+    await logActivity(ctx, {
+      bookId: goal.book_id,
+      actorId: userId,
+      action: "update",
+      target: "target",
+      label: goal.name,
+      detail: `${amount > 0 ? "Setor" : "Tarik"} ${rupiah(Math.abs(amount))}`,
+    });
 
     if (args.wallet_id) {
       const wallet = await ctx.db.get(args.wallet_id);

@@ -20,6 +20,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ChartPie,
   HandCoins,
+  History,
   LogOut,
   MoreHorizontal,
   PiggyBank,
@@ -46,6 +47,7 @@ const PRIMARY_TABS = [
 
 const SECONDARY_TABS = [
   { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie },
+  { to: "/dashboard/riwayat", label: "Riwayat", icon: History },
   { to: "/dashboard/partner", label: "Sharing", icon: Users },
 ];
 

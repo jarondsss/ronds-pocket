@@ -1,6 +1,11 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireMember, requireOwnerOrCreator } from "./books";
+import {
+  logActivity,
+  requireMember,
+  requireOwnerOrCreator,
+  rupiah,
+} from "./books";
 
 function cleanMoney(value: number, label: string) {
   if (!Number.isFinite(value)) {
@@ -119,6 +124,14 @@ export const create = mutation({
     if (!name) {
       throw new Error("Nama tabungannya jangan dikosongkan ya.");
     }
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: "create",
+      target: "tabungan",
+      label: name.slice(0, 60),
+      detail: `Modal ${rupiah(cleanMoney(args.principal, "awal"))}`,
+    });
     return await ctx.db.insert("savings", {
       book_id: args.bookId,
       name: name.slice(0, 60),
@@ -146,11 +159,23 @@ export const update = mutation({
     if (account === null) {
       throw new Error("Tabungannya tidak ketemu.");
     }
-    await requireOwnerOrCreator(ctx, account.book_id, account.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      account.book_id,
+      account.created_by,
+    );
     const name = args.name.trim();
     if (!name) {
       throw new Error("Nama tabungannya jangan dikosongkan ya.");
     }
+    await logActivity(ctx, {
+      bookId: account.book_id,
+      actorId: userId,
+      action: "update",
+      target: "tabungan",
+      label: account.name,
+      detail: `Bunga ${cleanRate(args.interest_rate)}%`,
+    });
     await ctx.db.patch(args.id, {
       name: name.slice(0, 60),
       kind: args.kind,
@@ -166,7 +191,18 @@ export const remove = mutation({
   handler: async (ctx, { id }) => {
     const account = await ctx.db.get(id);
     if (account === null) return null;
-    await requireOwnerOrCreator(ctx, account.book_id, account.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      account.book_id,
+      account.created_by,
+    );
+    await logActivity(ctx, {
+      bookId: account.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "tabungan",
+      label: account.name,
+    });
     const rows = await ctx.db
       .query("savings_entries")
       .withIndex("by_savings", (q) => q.eq("savings_id", id))
@@ -195,6 +231,14 @@ export const deposit = mutation({
     if (!Number.isFinite(amount) || amount <= 0) {
       throw new Error("Nominal setornya harus lebih dari 0 ya.");
     }
+    await logActivity(ctx, {
+      bookId: account.book_id,
+      actorId: userId,
+      action: "create",
+      target: "tabungan",
+      label: account.name,
+      detail: `Setor ${rupiah(amount)}`,
+    });
     await ctx.db.insert("savings_entries", {
       book_id: account.book_id,
       savings_id: args.id,
@@ -237,6 +281,15 @@ export const withdraw = mutation({
       throw new Error("Saldo tabungannya tidak cukup untuk ditarik segitu.");
     }
 
+    await logActivity(ctx, {
+      bookId: account.book_id,
+      actorId: userId,
+      action: "create",
+      target: "tabungan",
+      label: account.name,
+      detail: `Tarik ${rupiah(amount)}`,
+    });
+
     await ctx.db.insert("savings_entries", {
       book_id: account.book_id,
       savings_id: args.id,
@@ -255,7 +308,20 @@ export const removeEntry = mutation({
   handler: async (ctx, { id }) => {
     const entry = await ctx.db.get(id);
     if (entry === null) return null;
-    await requireOwnerOrCreator(ctx, entry.book_id, entry.created_by);
+    const { userId } = await requireOwnerOrCreator(
+      ctx,
+      entry.book_id,
+      entry.created_by,
+    );
+    const account = await ctx.db.get(entry.savings_id);
+    await logActivity(ctx, {
+      bookId: entry.book_id,
+      actorId: userId,
+      action: "delete",
+      target: "tabungan",
+      label: account?.name ?? "Tabungan",
+      detail: `${entry.type === "deposit" ? "Setor" : "Tarik"} ${rupiah(entry.amount)} dihapus`,
+    });
     await ctx.db.delete(id);
     return null;
   },

@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
+import type { ActivityAction } from "./schema";
 
 type Ctx = QueryCtx | MutationCtx;
 
@@ -89,6 +90,56 @@ function makeInviteCode() {
   }
   return code;
 }
+
+export function rupiah(value: number) {
+  return `Rp${Math.round(value).toLocaleString("id-ID")}`;
+}
+
+/**
+ * Catat satu baris riwayat perubahan. Disimpan di server (bukan dari klien)
+ * supaya jejaknya tidak bisa dilewati, dan nama pelakunya ikut disimpan sebagai
+ * salinan supaya tetap terbaca walau akunnya dihapus.
+ */
+export async function logActivity(
+  ctx: MutationCtx,
+  entry: {
+    bookId: Id<"books">;
+    actorId: Id<"users">;
+    action: ActivityAction;
+    target: string;
+    label: string;
+    detail?: string;
+  },
+) {
+  const actor = await ctx.db.get(entry.actorId);
+  await ctx.db.insert("activity", {
+    book_id: entry.bookId,
+    actor_id: entry.actorId,
+    actor_name:
+      actor?.name ??
+      actor?.email?.split("@")[0] ??
+      "Pengguna",
+    action: entry.action,
+    target: entry.target,
+    label: entry.label.slice(0, 80),
+    detail: entry.detail?.slice(0, 120),
+    created_at: Date.now(),
+  });
+}
+
+/** 50 perubahan terakhir di sebuah kantong. */
+export const activity = query({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, { bookId }) => {
+    await requireMember(ctx, bookId);
+    const rows = await ctx.db
+      .query("activity")
+      .withIndex("by_book_created", (q) => q.eq("book_id", bookId))
+      .order("desc")
+      .take(50);
+    return rows;
+  },
+});
 
 async function createBookFor(
   ctx: MutationCtx,
@@ -231,11 +282,18 @@ export const ensureDefault = mutation({
 export const rename = mutation({
   args: { bookId: v.id("books"), name: v.string() },
   handler: async (ctx, { bookId, name }) => {
-    await requireOwner(ctx, bookId);
+    const userId = await requireOwner(ctx, bookId);
     const clean = name.trim();
     if (!clean) {
       throw new Error("Nama kantongnya jangan dikosongkan ya.");
     }
+    await logActivity(ctx, {
+      bookId,
+      actorId: userId,
+      action: "update",
+      target: "kantong",
+      label: clean.slice(0, 60),
+    });
     await ctx.db.patch(bookId, { name: clean.slice(0, 60) });
   },
 });
@@ -252,6 +310,14 @@ export const createInvite = mutation({
         .withIndex("by_code", (q) => q.eq("code", code))
         .unique();
       if (clash !== null) continue;
+      await logActivity(ctx, {
+        bookId,
+        actorId: userId,
+        action: "share",
+        target: "undangan",
+        label: `Kode ${code}`,
+        detail: "Berlaku 7 hari",
+      });
       await ctx.db.insert("invites", {
         book_id: bookId,
         code,
@@ -269,7 +335,7 @@ export const createInvite = mutation({
 export const revokeInvite = mutation({
   args: { bookId: v.id("books"), inviteId: v.id("invites") },
   handler: async (ctx, { bookId, inviteId }) => {
-    await requireOwner(ctx, bookId);
+    const userId = await requireOwner(ctx, bookId);
     const invite = await ctx.db.get(inviteId);
     if (invite === null || invite.book_id !== bookId) {
       throw new Error("Kode undangannya tidak ketemu.");
@@ -277,6 +343,14 @@ export const revokeInvite = mutation({
     if (invite.accepted_by !== undefined) {
       throw new Error("Kode ini sudah dipakai, jadi tidak bisa dicabut.");
     }
+    await logActivity(ctx, {
+      bookId,
+      actorId: userId,
+      action: "share",
+      target: "undangan",
+      label: `Kode ${invite.code}`,
+      detail: "Kode dicabut",
+    });
     await ctx.db.patch(inviteId, { revoked_at: Date.now() });
     return null;
   },
@@ -350,6 +424,13 @@ export const redeemInvite = mutation({
       user_id: userId,
       role: "partner",
     });
+    await logActivity(ctx, {
+      bookId: invite.book_id,
+      actorId: userId,
+      action: "share",
+      target: "anggota",
+      label: "Bergabung pakai kode undangan",
+    });
     await ctx.db.patch(invite._id, { accepted_by: userId });
     return invite.book_id;
   },
@@ -365,6 +446,13 @@ export const leaveBook = mutation({
     }
     const membership = await getMembership(ctx, bookId, userId);
     if (membership === null) return null;
+    await logActivity(ctx, {
+      bookId,
+      actorId: userId,
+      action: "share",
+      target: "anggota",
+      label: "Keluar dari kantong ini",
+    });
     await ctx.db.delete(membership._id);
     return null;
   },
@@ -373,15 +461,24 @@ export const leaveBook = mutation({
 /** Owner-only: remove a partner from the book. */
 export const removeMember = mutation({
   args: { bookId: v.id("books"), userId: v.id("users") },
-  handler: async (ctx, { bookId, userId }) => {
-    await requireOwner(ctx, bookId);
-    const membership = await getMembership(ctx, bookId, userId);
+  handler: async (ctx, { bookId, userId: targetUserId }) => {
+    const actorId = await requireOwner(ctx, bookId);
+    const membership = await getMembership(ctx, bookId, targetUserId);
     if (membership === null) {
       throw new Error("Orang ini tidak ada di kantong ini.");
     }
     if (membership.role === "owner") {
       throw new Error("Pemilik kantong tidak bisa dihapus.");
     }
+    const target = await ctx.db.get(targetUserId);
+    await logActivity(ctx, {
+      bookId,
+      actorId,
+      action: "share",
+      target: "anggota",
+      label: target?.name ?? target?.email?.split("@")[0] ?? "Teman",
+      detail: "Dikeluarkan dari kantong ini",
+    });
     await ctx.db.delete(membership._id);
   },
 });

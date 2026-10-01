@@ -1,7 +1,8 @@
+import logo from "@/assets/logo.svg";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router";
 
-/** Clay coin mark + wordmark for Ronds Pocket. */
+/** Logo + wordmark for Ronds Pocket. */
 export function Brand({
   to = "/",
   compact = false,
@@ -17,8 +18,14 @@ export function Brand({
       className={cn("group flex items-center gap-3", className)}
       aria-label="Ronds Pocket"
     >
-      <span className="clay-primary grid size-11 shrink-0 place-items-center rounded-2xl text-lg font-extrabold">
-        Rp
+      <span className="clay-primary grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl">
+        <img
+          src={logo}
+          alt=""
+          width={44}
+          height={44}
+          className="size-11"
+        />
       </span>
       {!compact && (
         <span className="flex flex-col leading-none">

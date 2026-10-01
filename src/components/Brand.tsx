@@ -18,7 +18,7 @@ export function Brand({
       className={cn("group flex items-center gap-3", className)}
       aria-label="Ronds Pocket"
     >
-      <span className="clay-primary grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl">
+      <span className="clay-sm grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl">
         <img
           src={logo}
           alt=""

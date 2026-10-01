@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 96.81 96.81"><rect width="96.81" height="96.81" rx="18"/><g fill="#fff"><rect x="24.67" y="24.67" width="47.47" height="11.87"/><rect x="24.67" y="36.54" width="11.87" height="35.61"/><rect x="40.06" y="39.98" width="23.74" height="11.87"/><rect x="40.06" y="51.85" width="11.87" height="20.3"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Ronds Pocket">
+  <defs>
+    <linearGradient id="rp-r" x1="150" y1="140" x2="380" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d3c6ff" />
+      <stop offset="0.42" stop-color="#a78bfa" />
+      <stop offset="1" stop-color="#7c3aed" />
+    </linearGradient>
+    <linearGradient id="rp-slab" x1="210" y1="310" x2="320" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ded4ff" />
+      <stop offset="1" stop-color="#a78bfa" />
+    </linearGradient>
+    <linearGradient id="rp-coin" x1="192" y1="176" x2="288" y2="272" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2edff" />
+      <stop offset="1" stop-color="#b9a6ff" />
+    </linearGradient>
+    <linearGradient id="rp-dot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#d9ccff" />
+    </linearGradient>
+  </defs>
+  <path d="M152 202 L236 152 C316 126 374 180 374 254 C374 314 330 334 266 334" fill="none" stroke="url(#rp-r)" stroke-width="72" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M216 322 L312 404" fill="none" stroke="url(#rp-slab)" stroke-width="86" stroke-linecap="round" />
+  <circle cx="240" cy="224" r="58" fill="#ffffff" />
+  <circle cx="240" cy="224" r="50" fill="url(#rp-coin)" />
+  <circle cx="264" cy="362" r="13" fill="url(#rp-dot)" />
+</svg>

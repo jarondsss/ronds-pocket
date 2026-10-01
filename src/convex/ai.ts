@@ -14,7 +14,13 @@ export interface AiDraft {
   wallet_id: Id<"wallets"> | null;
 }
 
-const MODEL = "gemini-2.5-flash";
+/**
+ * Model utama lalu cadangan, dipakai berurutan supaya model yang sudah
+ * dinonaktifkan (404) atau sedang penuh (503) tidak mematikan fitur ini.
+ */
+const MODELS = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"];
+/** Status yang layak dicoba ulang / pindah model, bukan tanda kuncinya salah. */
+const TRANSIENT = new Set([408, 425, 429, 500, 502, 503, 504]);
 const MAX_INPUT = 500;
 const MAX_AMOUNT = 1_000_000_000_000; // 1 triliun, sama seperti transaksi manual
 const MAX_CATEGORY = 40;
@@ -55,7 +61,11 @@ const RESPONSE_SCHEMA = {
     amount: { type: "NUMBER" },
     category: { type: "STRING" },
     note: { type: "STRING" },
-    date: { type: "STRING", description: "tanggal ISO YYYY-MM-DD" },
+    date: {
+      type: "STRING",
+      description:
+        "tanggal transaksi YYYY-MM-DD di zona waktu pengguna; pakai tanggal hari ini kalau tidak disebut",
+    },
     wallet: { type: "STRING", description: "nama dompet atau string kosong" },
   },
   required: ["type", "amount", "category", "note", "date"],
@@ -119,8 +129,66 @@ function pickCategory(value: unknown, pool: string[]): string {
 
 interface GeminiResponse {
   candidates?: {
-    content?: { parts?: { text?: string }[] };
+    finishReason?: string;
+    content?: { parts?: { text?: string; thought?: boolean }[] };
   }[];
+  promptFeedback?: { blockReason?: string };
+}
+
+type GeminiResult =
+  | { ok: true; response: Response }
+  | { ok: false; kind: "network" | "unavailable" | "bad-request" };
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Coba model utama, lalu cadangan, buat dari status Transient-nya. */
+async function callGemini(
+  apiKey: string,
+  body: Record<string, unknown>,
+): Promise<GeminiResult> {
+  let sawBadRequest = false;
+  for (const model of MODELS) {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      let response: Response;
+      try {
+        response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": apiKey,
+            },
+            body: JSON.stringify(body),
+          },
+        );
+      } catch {
+        return { ok: false, kind: "network" };
+      }
+      if (response.ok) return { ok: true, response };
+      // 404 = model tidak tersedia, 400/401/403 = kunci bermasalah.
+      if (!TRANSIENT.has(response.status)) {
+        sawBadRequest = true;
+        break;
+      }
+      if (attempt === 0) await sleep(350);
+    }
+  }
+  return { ok: false, kind: sawBadRequest ? "bad-request" : "unavailable" };
+}
+
+/** Ambil JSON dari balasan: buang "thought" part dan pagar markdown. */
+function extractJson(payload: GeminiResponse): string {
+  const parts = payload.candidates?.[0]?.content?.parts ?? [];
+  return parts
+    .filter((part) => part.thought !== true)
+    .map((part) => part.text ?? "")
+    .join("")
+    .replace(/^\s*```(?:json)?/i, "")
+    .replace(/```\s*$/, "")
+    .trim();
 }
 
 /**
@@ -156,52 +224,39 @@ export const parseTransaction = action({
     const data = await ctx.runQuery(internal.ai.context, { bookId });
     const today = isoToTimestamp(todayIso, tzOffsetMinutes, Date.now());
 
-    let response: Response;
-    try {
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+    const result = await callGemini(apiKey, {
+      contents: [
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": apiKey,
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                role: "user",
-                parts: [
-                  {
-                    text: buildPrompt(clean, todayIso, tzOffsetMinutes, data),
-                  },
-                ],
-              },
-            ],
-            generationConfig: {
-              temperature: 0.2,
-              responseMimeType: "application/json",
-              responseSchema: RESPONSE_SCHEMA,
+          role: "user",
+          parts: [
+            {
+              text: buildPrompt(clean, todayIso, tzOffsetMinutes, data),
             },
-          }),
+          ],
         },
-      );
-    } catch {
-      throw new Error("AI-nya sedang tidak bisa dihubungi. Coba lagi ya.");
+      ],
+      generationConfig: {
+        temperature: 0.2,
+        responseMimeType: "application/json",
+        responseSchema: RESPONSE_SCHEMA,
+      },
+    });
+
+    if (!result.ok) {
+      if (result.kind === "network") {
+        throw new Error("AI-nya sedang tidak bisa dihubungi. Coba lagi ya.");
+      }
+      if (result.kind === "bad-request") {
+        throw new Error("Kunci AI-nya sepertinya tidak valid. Cek GEMINI_API_KEY ya.");
+      }
+      throw new Error("AI-nya sedang sibuk atau kuotanya habis. Coba lagi sebentar ya.");
     }
 
-    if (!response.ok) {
-      throw new Error(
-        response.status === 400 || response.status === 403
-          ? "Kunci AI-nya sepertinya tidak valid. Cek GEMINI_API_KEY ya."
-          : `AI-nya sedang error (${response.status}). Coba lagi sebentar lagi.`,
-      );
+    const payload = (await result.response.json()) as GeminiResponse;
+    if (payload.promptFeedback?.blockReason) {
+      throw new Error("Catatan itu belum bisa di-racik. Coba tulis ulang ya.");
     }
-
-    const payload = (await response.json()) as GeminiResponse;
-    const raw = payload.candidates?.[0]?.content?.parts
-      ?.map((part) => part.text ?? "")
-      .join(" ")
-      .trim();
+    const raw = extractJson(payload);
     if (!raw) {
       throw new Error("AI-nya tidak bisa membaca catatan itu. Coba tulis ulang ya.");
     }

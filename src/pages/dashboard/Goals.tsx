@@ -53,22 +53,27 @@ import {
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
+/** Satu sesi menambah/menarik dana target, dibuat di event handler. */
+export interface FundSession {
+  key: number;
+  goal: GoalRow | null;
+}
+
 function FundDialog({
   open,
   onOpenChange,
-  sessionKey,
-  goal,
+  session,
   wallets,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Naik tiap dialog dibuka; key ini bikin form mulai bersih tiap sesi. */
-  sessionKey: number;
-  goal: GoalRow | null;
+  /** Satu sesi setor/tarik dana, dibuat di event handler. */
+  session: FundSession;
   wallets: WalletRow[];
 }) {
   const adjust = useMutation(api.goals.adjustFunds);
   const save = useSaveTracker();
+  const goal = session.goal;
   const [direction, setDirection] = useState<"add" | "withdraw">("add");
   const [amount, setAmount] = useState(0);
   const [walletId, setWalletId] = useState("none");
@@ -108,7 +113,7 @@ function FundDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <SlideUpDialogContent className="sm:max-w-md">
-        <div key={sessionKey}>
+        <div key={session.key}>
           <DialogHeader>
             <DialogTitle className="font-display text-xl">
               {goal ? goal.name : "Target"}
@@ -206,8 +211,7 @@ export default function Goals() {
     setFormSession({ key: sessionKey.current, goal });
     setFormOpen(true);
   };
-  const [fundTarget, setFundTarget] = useState<GoalRow | null>(null);
-  const fundKeyRef = useRef(0);
+  const [fundSession, setFundSession] = useState<FundSession | null>(null);
   const [deleting, setDeleting] = useState<GoalRow | null>(null);
 
   if (!activeBook || !bookId) return null;
@@ -216,6 +220,12 @@ export default function Goals() {
   const wallets = walletData?.wallets ?? [];
   const totalTarget = rows.reduce((sum, row) => sum + row.target_amount, 0);
   const totalSaved = rows.reduce((sum, row) => sum + row.saved_amount, 0);
+
+  // Sesi fund dibuat di event handler; `key` yang naik bikin form mulai bersih.
+  const startFund = (goal: GoalRow) => {
+    sessionKey.current += 1;
+    setFundSession({ key: sessionKey.current, goal });
+  };
 
   return (
     <div className="flex flex-col gap-5">
@@ -355,8 +365,7 @@ export default function Goals() {
                       size="sm"
                       className="flex-1"
                       onClick={() => {
-                        fundKey.current += 1;
-                        setFundTarget(goal);
+                        startFund(goal);
                       }}
                     >
                       <Plus className="size-4" />
@@ -393,12 +402,11 @@ export default function Goals() {
         session={formSession ?? { key: 0, goal: null }}
       />
       <FundDialog
-        open={fundTarget !== null}
+        open={fundSession !== null}
         onOpenChange={(open) => {
-          if (!open) setFundTarget(null);
+          if (!open) setFundSession(null);
         }}
-        sessionKey={fundKeyRef.current}
-        goal={fundTarget}
+        session={fundSession ?? { key: 0, goal: null }}
         wallets={wallets}
       />
 

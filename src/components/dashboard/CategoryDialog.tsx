@@ -17,44 +17,40 @@ import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow } from "@/lib/types";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-export function CategoryDialog({
-  open,
-  onOpenChange,
+/**
+ * Satu sesi membuat/mengubah kategori, dibuat di event handler (bukan render)
+ * supaya form selalu mulai bersih tiap dialog dibuka tanpa reset via effect.
+ */
+export interface CategorySession {
+  key: number;
+  category: CategoryRow | null;
+  defaultType: "income" | "expense";
+}
+
+function CategoryForm({
+  session,
   bookId,
-  category,
-  defaultType = "expense",
+  onOpenChange,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  session: CategorySession;
   bookId: Id<"books">;
-  category?: CategoryRow | null;
-  defaultType?: "income" | "expense";
+  onOpenChange: (open: boolean) => void;
 }) {
-  const isEdit = Boolean(category);
+  const category = session.category;
+  const isEdit = category !== null;
   const createCategory = useMutation(api.categories.create);
   const updateCategory = useMutation(api.categories.update);
   const save = useSaveTracker();
 
-  const [name, setName] = useState("");
-  const [type, setType] = useState<"income" | "expense">(defaultType);
-  const [color, setColor] = useState("violet");
+  const [name, setName] = useState(category?.name ?? "");
+  const [type, setType] = useState<"income" | "expense">(
+    category?.type ?? session.defaultType,
+  );
+  const [color, setColor] = useState(category?.color ?? "violet");
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    if (category) {
-      setName(category.name);
-      setType(category.type);
-      setColor(category.color);
-    } else {
-      setName("");
-      setType(defaultType);
-      setColor("violet");
-    }
-  }, [open, category, defaultType]);
 
   const handleSubmit = async () => {
     const clean = name.trim();
@@ -86,65 +82,88 @@ export function CategoryDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <SlideUpDialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-display text-xl">
-            {isEdit ? "Ubah kategori" : "Kategori baru"}
-          </DialogTitle>
-          <DialogDescription>
-            Kategori dipakai untuk merapikan catatan dan mengatur anggaran.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <DialogHeader>
+        <DialogTitle className="font-display text-xl">
+          {isEdit ? "Ubah kategori" : "Kategori baru"}
+        </DialogTitle>
+        <DialogDescription>
+          Kategori dipakai untuk merapikan catatan dan mengatur anggaran.
+        </DialogDescription>
+      </DialogHeader>
 
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="category-name">Nama kategori</Label>
-            <Input
-              id="category-name"
-              value={name}
-              maxLength={40}
-              placeholder="Kopi & Jajan"
-              onChange={(event) => setName(event.target.value)}
-            />
-          </div>
-
-          {!isEdit && (
-            <div className="flex flex-col gap-2">
-              <Label>Jenis</Label>
-              <SegmentedChips
-                options={[
-                  { value: "expense", label: "Pengeluaran", tone: "expense" },
-                  { value: "income", label: "Pemasukan", tone: "income" },
-                ]}
-                value={type}
-                onChange={setType}
-              />
-            </div>
-          )}
-
-          <div className="flex flex-col gap-2">
-            <Label>Warna</Label>
-            <TonePicker value={color} onChange={setColor} />
-            <p className="text-xs text-muted-foreground">
-              15 pilihan warna untuk membedakan kategori.
-            </p>
-          </div>
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="category-name">Nama kategori</Label>
+          <Input
+            id="category-name"
+            value={name}
+            maxLength={40}
+            placeholder="Kopi & Jajan"
+            onChange={(event) => setName(event.target.value)}
+          />
         </div>
 
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={saving}
-          >
-            Batal
-          </Button>
-          <Button type="button" onClick={handleSubmit} disabled={saving}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
-          </Button>
-        </DialogFooter>
+        {!isEdit && (
+          <div className="flex flex-col gap-2">
+            <Label>Jenis</Label>
+            <SegmentedChips
+              options={[
+                { value: "expense", label: "Pengeluaran", tone: "expense" },
+                { value: "income", label: "Pemasukan", tone: "income" },
+              ]}
+              value={type}
+              onChange={setType}
+            />
+          </div>
+        )}
+
+        <div className="flex flex-col gap-2">
+          <Label>Warna</Label>
+          <TonePicker value={color} onChange={setColor} />
+          <p className="text-xs text-muted-foreground">
+            15 pilihan warna untuk membedakan kategori.
+          </p>
+        </div>
+      </div>
+
+      <DialogFooter>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => onOpenChange(false)}
+          disabled={saving}
+        >
+          Batal
+        </Button>
+        <Button type="button" onClick={handleSubmit} disabled={saving}>
+          {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+export function CategoryDialog({
+  open,
+  onOpenChange,
+  bookId,
+  session,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  bookId: Id<"books">;
+  session: CategorySession;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <SlideUpDialogContent className="sm:max-w-md">
+        <CategoryForm
+          key={session.key}
+          session={session}
+          bookId={bookId}
+          onOpenChange={onOpenChange}
+        />
       </SlideUpDialogContent>
     </Dialog>
   );

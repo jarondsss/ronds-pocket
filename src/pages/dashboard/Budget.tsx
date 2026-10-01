@@ -1,4 +1,7 @@
-import { CategoryDialog } from "@/components/dashboard/CategoryDialog";
+import {
+  CategoryDialog,
+  type CategorySession,
+} from "@/components/dashboard/CategoryDialog";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import { RupiahInput } from "@/components/RupiahInput";
 import { Button } from "@/components/ui/button";
@@ -26,7 +29,7 @@ import {
   ShieldAlert,
   Trash2,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 function BudgetRow({
@@ -48,10 +51,14 @@ function BudgetRow({
   const removeBudget = useMutation(api.budgets.remove);
   const save = useSaveTracker();
   const [value, setValue] = useState(amount);
+  const [syncedAmount, setSyncedAmount] = useState(amount);
 
-  useEffect(() => {
+  // Ikuti perubahan anggaran dari server tanpa effect (pola "adjust state
+  // saat render" dari React: set state hanya kalau props-nya memang berubah).
+  if (syncedAmount !== amount) {
+    setSyncedAmount(amount);
     setValue(amount);
-  }, [amount]);
+  }
 
   // Tulis ke server 600 ms setelah berhenti mengetik.
   const commit = useDebouncedCallback((next: number) => {
@@ -152,10 +159,19 @@ function CategoryShelf({
   const removeCategory = useMutation(api.categories.remove);
   const save = useSaveTracker();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<CategoryRow | null>(null);
-  const [defaultType, setDefaultType] = useState<"income" | "expense">(
-    "expense",
-  );
+  const [session, setSession] = useState<CategorySession | null>(null);
+  const sessionKey = useRef(0);
+
+  // Sesi dibuat di event handler supaya form selalu mulai bersih tiap dibuka.
+  const startCategorySession = (category: CategoryRow | null) => {
+    sessionKey.current += 1;
+    setSession({
+      key: sessionKey.current,
+      category,
+      defaultType: category?.type ?? "expense",
+    });
+    setDialogOpen(true);
+  };
 
   const groups = useMemo(
     () => [
@@ -193,11 +209,7 @@ function CategoryShelf({
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => {
-            setEditing(null);
-            setDefaultType("expense");
-            setDialogOpen(true);
-          }}
+          onClick={() => startCategorySession(null)}
         >
           <Plus className="size-4" />
           Kategori baru
@@ -229,11 +241,7 @@ function CategoryShelf({
                     <button
                       type="button"
                       aria-label={`Ubah ${item.name}`}
-                      onClick={() => {
-                        setEditing(item);
-                        setDefaultType(item.type);
-                        setDialogOpen(true);
-                      }}
+                      onClick={() => startCategorySession(item)}
                       className="text-muted-foreground transition-colors hover:text-primary"
                     >
                       <PencilLine className="size-3.5" />
@@ -266,8 +274,7 @@ function CategoryShelf({
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         bookId={bookId}
-        category={editing}
-        defaultType={defaultType}
+        session={session ?? { key: 0, category: null, defaultType: "expense" }}
       />
     </section>
   );

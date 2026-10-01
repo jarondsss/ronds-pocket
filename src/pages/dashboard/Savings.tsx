@@ -1,4 +1,4 @@
-import { SavingsDialog } from "@/components/dashboard/SavingsDialog";
+import { SavingsDialog, type SavingsSession } from "@/components/dashboard/SavingsDialog";
 import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
 import { DatePicker } from "@/components/dashboard/DatePicker";
 import { RupiahInput } from "@/components/RupiahInput";
@@ -46,33 +46,40 @@ import {
   TrendingUp,
   Trash2,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+
+/**
+ * Satu sesi setor/tarik, dibuat di event handler supaya tanggal hari ini
+ * dihitung tanpa fungsi impure saat render dan form selalu mulai bersih.
+ */
+interface MoveSession {
+  key: number;
+  direction: "deposit" | "withdraw";
+  today: string;
+}
 
 function MoveDialog({
   open,
   onOpenChange,
+  session,
   account,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  session: MoveSession;
   account: SavingsRow | null;
 }) {
   const deposit = useMutation(api.savings.deposit);
   const withdraw = useMutation(api.savings.withdraw);
   const save = useSaveTracker();
 
-  const [direction, setDirection] = useState<"deposit" | "withdraw">("deposit");
+  const [direction, setDirection] = useState<"deposit" | "withdraw">(
+    session.direction,
+  );
   const [amount, setAmount] = useState(0);
-  const [dateValue, setDateValue] = useState(toDateInput(Date.now()));
+  const [dateValue, setDateValue] = useState(session.today);
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    setDirection("deposit");
-    setAmount(0);
-    setDateValue(toDateInput(Date.now()));
-  }, [open]);
 
   const handleSubmit = async () => {
     if (!account) return;
@@ -238,10 +245,34 @@ export default function Savings() {
   const save = useSaveTracker();
 
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<SavingsRow | null>(null);
+  const [formSession, setFormSession] = useState<SavingsSession | null>(null);
+  const [moveSession, setMoveSession] = useState<MoveSession | null>(null);
   const [moving, setMoving] = useState<SavingsRow | null>(null);
   const [historyFor, setHistoryFor] = useState<SavingsRow | null>(null);
   const [deleting, setDeleting] = useState<SavingsRow | null>(null);
+  const sessionKey = useRef(0);
+
+  // Sesi dibuat di event handler: `Date.now()` boleh dipanggil di sini, dan
+  // `key` yang naik bikin form di dialog ter-remount dengan nilai awal segar.
+  const startForm = (account: SavingsRow | null) => {
+    sessionKey.current += 1;
+    setFormSession({
+      key: sessionKey.current,
+      account,
+      today: toDateInput(Date.now()),
+    });
+    setFormOpen(true);
+  };
+
+  const startMove = (account: SavingsRow) => {
+    sessionKey.current += 1;
+    setMoveSession({
+      key: sessionKey.current,
+      direction: "deposit",
+      today: toDateInput(Date.now()),
+    });
+    setMoving(account);
+  };
 
   if (!activeBook || !bookId) return null;
 
@@ -258,13 +289,7 @@ export default function Savings() {
             Deposito, reksa dana, emas — catat semuanya beserta bunganya.
           </p>
         </div>
-        <Button
-          type="button"
-          onClick={() => {
-            setEditing(null);
-            setFormOpen(true);
-          }}
-        >
+        <Button type="button" onClick={() => startForm(null)}>
           <Plus className="size-4" />
           Tabungan baru
         </Button>
@@ -288,10 +313,7 @@ export default function Savings() {
           </p>
           <button
             type="button"
-            onClick={() => {
-              setEditing(null);
-              setFormOpen(true);
-            }}
+            onClick={() => startForm(null)}
             className="clay-primary clay-press mt-2 px-5 py-2.5 text-sm font-bold"
           >
             Tambah tabungan
@@ -381,7 +403,7 @@ export default function Savings() {
                       type="button"
                       size="sm"
                       className="flex-1"
-                      onClick={() => setMoving(account)}
+                      onClick={() => startMove(account)}
                     >
                       <Plus className="size-4" />
                       Setor / tarik
@@ -397,10 +419,7 @@ export default function Savings() {
                     <button
                       type="button"
                       aria-label={`Ubah ${account.name}`}
-                      onClick={() => {
-                        setEditing(account);
-                        setFormOpen(true);
-                      }}
+                      onClick={() => startForm(account)}
                       className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
                     >
                       <PencilLine className="size-4" />
@@ -425,13 +444,18 @@ export default function Savings() {
         open={formOpen}
         onOpenChange={setFormOpen}
         bookId={bookId}
-        account={editing}
+        session={
+          formSession ?? { key: 0, account: null, today: "" }
+        }
       />
       <MoveDialog
         open={moving !== null}
         onOpenChange={(open) => {
           if (!open) setMoving(null);
         }}
+        session={
+          moveSession ?? { key: 0, direction: "deposit", today: "" }
+        }
         account={moving}
       />
       <HistoryDialog

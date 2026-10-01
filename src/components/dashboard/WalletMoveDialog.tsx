@@ -1,10 +1,17 @@
+import {
+  SegmentedChips,
+  type SegmentedOption,
+} from "@/components/dashboard/ChoiceChips";
+import { DatePicker } from "@/components/dashboard/DatePicker";
+import { RupiahInput } from "@/components/RupiahInput";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  Dialog,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,21 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatePicker } from "@/components/dashboard/DatePicker";
-import {
-  SegmentedChips,
-  type SegmentedOption,
-} from "@/components/dashboard/ChoiceChips";
-import { RupiahInput } from "@/components/RupiahInput";
-import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
-import { fromDateInput, toDateInput } from "@/lib/format";
+import { fromDateInput } from "@/lib/format";
 import { useSaveTracker } from "@/lib/save-status";
 import type { WalletRow } from "@/lib/types";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export type MoveMode = "transfer" | "add" | "subtract";
@@ -54,39 +54,40 @@ const MODES: (SegmentedOption<MoveMode> & { hint: string })[] = [
   },
 ];
 
-export function WalletMoveDialog({
-  open,
-  onOpenChange,
+/**
+ * Satu sesi atur saldo. Dibuat di event handler (dengan dompet awal yang
+ * sudah disiapkan) supaya tidak perlu effect reset saat dialog dibuka.
+ */
+export interface MoveSession {
+  key: number;
+  mode: MoveMode;
+  /** Dompet terpilih saat sesi dibuka; `null` kalau belum ada dompet. */
+  from: Id<"wallets"> | null;
+  to: Id<"wallets"> | null;
+  today: string;
+}
+
+function MoveForm({
+  session,
   bookId,
   wallets,
-  initialMode = "transfer",
+  onOpenChange,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  session: MoveSession;
   bookId: Id<"books">;
   wallets: WalletRow[];
-  initialMode?: MoveMode;
+  onOpenChange: (open: boolean) => void;
 }) {
   const transfer = useMutation(api.wallets.transfer);
   const save = useSaveTracker();
 
-  const [mode, setMode] = useState<MoveMode>(initialMode);
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [mode, setMode] = useState<MoveMode>(session.mode);
+  const [from, setFrom] = useState(session.from ?? "");
+  const [to, setTo] = useState(session.to ?? session.from ?? "");
   const [amount, setAmount] = useState(0);
   const [note, setNote] = useState("");
-  const [dateValue, setDateValue] = useState(toDateInput(Date.now()));
+  const [dateValue, setDateValue] = useState(session.today);
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    setMode(initialMode);
-    setAmount(0);
-    setNote("");
-    setDateValue(toDateInput(Date.now()));
-    setFrom(wallets[0]?._id ?? "");
-    setTo(wallets[1]?._id ?? wallets[0]?._id ?? "");
-  }, [open, initialMode, wallets]);
 
   const activeMode = MODES.find((item) => item.value === mode) ?? MODES[0];
 
@@ -112,7 +113,9 @@ export function WalletMoveDialog({
           from_wallet_id:
             mode === "add" ? undefined : (from as Id<"wallets">) || undefined,
           to_wallet_id:
-            mode === "subtract" ? undefined : (to as Id<"wallets">) || undefined,
+            mode === "subtract"
+              ? undefined
+              : (to as Id<"wallets">) || undefined,
           amount,
           note,
           occurred_at: fromDateInput(dateValue),
@@ -128,7 +131,9 @@ export function WalletMoveDialog({
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Perubahannya gagal disimpan.",
+        error instanceof Error
+          ? error.message
+          : "Perubahannya gagal disimpan.",
       );
     } finally {
       setSaving(false);
@@ -136,105 +141,131 @@ export function WalletMoveDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <SlideUpDialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-display text-xl">
-            Atur saldo dompet
-          </DialogTitle>
-          <DialogDescription>{activeMode.hint}</DialogDescription>
-        </DialogHeader>
+    <>
+      <DialogHeader>
+        <DialogTitle className="font-display text-xl">
+          Atur saldo dompet
+        </DialogTitle>
+        <DialogDescription>{activeMode.hint}</DialogDescription>
+      </DialogHeader>
 
-        <div className="flex flex-col gap-5">
-          <SegmentedChips
-            options={MODES.map(({ value, label, tone }) => ({
-              value,
-              label,
-              tone,
-            }))}
-            value={mode}
-            onChange={setMode}
-          />
+      <div className="flex flex-col gap-5">
+        <SegmentedChips
+          options={MODES.map(({ value, label, tone }) => ({
+            value,
+            label,
+            tone,
+          }))}
+          value={mode}
+          onChange={setMode}
+        />
 
-          {mode !== "add" && (
-            <div className="flex flex-col gap-2">
-              <Label>Dari dompet</Label>
-              <Select value={from} onValueChange={setFrom}>
-                <SelectTrigger className="h-11 w-full">
-                  <SelectValue placeholder="Pilih dompet" />
-                </SelectTrigger>
-                <SelectContent>
-                  {wallets.map((wallet) => (
-                    <SelectItem key={wallet._id} value={wallet._id}>
-                      <span className="mr-1.5">{wallet.icon}</span>
-                      {wallet.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          {mode !== "subtract" && (
-            <div className="flex flex-col gap-2">
-              <Label>Ke dompet</Label>
-              <Select value={to} onValueChange={setTo}>
-                <SelectTrigger className="h-11 w-full">
-                  <SelectValue placeholder="Pilih dompet" />
-                </SelectTrigger>
-                <SelectContent>
-                  {wallets.map((wallet) => (
-                    <SelectItem key={wallet._id} value={wallet._id}>
-                      <span className="mr-1.5">{wallet.icon}</span>
-                      {wallet.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
+        {mode !== "add" && (
           <div className="flex flex-col gap-2">
-            <Label htmlFor="move-amount">Nominal</Label>
-            <RupiahInput
-              id="move-amount"
-              value={amount}
-              onChange={setAmount}
-            />
+            <Label>Dari dompet</Label>
+            <Select value={from} onValueChange={setFrom}>
+              <SelectTrigger className="h-11 w-full">
+                <SelectValue placeholder="Pilih dompet" />
+              </SelectTrigger>
+              <SelectContent>
+                {wallets.map((wallet) => (
+                  <SelectItem key={wallet._id} value={wallet._id}>
+                    <span className="mr-1.5">{wallet.icon}</span>
+                    {wallet.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+        )}
 
+        {mode !== "subtract" && (
           <div className="flex flex-col gap-2">
-            <Label htmlFor="move-note">Catatan</Label>
-            <Input
-              id="move-note"
-              value={note}
-              maxLength={120}
-              placeholder="mis. tarik tunai di ATM"
-              onChange={(event) => setNote(event.target.value)}
-            />
+            <Label>Ke dompet</Label>
+            <Select value={to} onValueChange={setTo}>
+              <SelectTrigger className="h-11 w-full">
+                <SelectValue placeholder="Pilih dompet" />
+              </SelectTrigger>
+              <SelectContent>
+                {wallets.map((wallet) => (
+                  <SelectItem key={wallet._id} value={wallet._id}>
+                    <span className="mr-1.5">{wallet.icon}</span>
+                    {wallet.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+        )}
 
-          <DatePicker
-            id="move-date"
-            label="Tanggal"
-            value={dateValue}
-            onChange={setDateValue}
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="move-amount">Nominal</Label>
+          <RupiahInput
+            id="move-amount"
+            value={amount}
+            onChange={setAmount}
           />
         </div>
 
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={saving}
-          >
-            Batal
-          </Button>
-          <Button type="button" onClick={handleSubmit} disabled={saving}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
-          </Button>
-        </DialogFooter>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="move-note">Catatan</Label>
+          <Input
+            id="move-note"
+            value={note}
+            maxLength={120}
+            placeholder="mis. tarik tunai di ATM"
+            onChange={(event) => setNote(event.target.value)}
+          />
+        </div>
+
+        <DatePicker
+          id="move-date"
+          label="Tanggal"
+          value={dateValue}
+          onChange={setDateValue}
+        />
+      </div>
+
+      <DialogFooter>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => onOpenChange(false)}
+          disabled={saving}
+        >
+          Batal
+        </Button>
+        <Button type="button" onClick={handleSubmit} disabled={saving}>
+          {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+export function WalletMoveDialog({
+  open,
+  onOpenChange,
+  bookId,
+  wallets,
+  session,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  bookId: Id<"books">;
+  wallets: WalletRow[];
+  session: MoveSession;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <SlideUpDialogContent className="sm:max-w-md">
+        <MoveForm
+          key={session.key}
+          session={session}
+          bookId={bookId}
+          wallets={wallets}
+          onOpenChange={onOpenChange}
+        />
       </SlideUpDialogContent>
     </Dialog>
   );

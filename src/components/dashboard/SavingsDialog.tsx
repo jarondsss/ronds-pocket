@@ -1,5 +1,7 @@
 import { ChoiceChips } from "@/components/dashboard/ChoiceChips";
 import { DatePicker } from "@/components/dashboard/DatePicker";
+import { RupiahInput } from "@/components/RupiahInput";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,8 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RupiahInput } from "@/components/RupiahInput";
-import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { fromDateInput, toDateInput } from "@/lib/format";
@@ -20,7 +20,7 @@ import { useSaveTracker } from "@/lib/save-status";
 import type { SavingsRow } from "@/lib/types";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const KIND_OPTIONS = SAVING_KINDS.map((kind) => ({
@@ -29,45 +29,40 @@ const KIND_OPTIONS = SAVING_KINDS.map((kind) => ({
   icon: kind.icon,
 }));
 
-export function SavingsDialog({
-  open,
-  onOpenChange,
+/**
+ * Satu sesi membuat/mengubah tabungan, dibuat di event handler supaya tanggal
+ * hari ini dihitung tanpa fungsi impure saat render.
+ */
+export interface SavingsSession {
+  key: number;
+  account: SavingsRow | null;
+  /** `YYYY-MM-DD` untuk tabungan baru. */
+  today: string;
+}
+
+function SavingsForm({
+  session,
   bookId,
-  account,
+  onOpenChange,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  session: SavingsSession;
   bookId: Id<"books">;
-  account?: SavingsRow | null;
+  onOpenChange: (open: boolean) => void;
 }) {
-  const isEdit = Boolean(account);
+  const account = session.account;
+  const isEdit = account !== null;
   const createSavings = useMutation(api.savings.create);
   const updateSavings = useMutation(api.savings.update);
   const save = useSaveTracker();
 
-  const [name, setName] = useState("");
-  const [kind, setKind] = useState("umum");
-  const [principal, setPrincipal] = useState(0);
-  const [rate, setRate] = useState("0");
-  const [started, setStarted] = useState(toDateInput(Date.now()));
+  const [name, setName] = useState(account?.name ?? "");
+  const [kind, setKind] = useState(account?.kind ?? "umum");
+  const [principal, setPrincipal] = useState(account?.principal ?? 0);
+  const [rate, setRate] = useState(account ? `${account.interest_rate}` : "0");
+  const [started, setStarted] = useState(() =>
+    account ? toDateInput(account.started_at) : session.today,
+  );
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    if (account) {
-      setName(account.name);
-      setKind(account.kind);
-      setPrincipal(account.principal);
-      setRate(`${account.interest_rate}`);
-      setStarted(toDateInput(account.started_at));
-    } else {
-      setName("");
-      setKind("umum");
-      setPrincipal(0);
-      setRate("0");
-      setStarted(toDateInput(Date.now()));
-    }
-  }, [open, account]);
 
   const handleSubmit = async () => {
     const clean = name.trim();
@@ -118,81 +113,104 @@ export function SavingsDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <SlideUpDialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-display text-xl">
-            {isEdit ? "Ubah tabungan" : "Tabungan baru"}
-          </DialogTitle>
-          <DialogDescription>
-            Deposito, reksa dana, emas, atau tabungan biasa — catat semuanya di
-            satu tempat.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <DialogHeader>
+        <DialogTitle className="font-display text-xl">
+          {isEdit ? "Ubah tabungan" : "Tabungan baru"}
+        </DialogTitle>
+        <DialogDescription>
+          Deposito, reksa dana, emas, atau tabungan biasa — catat semuanya di
+          satu tempat.
+        </DialogDescription>
+      </DialogHeader>
 
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="savings-name">Nama tabungan</Label>
-            <Input
-              id="savings-name"
-              value={name}
-              maxLength={60}
-              placeholder="Deposito BCA"
-              onChange={(event) => setName(event.target.value)}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label>Jenis</Label>
-            <ChoiceChips options={KIND_OPTIONS} value={kind} onChange={setKind} />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="savings-principal">Saldo awal</Label>
-            <RupiahInput
-              id="savings-principal"
-              value={principal}
-              onChange={setPrincipal}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="savings-rate">Bunga per tahun (%)</Label>
-            <Input
-              id="savings-rate"
-              inputMode="decimal"
-              value={rate}
-              placeholder="4.5"
-              onChange={(event) =>
-                setRate(event.target.value.replace(/[^\d.,]/g, ""))
-              }
-            />
-            <p className="text-xs text-muted-foreground">
-              Isi 0 kalau tabungannya tidak berbunga.
-            </p>
-          </div>
-
-          <DatePicker
-            id="savings-start"
-            label="Mulai sejak"
-            value={started}
-            onChange={setStarted}
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="savings-name">Nama tabungan</Label>
+          <Input
+            id="savings-name"
+            value={name}
+            maxLength={60}
+            placeholder="Deposito BCA"
+            onChange={(event) => setName(event.target.value)}
           />
         </div>
 
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={saving}
-          >
-            Batal
-          </Button>
-          <Button type="button" onClick={handleSubmit} disabled={saving}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
-          </Button>
-        </DialogFooter>
+        <div className="flex flex-col gap-2">
+          <Label>Jenis</Label>
+          <ChoiceChips options={KIND_OPTIONS} value={kind} onChange={setKind} />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="savings-principal">Saldo awal</Label>
+          <RupiahInput
+            id="savings-principal"
+            value={principal}
+            onChange={setPrincipal}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="savings-rate">Bunga per tahun (%)</Label>
+          <Input
+            id="savings-rate"
+            inputMode="decimal"
+            value={rate}
+            placeholder="4.5"
+            onChange={(event) =>
+              setRate(event.target.value.replace(/[^\d.,]/g, ""))
+            }
+          />
+          <p className="text-xs text-muted-foreground">
+            Isi 0 kalau tabungannya tidak berbunga.
+          </p>
+        </div>
+
+        <DatePicker
+          id="savings-start"
+          label="Mulai sejak"
+          value={started}
+          onChange={setStarted}
+        />
+      </div>
+
+      <DialogFooter>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => onOpenChange(false)}
+          disabled={saving}
+        >
+          Batal
+        </Button>
+        <Button type="button" onClick={handleSubmit} disabled={saving}>
+          {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+export function SavingsDialog({
+  open,
+  onOpenChange,
+  bookId,
+  session,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  bookId: Id<"books">;
+  session: SavingsSession;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <SlideUpDialogContent className="sm:max-w-md">
+        <SavingsForm
+          key={session.key}
+          session={session}
+          bookId={bookId}
+          onOpenChange={onOpenChange}
+        />
       </SlideUpDialogContent>
     </Dialog>
   );

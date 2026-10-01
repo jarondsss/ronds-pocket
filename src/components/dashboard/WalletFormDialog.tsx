@@ -1,3 +1,7 @@
+import { ChoiceChips } from "@/components/dashboard/ChoiceChips";
+import { RupiahInput } from "@/components/RupiahInput";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
+import { TonePicker } from "@/components/dashboard/TonePicker";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -17,19 +22,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RupiahInput } from "@/components/RupiahInput";
-import { SlideUpDialogContent } from "@/components/SlideUpDialog";
-import { ChoiceChips } from "@/components/dashboard/ChoiceChips";
-import { TonePicker } from "@/components/dashboard/TonePicker";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+import { WALLET_TYPES, walletTypeOf } from "@/lib/palette";
 import { useSaveTracker } from "@/lib/save-status";
 import type { WalletRow } from "@/lib/types";
-import { WALLET_TYPES, walletTypeOf } from "@/lib/palette";
-import { Dialog } from "@/components/ui/dialog";
 import { useMutation } from "convex/react";
 import { Loader2, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const TYPE_OPTIONS = WALLET_TYPES.map((option) => ({
@@ -44,47 +44,38 @@ const ICON_OPTIONS = WALLET_TYPES.map((option) => ({
   icon: option.icon,
 }));
 
-export function WalletFormDialog({
-  open,
-  onOpenChange,
+/**
+ * Satu sesi membuat/mengubah dompet. Dibuat di event handler dan di-remount
+ * lewat `key`, jadi tidak perlu effect reset.
+ */
+export interface WalletFormSession {
+  key: number;
+  wallet: WalletRow | null;
+}
+
+function WalletForm({
+  session,
   bookId,
-  wallet,
+  onOpenChange,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  session: WalletFormSession;
   bookId: Id<"books">;
-  wallet?: WalletRow | null;
+  onOpenChange: (open: boolean) => void;
 }) {
-  const isEdit = Boolean(wallet);
+  const wallet = session.wallet;
+  const isEdit = wallet !== null;
   const createWallet = useMutation(api.wallets.create);
   const updateWallet = useMutation(api.wallets.update);
   const removeWallet = useMutation(api.wallets.remove);
   const save = useSaveTracker();
 
-  const [name, setName] = useState("");
-  const [type, setType] = useState("cash");
-  const [icon, setIcon] = useState(walletTypeOf("cash").icon);
-  const [color, setColor] = useState("mint");
-  const [opening, setOpening] = useState(0);
+  const [name, setName] = useState(wallet?.name ?? "");
+  const [type, setType] = useState(wallet?.type ?? "cash");
+  const [icon, setIcon] = useState(wallet?.icon ?? walletTypeOf("cash").icon);
+  const [color, setColor] = useState(wallet?.color ?? "mint");
+  const [opening, setOpening] = useState(wallet?.opening_balance ?? 0);
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    if (wallet) {
-      setName(wallet.name);
-      setType(wallet.type);
-      setIcon(wallet.icon);
-      setColor(wallet.color);
-      setOpening(wallet.opening_balance);
-    } else {
-      setName("");
-      setType("cash");
-      setIcon(walletTypeOf("cash").icon);
-      setColor("mint");
-      setOpening(0);
-    }
-  }, [open, wallet]);
 
   const handleType = (next: string) => {
     setType(next);
@@ -153,101 +144,97 @@ export function WalletFormDialog({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <SlideUpDialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-display text-xl">
-              {isEdit ? "Ubah dompet" : "Dompet baru"}
-            </DialogTitle>
-            <DialogDescription>
-              Tempat uangmu disimpan, misalnya Tunai atau rekening bank.
-            </DialogDescription>
-          </DialogHeader>
+      <DialogHeader>
+        <DialogTitle className="font-display text-xl">
+          {isEdit ? "Ubah dompet" : "Dompet baru"}
+        </DialogTitle>
+        <DialogDescription>
+          Tempat uangmu disimpan, misalnya Tunai atau rekening bank.
+        </DialogDescription>
+      </DialogHeader>
 
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="wallet-name">Nama dompet</Label>
-              <Input
-                id="wallet-name"
-                value={name}
-                maxLength={40}
-                placeholder="BCA"
-                onChange={(event) => setName(event.target.value)}
-              />
-            </div>
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="wallet-name">Nama dompet</Label>
+          <Input
+            id="wallet-name"
+            value={name}
+            maxLength={40}
+            placeholder="BCA"
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
 
-            <div className="flex flex-col gap-2">
-              <Label>Tipe dompet</Label>
-              <ChoiceChips
-                options={TYPE_OPTIONS}
-                value={type}
-                onChange={handleType}
-              />
-            </div>
+        <div className="flex flex-col gap-2">
+          <Label>Tipe dompet</Label>
+          <ChoiceChips
+            options={TYPE_OPTIONS}
+            value={type}
+            onChange={handleType}
+          />
+        </div>
 
-            <div className="flex flex-col gap-2">
-              <Label>Ikon</Label>
-              <ChoiceChips
-                options={ICON_OPTIONS}
-                value={icon}
-                onChange={setIcon}
-                iconOnly
-              />
-              <p className="text-xs text-muted-foreground">
-                Ganti tipe biasanya mengganti ikonnya juga, tapi ikon bebas kamu
-                ubah lagi di sini.
-              </p>
-            </div>
+        <div className="flex flex-col gap-2">
+          <Label>Ikon</Label>
+          <ChoiceChips
+            options={ICON_OPTIONS}
+            value={icon}
+            onChange={setIcon}
+            iconOnly
+          />
+          <p className="text-xs text-muted-foreground">
+            Ganti tipe biasanya mengganti ikonnya juga, tapi ikon bebas kamu
+            ubah lagi di sini.
+          </p>
+        </div>
 
-            <div className="flex flex-col gap-2">
-              <Label>Warna</Label>
-              <TonePicker value={color} onChange={setColor} />
-            </div>
+        <div className="flex flex-col gap-2">
+          <Label>Warna</Label>
+          <TonePicker value={color} onChange={setColor} />
+        </div>
 
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="wallet-opening">Saldo awal</Label>
-              <RupiahInput
-                id="wallet-opening"
-                value={opening}
-                onChange={setOpening}
-              />
-              <p className="text-xs text-muted-foreground">
-                Isi kalau dompet ini sudah ada isinya. Boleh dikosongkan.
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="wallet-opening">Saldo awal</Label>
+          <RupiahInput
+            id="wallet-opening"
+            value={opening}
+            onChange={setOpening}
+          />
+          <p className="text-xs text-muted-foreground">
+            Isi kalau dompet ini sudah ada isinya. Boleh dikosongkan.
+          </p>
+        </div>
+      </div>
 
-          <DialogFooter className="gap-2 sm:justify-between">
-            {isEdit ? (
-              <Button
-                type="button"
-                variant="ghost"
-                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                onClick={() => setConfirmDelete(true)}
-                disabled={saving}
-              >
-                <Trash2 className="size-4" />
-                Hapus
-              </Button>
-            ) : (
-              <span />
-            )}
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={saving}
-              >
-                Batal
-              </Button>
-              <Button type="button" onClick={handleSubmit} disabled={saving}>
-                {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
-              </Button>
-            </div>
-          </DialogFooter>
-        </SlideUpDialogContent>
-      </Dialog>
+      <DialogFooter className="gap-2 sm:justify-between">
+        {isEdit ? (
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+            onClick={() => setConfirmDelete(true)}
+            disabled={saving}
+          >
+            <Trash2 className="size-4" />
+            Hapus
+          </Button>
+        ) : (
+          <span />
+        )}
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={saving}
+          >
+            Batal
+          </Button>
+          <Button type="button" onClick={handleSubmit} disabled={saving}>
+            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+          </Button>
+        </div>
+      </DialogFooter>
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
@@ -274,5 +261,30 @@ export function WalletFormDialog({
         </AlertDialogContent>
       </AlertDialog>
     </>
+  );
+}
+
+export function WalletFormDialog({
+  open,
+  onOpenChange,
+  bookId,
+  session,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  bookId: Id<"books">;
+  session: WalletFormSession;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <SlideUpDialogContent className="sm:max-w-md">
+        <WalletForm
+          key={session.key}
+          session={session}
+          bookId={bookId}
+          onOpenChange={onOpenChange}
+        />
+      </SlideUpDialogContent>
+    </Dialog>
   );
 }

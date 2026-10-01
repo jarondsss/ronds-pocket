@@ -1,4 +1,4 @@
-import { GoalDialog } from "@/components/dashboard/GoalDialog";
+import { GoalDialog, type GoalSession } from "@/components/dashboard/GoalDialog";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import {
@@ -50,17 +50,20 @@ import {
   Target,
   Trash2,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 function FundDialog({
   open,
   onOpenChange,
+  sessionKey,
   goal,
   wallets,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Naik tiap dialog dibuka; key ini bikin form mulai bersih tiap sesi. */
+  sessionKey: number;
   goal: GoalRow | null;
   wallets: WalletRow[];
 }) {
@@ -70,14 +73,6 @@ function FundDialog({
   const [amount, setAmount] = useState(0);
   const [walletId, setWalletId] = useState("none");
   const [saving, setSaving] = useState(false);
-
-  // Setiap kali dialog dibuka, formnya mulai dari bersih lagi.
-  useEffect(() => {
-    if (!open) return;
-    setDirection("add");
-    setAmount(0);
-    setWalletId("none");
-  }, [open]);
 
   const handleSubmit = async () => {
     if (!goal) return;
@@ -113,14 +108,15 @@ function FundDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <SlideUpDialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-display text-xl">
-            {goal ? goal.name : "Target"}
-          </DialogTitle>
-          <DialogDescription>
-            Catat setoran atau penarikan dana untuk target ini.
-          </DialogDescription>
-        </DialogHeader>
+        <div key={sessionKey}>
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl">
+              {goal ? goal.name : "Target"}
+            </DialogTitle>
+            <DialogDescription>
+              Catat setoran atau penarikan dana untuk target ini.
+            </DialogDescription>
+          </DialogHeader>
 
         <div className="flex flex-col gap-5">
           <div className="clay-sunken grid grid-cols-2 gap-2 p-2">
@@ -173,19 +169,20 @@ function FundDialog({
           </div>
         </div>
 
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={saving}
-          >
-            Batal
-          </Button>
-          <Button type="button" onClick={handleSubmit} disabled={saving}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={saving}
+            >
+              Batal
+            </Button>
+            <Button type="button" onClick={handleSubmit} disabled={saving}>
+              {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+            </Button>
+          </DialogFooter>
+        </div>
       </SlideUpDialogContent>
     </Dialog>
   );
@@ -201,8 +198,16 @@ export default function Goals() {
   const save = useSaveTracker();
 
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<GoalRow | null>(null);
+  const [formSession, setFormSession] = useState<GoalSession | null>(null);
+  const sessionKey = useRef(0);
+
+  const startForm = (goal: GoalRow | null) => {
+    sessionKey.current += 1;
+    setFormSession({ key: sessionKey.current, goal });
+    setFormOpen(true);
+  };
   const [fundTarget, setFundTarget] = useState<GoalRow | null>(null);
+  const fundKeyRef = useRef(0);
   const [deleting, setDeleting] = useState<GoalRow | null>(null);
 
   if (!activeBook || !bookId) return null;
@@ -223,13 +228,7 @@ export default function Goals() {
             Tulis targetnya, lalu lihat seberapa dekat kamu ke sana.
           </p>
         </div>
-        <Button
-          type="button"
-          onClick={() => {
-            setEditing(null);
-            setFormOpen(true);
-          }}
-        >
+        <Button type="button" onClick={() => startForm(null)}>
           <Plus className="size-4" />
           Target baru
         </Button>
@@ -253,10 +252,7 @@ export default function Goals() {
           </p>
           <button
             type="button"
-            onClick={() => {
-              setEditing(null);
-              setFormOpen(true);
-            }}
+            onClick={() => startForm(null)}
             className="clay-primary clay-press mt-2 px-5 py-2.5 text-sm font-bold"
           >
             Bikin target pertama
@@ -358,7 +354,10 @@ export default function Goals() {
                       type="button"
                       size="sm"
                       className="flex-1"
-                      onClick={() => setFundTarget(goal)}
+                      onClick={() => {
+                        fundKey.current += 1;
+                        setFundTarget(goal);
+                      }}
                     >
                       <Plus className="size-4" />
                       Tambah dana
@@ -366,10 +365,7 @@ export default function Goals() {
                     <button
                       type="button"
                       aria-label={`Ubah ${goal.name}`}
-                      onClick={() => {
-                        setEditing(goal);
-                        setFormOpen(true);
-                      }}
+                      onClick={() => startForm(goal)}
                       className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
                     >
                       <PencilLine className="size-4" />
@@ -394,13 +390,14 @@ export default function Goals() {
         open={formOpen}
         onOpenChange={setFormOpen}
         bookId={bookId}
-        goal={editing}
+        session={formSession ?? { key: 0, goal: null }}
       />
       <FundDialog
         open={fundTarget !== null}
         onOpenChange={(open) => {
           if (!open) setFundTarget(null);
         }}
+        sessionKey={fundKeyRef.current}
         goal={fundTarget}
         wallets={wallets}
       />

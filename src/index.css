@@ -366,53 +366,45 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Modal meluncur dari bawah di HP. Ditulis di luar @layer supaya menang dari
+   Modal form tetap di tengah layar (desktop dan HP), hanya dibatasi tinggi
+   supaya form panjang bisa di-scroll. Ditulis di luar @layer supaya menang dari
    animasi bawaan komponen Dialog tanpa perlu !important.
 --------------------------------------------------------------------------- */
 @keyframes sheet-up-in {
   from {
-    transform: translateY(100%);
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
   }
   to {
-    transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes sheet-up-out {
   from {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
   to {
-    transform: translateY(100%);
     opacity: 0;
+    transform: translateY(10px) scale(0.98);
   }
 }
 
 @media (max-width: 639px) {
+  /* Penempatan tengah (top/left + translate) diwarisi dari DialogContent, jadi
+     di HP cukup dibatasi tinggi dan diberi animasi naik tipis. */
   [data-slot="dialog-content"].sheet-up {
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-width: 100%;
-    max-height: 92dvh;
+    max-height: 88dvh;
     overflow-y: auto;
-    /* Tailwind v4 memakai properti `translate`, jadi keduanya perlu direset. */
-    translate: none;
-    transform: none;
-    border-top-left-radius: 2rem;
-    border-top-right-radius: 2rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
   }
 
   [data-slot="dialog-content"].sheet-up[data-state="open"] {
-    animation: sheet-up-in 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: sheet-up-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   [data-slot="dialog-content"].sheet-up[data-state="closed"] {
-    animation: sheet-up-out 200ms ease-in;
+    animation: sheet-up-out 180ms ease-in;
   }
 }

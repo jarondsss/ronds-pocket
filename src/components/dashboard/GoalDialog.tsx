@@ -1,3 +1,7 @@
+import { DatePicker } from "@/components/dashboard/DatePicker";
+import { RupiahInput } from "@/components/RupiahInput";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogDescription,
@@ -5,12 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DatePicker } from "@/components/dashboard/DatePicker";
-import { RupiahInput } from "@/components/RupiahInput";
-import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { fromDateInput, toDateInput } from "@/lib/format";
@@ -18,47 +18,43 @@ import { useSaveTracker } from "@/lib/save-status";
 import type { GoalRow } from "@/lib/types";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-export function GoalDialog({
-  open,
-  onOpenChange,
+/**
+ * Satu sesi membuat/mengubah target, dibuat di event handler (bukan render)
+ * supaya "6 bulan ke depan" bisa dihitung tanpa fungsi impure saat render.
+ */
+export interface GoalSession {
+  key: number;
+  goal: GoalRow | null;
+}
+
+function GoalForm({
+  session,
   bookId,
-  goal,
+  onOpenChange,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  session: GoalSession;
   bookId: Id<"books">;
-  goal?: GoalRow | null;
+  onOpenChange: (open: boolean) => void;
 }) {
-  const isEdit = Boolean(goal);
+  const goal = session.goal;
+  const isEdit = goal !== null;
   const createGoal = useMutation(api.goals.create);
   const updateGoal = useMutation(api.goals.update);
   const save = useSaveTracker();
 
-  const [name, setName] = useState("");
-  const [target, setTarget] = useState(0);
-  const [saved, setSaved] = useState(0);
-  const [deadline, setDeadline] = useState(toDateInput(Date.now()));
+  const [name, setName] = useState(goal?.name ?? "");
+  const [target, setTarget] = useState(goal?.target_amount ?? 0);
+  const [saved, setSaved] = useState(goal?.saved_amount ?? 0);
+  const [deadline, setDeadline] = useState(() => {
+    if (goal) return toDateInput(goal.deadline);
+    const next = new Date();
+    next.setMonth(next.getMonth() + 6);
+    return toDateInput(next.getTime());
+  });
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    if (goal) {
-      setName(goal.name);
-      setTarget(goal.target_amount);
-      setSaved(goal.saved_amount);
-      setDeadline(toDateInput(goal.deadline));
-    } else {
-      const nextYear = new Date();
-      nextYear.setMonth(nextYear.getMonth() + 6);
-      setName("");
-      setTarget(0);
-      setSaved(0);
-      setDeadline(toDateInput(nextYear.getTime()));
-    }
-  }, [open, goal]);
 
   const handleSubmit = async () => {
     const clean = name.trim();
@@ -106,60 +102,83 @@ export function GoalDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <SlideUpDialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="font-display text-xl">
-            {isEdit ? "Ubah target" : "Target baru"}
-          </DialogTitle>
-          <DialogDescription>
-            Tentukan nominalnya, lalu pantau seberapa dekat kamu ke sana.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <DialogHeader>
+        <DialogTitle className="font-display text-xl">
+          {isEdit ? "Ubah target" : "Target baru"}
+        </DialogTitle>
+        <DialogDescription>
+          Tentukan nominalnya, lalu pantau seberapa dekat kamu ke sana.
+        </DialogDescription>
+      </DialogHeader>
 
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="goal-name">Nama target</Label>
-            <Input
-              id="goal-name"
-              value={name}
-              maxLength={60}
-              placeholder="Liburan ke Bali"
-              onChange={(event) => setName(event.target.value)}
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="goal-target">Nominal target</Label>
-            <RupiahInput id="goal-target" value={target} onChange={setTarget} />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="goal-saved">Sudah terkumpul</Label>
-            <RupiahInput id="goal-saved" value={saved} onChange={setSaved} />
-          </div>
-
-          <DatePicker
-            id="goal-deadline"
-            label="Target tanggal"
-            value={deadline}
-            onChange={setDeadline}
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="goal-name">Nama target</Label>
+          <Input
+            id="goal-name"
+            value={name}
+            maxLength={60}
+            placeholder="Liburan ke Bali"
+            onChange={(event) => setName(event.target.value)}
           />
         </div>
 
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={saving}
-          >
-            Batal
-          </Button>
-          <Button type="button" onClick={handleSubmit} disabled={saving}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
-          </Button>
-        </DialogFooter>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="goal-target">Nominal target</Label>
+          <RupiahInput id="goal-target" value={target} onChange={setTarget} />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="goal-saved">Sudah terkumpul</Label>
+          <RupiahInput id="goal-saved" value={saved} onChange={setSaved} />
+        </div>
+
+        <DatePicker
+          id="goal-deadline"
+          label="Target tanggal"
+          value={deadline}
+          onChange={setDeadline}
+        />
+      </div>
+
+      <DialogFooter>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => onOpenChange(false)}
+          disabled={saving}
+        >
+          Batal
+        </Button>
+        <Button type="button" onClick={handleSubmit} disabled={saving}>
+          {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+export function GoalDialog({
+  open,
+  onOpenChange,
+  bookId,
+  session,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  bookId: Id<"books">;
+  session: GoalSession;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <SlideUpDialogContent className="sm:max-w-md">
+        <GoalForm
+          key={session.key}
+          session={session}
+          bookId={bookId}
+          onOpenChange={onOpenChange}
+        />
       </SlideUpDialogContent>
     </Dialog>
   );

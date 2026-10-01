@@ -1,12 +1,16 @@
-import { WalletFormDialog } from "@/components/dashboard/WalletFormDialog";
+import {
+  WalletFormDialog,
+  type WalletFormSession,
+} from "@/components/dashboard/WalletFormDialog";
 import {
   WalletMoveDialog,
   type MoveMode,
+  type MoveSession,
 } from "@/components/dashboard/WalletMoveDialog";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useBooks } from "@/lib/book-context";
-import { formatDay, formatRupiah } from "@/lib/format";
+import { formatDay, formatRupiah, toDateInput } from "@/lib/format";
 import { toneValue, walletTypeOf } from "@/lib/palette";
 import type { TransferRow, WalletRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -19,7 +23,7 @@ import {
   Plus,
   Wallet as WalletIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Wallet() {
   const { activeBook } = useBooks();
@@ -32,21 +36,34 @@ export default function Wallet() {
   );
 
   const [formOpen, setFormOpen] = useState(false);
-  const [editing, setEditing] = useState<WalletRow | null>(null);
+  const [formSession, setFormSession] = useState<WalletFormSession | null>(
+    null,
+  );
   const [moveOpen, setMoveOpen] = useState(false);
-  const [moveMode, setMoveMode] = useState<MoveMode>("transfer");
+  const [moveSession, setMoveSession] = useState<MoveSession | null>(null);
+  const sessionKey = useRef(0);
 
   if (!activeBook || !bookId) return null;
 
   const wallets = data?.wallets ?? [];
 
-  const openNew = () => {
-    setEditing(null);
+  // Sesi dibuat di event handler: tanggal hari ini dihitung di sini, dan
+  // `key` yang naik bikin form di dialog ter-remount dengan nilai awal segar.
+  const startForm = (wallet: WalletRow | null) => {
+    sessionKey.current += 1;
+    setFormSession({ key: sessionKey.current, wallet });
     setFormOpen(true);
   };
 
-  const openMove = (mode: MoveMode) => {
-    setMoveMode(mode);
+  const startMove = (mode: MoveMode) => {
+    sessionKey.current += 1;
+    setMoveSession({
+      key: sessionKey.current,
+      mode,
+      from: wallets[0]?._id ?? null,
+      to: (wallets[1] ?? wallets[0])?._id ?? null,
+      today: toDateInput(Date.now()),
+    });
     setMoveOpen(true);
   };
 
@@ -62,11 +79,15 @@ export default function Wallet() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={() => openMove("transfer")}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => startMove("transfer")}
+          >
             <ArrowLeftRight className="size-4" />
             Atur saldo
           </Button>
-          <Button type="button" onClick={openNew}>
+          <Button type="button" onClick={() => startForm(null)}>
             <Plus className="size-4" />
             Dompet baru
           </Button>
@@ -117,7 +138,7 @@ export default function Wallet() {
               </p>
               <button
                 type="button"
-                onClick={openNew}
+                onClick={() => startForm(null)}
                 className="clay-primary clay-press mt-4 px-5 py-2.5 text-sm font-bold"
               >
                 Dompet baru
@@ -132,10 +153,7 @@ export default function Wallet() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  onClick={() => {
-                    setEditing(wallet);
-                    setFormOpen(true);
-                  }}
+                  onClick={() => startForm(wallet)}
                   className="clay clay-press flex flex-col gap-3 p-4 text-left sm:p-5"
                 >
                   <span className="flex items-center gap-3">
@@ -186,7 +204,7 @@ export default function Wallet() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => openMove("transfer")}
+                onClick={() => startMove("transfer")}
               >
                 Pindah uang
               </Button>
@@ -242,14 +260,22 @@ export default function Wallet() {
         open={formOpen}
         onOpenChange={setFormOpen}
         bookId={bookId}
-        wallet={editing}
+        session={formSession ?? { key: 0, wallet: null }}
       />
       <WalletMoveDialog
         open={moveOpen}
         onOpenChange={setMoveOpen}
         bookId={bookId}
         wallets={wallets}
-        initialMode={moveMode}
+        session={
+          moveSession ?? {
+            key: 0,
+            mode: "transfer",
+            from: null,
+            to: null,
+            today: "",
+          }
+        }
       />
     </div>
   );

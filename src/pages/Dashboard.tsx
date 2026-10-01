@@ -2,6 +2,7 @@ import { Brand } from "@/components/Brand";
 import { BookSwitcher } from "@/components/dashboard/BookSwitcher";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SaveBadge } from "@/components/SaveBadge";
+import { NotificationBell } from "@/components/dashboard/NotificationBell";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -253,6 +254,7 @@ function Shell() {
               <Brand compact />
               <div className="flex items-center gap-2">
                 <SaveBadge />
+                <NotificationBell />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
@@ -292,8 +294,9 @@ function Shell() {
             </div>
           </header>
 
-          <div className="mb-3 hidden justify-end lg:flex">
+          <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
+            <NotificationBell />
           </div>
 
           {isLoading ? (

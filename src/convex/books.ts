@@ -13,6 +13,7 @@ const INVITE_CODE_LENGTH = 8;
 const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // satu minggu
 const REDEEM_WINDOW_MS = 15 * 60 * 1000;
 const REDEEM_MAX_ATTEMPTS = 8;
+const NOTIFICATION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // satu bulan
 
 /** Every request must resolve to a signed-in user. */
 export async function requireUserId(ctx: Ctx): Promise<Id<"users">> {
@@ -126,6 +127,94 @@ export async function logActivity(
     created_at: Date.now(),
   });
 }
+
+/**
+ * Kabari anggota lain (bukan pelakunya) bahwa ada catatan baru di pocket ini.
+ * Notifikasi lama dibersihkan biar tabelnya nggak numpuk.
+ */
+export async function notifyMembers(
+  ctx: MutationCtx,
+  entry: {
+    bookId: Id<"books">;
+    actorId: Id<"users">;
+    message: string;
+    label: string;
+    detail?: string;
+  },
+) {
+  const members = await ctx.db
+    .query("book_members")
+    .withIndex("by_book", (q) => q.eq("book_id", entry.bookId))
+    .collect();
+  const targets = members.filter((member) => member.user_id !== entry.actorId);
+  if (targets.length === 0) return;
+
+  const actor = await ctx.db.get(entry.actorId);
+  const actorName =
+    actor?.name ?? actor?.email?.split("@")[0] ?? "Temanmu";
+  const now = Date.now();
+
+  for (const member of targets) {
+    const old = await ctx.db
+      .query("notifications")
+      .withIndex("by_book_user", (q) =>
+        q.eq("book_id", entry.bookId).eq("user_id", member.user_id),
+      )
+      .collect();
+    for (const row of old) {
+      if (now - row.created_at > NOTIFICATION_TTL_MS) {
+        await ctx.db.delete(row._id);
+      }
+    }
+    await ctx.db.insert("notifications", {
+      book_id: entry.bookId,
+      user_id: member.user_id,
+      actor_id: entry.actorId,
+      actor_name: actorName,
+      message: entry.message.slice(0, 80),
+      label: entry.label.slice(0, 80),
+      detail: entry.detail?.slice(0, 120),
+      created_at: now,
+    });
+  }
+}
+
+/** Notifikasi milik user yang sedang login, terbaru dulu. */
+export const notifications = query({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, { bookId }) => {
+    const { userId } = await requireMember(ctx, bookId);
+    const rows = await ctx.db
+      .query("notifications")
+      .withIndex("by_book_user_created", (q) =>
+        q.eq("book_id", bookId).eq("user_id", userId),
+      )
+      .order("desc")
+      .take(30);
+    return rows;
+  },
+});
+
+/** Tandai semua notifikasi pocket ini sebagai sudah dibaca. */
+export const markNotificationsRead = mutation({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, { bookId }) => {
+    const { userId } = await requireMember(ctx, bookId);
+    const rows = await ctx.db
+      .query("notifications")
+      .withIndex("by_book_user", (q) =>
+        q.eq("book_id", bookId).eq("user_id", userId),
+      )
+      .collect();
+    const now = Date.now();
+    for (const row of rows) {
+      if (row.read_at === undefined) {
+        await ctx.db.patch(row._id, { read_at: now });
+      }
+    }
+    return null;
+  },
+});
 
 /** 50 perubahan terakhir di sebuah kantong. */
 export const activity = query({

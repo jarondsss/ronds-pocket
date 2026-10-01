@@ -161,6 +161,7 @@ export default function Ledger() {
         <TransactionList
           transactions={visible}
           onEdit={openEdit}
+          showAuthor={(activeBook?.memberCount ?? 1) > 1}
           emptyTitle={
             filter === "all" ? "Bulan ini masih kosong" : "Belum ada isinya"
           }

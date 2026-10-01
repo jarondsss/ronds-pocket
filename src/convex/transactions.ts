@@ -4,6 +4,7 @@ import type { QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import {
   logActivity,
+  notifyMembers,
   requireMember,
   requireOwnerOrCreator,
   rupiah,
@@ -199,6 +200,14 @@ export const create = mutation({
       target: "transaksi",
       label: describeTransaction(args.category, args.note),
       detail: `${args.type === "income" ? "Masuk" : "Keluar"} ${rupiah(args.amount)}`,
+    });
+    await notifyMembers(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      message:
+        args.type === "income" ? "nambah pemasukan" : "nambah pengeluaran",
+      label: describeTransaction(args.category, args.note),
+      detail: `${args.type === "income" ? "+" : "−"}${rupiah(args.amount)}`,
     });
     return await ctx.db.insert("transactions", {
       book_id: args.bookId,

@@ -116,6 +116,21 @@ const schema = defineSchema(
       .index("by_book", ["book_id"])
       .index("by_book_created", ["book_id", "created_at"]),
 
+    // Notifikasi buat anggota lain saat temannya nambah catatan baru.
+    notifications: defineTable({
+      book_id: v.id("books"),
+      user_id: v.id("users"), // penerima
+      actor_id: v.id("users"),
+      actor_name: v.string(),
+      message: v.string(),
+      label: v.string(),
+      detail: v.optional(v.string()),
+      read_at: v.optional(v.number()),
+      created_at: v.number(),
+    })
+      .index("by_book_user", ["book_id", "user_id"])
+      .index("by_book_user_created", ["book_id", "user_id", "created_at"]),
+
     // Dompet: tempat uang fisik/digital disimpan
     wallets: defineTable({
       book_id: v.id("books"),

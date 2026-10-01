@@ -32,12 +32,15 @@ export function TransactionList({
   emptyTitle = "Belum ada catatan",
   emptyDescription = "Mulai catat pengeluaran atau pemasukan pertamamu.",
   onEmptyAction,
+  showAuthor = false,
 }: {
   transactions: LedgerTransaction[];
   onEdit: (transaction: LedgerTransaction) => void;
   emptyTitle?: string;
   emptyDescription?: string;
   onEmptyAction?: () => void;
+  /** Tampilkan siapa yang mengetik catatan ini (berguna saat pocket dipakai berdua). */
+  showAuthor?: boolean;
 }) {
   const groups = useMemo(() => {
     const map = new Map<number, LedgerTransaction[]>();
@@ -137,6 +140,14 @@ export function TransactionList({
                           : "Tanpa dompet"}{" "}
                         · {tx.note || "Tanpa catatan"}
                       </span>
+                      {showAuthor && (
+                        <span className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold text-primary">
+                          <span className="grid size-4 place-items-center rounded-full bg-primary/15 text-[9px] font-black">
+                            {tx.createdByName.charAt(0).toUpperCase()}
+                          </span>
+                          {tx.createdByName}
+                        </span>
+                      )}
                     </span>
                     <span
                       className={cn(

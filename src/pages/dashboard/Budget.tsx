@@ -152,15 +152,21 @@ function BudgetRow({
 function CategoryShelf({
   bookId,
   categories,
+  budgets,
 }: {
   bookId: Id<"books">;
   categories: CategoryRow[];
+  budgets: { category: string; amount: number }[];
 }) {
   const removeCategory = useMutation(api.categories.remove);
   const save = useSaveTracker();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [session, setSession] = useState<CategorySession | null>(null);
   const sessionKey = useRef(0);
+  const budgetByCategory = useMemo(
+    () => new Map(budgets.map((row) => [row.category, row.amount])),
+    [budgets],
+  );
 
   // Sesi dibuat di event handler supaya form selalu mulai bersih tiap dibuka.
   const startCategorySession = (category: CategoryRow | null) => {
@@ -169,6 +175,7 @@ function CategoryShelf({
       key: sessionKey.current,
       category,
       defaultType: category?.type ?? "expense",
+      budget: category ? (budgetByCategory.get(category.name) ?? 0) : 0,
     });
     setDialogOpen(true);
   };
@@ -201,7 +208,7 @@ function CategoryShelf({
               Kategori kamu
             </h3>
             <p className="text-xs text-muted-foreground">
-              Tambah atau ubah warna kategorinya kapan saja.
+              Tambah kategori, atur warna dan anggarannya sekaligus.
             </p>
           </div>
         </div>
@@ -238,6 +245,12 @@ function CategoryShelf({
                       style={{ backgroundColor: toneValue(item.color) }}
                     />
                     {item.name}
+                    {item.type === "expense" &&
+                      (budgetByCategory.get(item.name) ?? 0) > 0 && (
+                        <span className="rounded-full bg-income/15 px-1.5 py-0.5 text-[10px] font-bold text-income">
+                          {formatRupiah(budgetByCategory.get(item.name) ?? 0)}
+                        </span>
+                      )}
                     <button
                       type="button"
                       aria-label={`Ubah ${item.name}`}
@@ -274,7 +287,14 @@ function CategoryShelf({
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         bookId={bookId}
-        session={session ?? { key: 0, category: null, defaultType: "expense" }}
+        session={
+          session ?? {
+            key: 0,
+            category: null,
+            defaultType: "expense",
+            budget: 0,
+          }
+        }
       />
     </section>
   );
@@ -410,7 +430,11 @@ export default function Budget() {
             </section>
           )}
 
-          <CategoryShelf bookId={bookId} categories={categoryRows} />
+          <CategoryShelf
+            bookId={bookId}
+            categories={categoryRows}
+            budgets={rows}
+          />
         </>
       )}
     </div>

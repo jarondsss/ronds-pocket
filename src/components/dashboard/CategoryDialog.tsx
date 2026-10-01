@@ -1,4 +1,5 @@
 import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
+import { RupiahInput } from "@/components/RupiahInput";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,6 +29,8 @@ export interface CategorySession {
   key: number;
   category: CategoryRow | null;
   defaultType: "income" | "expense";
+  /** Nominal anggaran bulanan yang sudah terpasang untuk kategori ini. */
+  budget: number;
 }
 
 function CategoryForm({
@@ -43,6 +46,7 @@ function CategoryForm({
   const isEdit = category !== null;
   const createCategory = useMutation(api.categories.create);
   const updateCategory = useMutation(api.categories.update);
+  const setBudgetAmount = useMutation(api.budgets.setAmount);
   const save = useSaveTracker();
 
   const [name, setName] = useState(category?.name ?? "");
@@ -50,7 +54,11 @@ function CategoryForm({
     category?.type ?? session.defaultType,
   );
   const [color, setColor] = useState(category?.color ?? "violet");
+  const [budget, setBudget] = useState(session.budget);
   const [saving, setSaving] = useState(false);
+
+  // Anggaran cuma masuk akal untuk kategori pengeluaran.
+  const isExpense = category ? category.type === "expense" : type === "expense";
 
   const handleSubmit = async () => {
     const clean = name.trim();
@@ -58,18 +66,34 @@ function CategoryForm({
       toast.error("Beri nama kategorinya dulu ya.");
       return;
     }
+    const renamed =
+      category !== null &&
+      category.name.trim().toLowerCase() !== clean.toLowerCase();
     setSaving(true);
     try {
       if (category) {
         await save(() =>
           updateCategory({ id: category._id, name: clean, color }),
         );
+        // Anggaran/Ambang diikat ke nama kategori, jadi kalau namanya diganti,
+        // angka lamanya ikut pindah supaya tidak jadi yatim.
+        if (renamed && session.budget > 0) {
+          await save(() =>
+            setBudgetAmount({ bookId, category: category.name, amount: 0 }),
+          );
+        }
         toast.success("Kategorinya sudah diperbarui.");
       } else {
         await save(() =>
           createCategory({ bookId, name: clean, type, color }),
         );
         toast.success("Kategori barunya sudah siap.");
+      }
+
+      if (isExpense && (!category || budget !== session.budget || renamed)) {
+        await save(() =>
+          setBudgetAmount({ bookId, category: clean, amount: budget }),
+        );
       }
       onOpenChange(false);
     } catch (error) {
@@ -125,6 +149,22 @@ function CategoryForm({
             15 pilihan warna untuk membedakan kategori.
           </p>
         </div>
+
+        {isExpense && (
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="category-budget">Anggaran bulanan</Label>
+            <RupiahInput
+              id="category-budget"
+              value={budget}
+              onChange={setBudget}
+              placeholder="500.000"
+            />
+            <p className="text-xs text-muted-foreground">
+              Batas pengeluaran untuk kategori ini tiap bulan. Kosongkan kalau
+              belum mau dibatasi.
+            </p>
+          </div>
+        )}
       </div>
 
       <DialogFooter>
@@ -137,7 +177,11 @@ function CategoryForm({
           Batal
         </Button>
         <Button type="button" onClick={handleSubmit} disabled={saving}>
-          {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+          {saving ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            "Simpan"
+          )}
         </Button>
       </DialogFooter>
     </>

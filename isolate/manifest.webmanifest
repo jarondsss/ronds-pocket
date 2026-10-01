@@ -1,0 +1,17 @@
+{
+  "name": "Ronds Pocket",
+  "short_name": "Ronds Pocket",
+  "description": "Kantong kecil buat uangmu — catat pengeluaran dan pemasukan tanpa ribet.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f2ff",
+  "theme_color": "#8a4bf0",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

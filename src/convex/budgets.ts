@@ -102,14 +102,6 @@ export const setAmount = mutation({
       throw new Error("Pilih kategorinya dulu ya.");
     }
     const amount = Math.max(0, Math.round(args.amount));
-    await logActivity(ctx, {
-      bookId: args.bookId,
-      actorId: userId,
-      action: amount === 0 ? "delete" : "update",
-      target: "anggaran",
-      label: category,
-      detail: amount === 0 ? "Anggaran dihapus" : `Jadi ${rupiah(amount)} / bulan`,
-    });
 
     const existing = await ctx.db
       .query("budgets")
@@ -118,16 +110,44 @@ export const setAmount = mutation({
       )
       .unique();
 
+    // Jejak riwayat cuma ditulis kalau memang ada yang berubah, supaya
+    // penyimpanan yang tidak mengubah apa-apa tidak membanjiri Riwayat.
     if (amount === 0) {
-      if (existing !== null) await ctx.db.delete(existing._id);
+      if (existing === null) return null;
+      await logActivity(ctx, {
+        bookId: args.bookId,
+        actorId: userId,
+        action: "delete",
+        target: "anggaran",
+        label: category,
+        detail: "Anggaran dihapus",
+      });
+      await ctx.db.delete(existing._id);
       return null;
     }
 
     if (existing !== null) {
+      if (existing.amount === amount) return existing._id;
+      await logActivity(ctx, {
+        bookId: args.bookId,
+        actorId: userId,
+        action: "update",
+        target: "anggaran",
+        label: category,
+        detail: `${rupiah(existing.amount)} → ${rupiah(amount)} / bulan`,
+      });
       await ctx.db.patch(existing._id, { amount, updated_at: Date.now() });
       return existing._id;
     }
 
+    await logActivity(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      action: "create",
+      target: "anggaran",
+      label: category,
+      detail: `Jadi ${rupiah(amount)} / bulan`,
+    });
     return await ctx.db.insert("budgets", {
       book_id: args.bookId,
       category,

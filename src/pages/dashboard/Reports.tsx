@@ -28,6 +28,8 @@ const EXPENSE_COLOR = "oklch(0.66 0.17 42)";
 export default function Reports() {
   const { activeBook } = useBooks();
   const [monthKey, setMonthKey] = useState(() => toMonthKey(Date.now()));
+  // Snapshot bulan berjalan diambil sekali saat mount supaya useMemo tetap murni.
+  const [currentKey] = useState(() => toMonthKey(Date.now()));
   const bookId = activeBook?._id;
   const range = useMemo(() => monthRange(monthKey), [monthKey]);
 
@@ -42,7 +44,6 @@ export default function Reports() {
 
   const trend = useMemo(() => {
     const rows = all ?? [];
-    const currentKey = toMonthKey(Date.now());
     return Array.from({ length: 6 }, (_, index) =>
       shiftMonthKey(currentKey, index - 5),
     ).map((key) => {
@@ -55,8 +56,7 @@ export default function Reports() {
         else expense += row.amount;
       }
       return { label: monthShortLabel(key), income, expense };
-    });
-  }, [all]);
+    });    }, [all, currentKey]);
 
   const highlight = useMemo(() => {
     const rows = (all ?? []).filter(

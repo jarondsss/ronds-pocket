@@ -5,6 +5,7 @@ import {
   toMonthKey,
 } from "@/lib/format";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
 export function MonthNavigator({
   monthKey,
@@ -13,7 +14,9 @@ export function MonthNavigator({
   monthKey: string;
   onChange: (monthKey: string) => void;
 }) {
-  const currentKey = toMonthKey(Date.now());
+  // Snapshot bulan berjalan diambil sekali saat mount (initializer useState
+  // adalah tempat yang legal untuk memanggil fungsi impure seperti Date.now).
+  const [currentKey] = useState(() => toMonthKey(Date.now()));
   const isCurrent = monthKey === currentKey;
 
   return (

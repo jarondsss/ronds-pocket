@@ -252,6 +252,10 @@ export default function Savings() {
   const [deleting, setDeleting] = useState<SavingsRow | null>(null);
   const sessionKey = useRef(0);
 
+  if (!activeBook || !bookId) return null;
+
+  const accounts = data?.accounts ?? [];
+
   // Sesi dibuat di event handler: `Date.now()` boleh dipanggil di sini, dan
   // `key` yang naik bikin form di dialog ter-remount dengan nilai awal segar.
   const startForm = (account: SavingsRow | null) => {
@@ -263,20 +267,6 @@ export default function Savings() {
     });
     setFormOpen(true);
   };
-
-  const startMove = (account: SavingsRow) => {
-    sessionKey.current += 1;
-    setMoveSession({
-      key: sessionKey.current,
-      direction: "deposit",
-      today: toDateInput(Date.now()),
-    });
-    setMoving(account);
-  };
-
-  if (!activeBook || !bookId) return null;
-
-  const accounts = data?.accounts ?? [];
 
   return (
     <div className="flex flex-col gap-5">
@@ -403,7 +393,15 @@ export default function Savings() {
                       type="button"
                       size="sm"
                       className="flex-1"
-                      onClick={() => startMove(account)}
+                      onClick={() => {
+                        sessionKey.current += 1;
+                        setMoveSession({
+                          key: sessionKey.current,
+                          direction: "deposit",
+                          today: toDateInput(Date.now()),
+                        });
+                        setMoving(account);
+                      }}
                     >
                       <Plus className="size-4" />
                       Setor / tarik

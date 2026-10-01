@@ -26,6 +26,34 @@ import { Check, ChevronDown, Loader2, Plus, Users } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+function BookItem({
+  book,
+  active,
+  onSelect,
+}: {
+  book: { _id: string; name: string; memberCount: number };
+  active: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <DropdownMenuItem onSelect={onSelect} className="gap-2">
+      <span className="grid size-6 place-items-center rounded-lg bg-primary/12 text-[11px] font-black text-primary">
+        {book.name.charAt(0).toUpperCase()}
+      </span>
+      <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+        {book.name}
+      </span>
+      {book.memberCount > 1 && (
+        <span className="flex shrink-0 items-center gap-0.5 text-[11px] font-bold text-muted-foreground">
+          <Users className="size-3" />
+          {book.memberCount}
+        </span>
+      )}
+      {active && <Check className="size-4 shrink-0 text-primary" />}
+    </DropdownMenuItem>
+  );
+}
+
 export function BookSwitcher({ className }: { className?: string }) {
   const { books, activeBook, setActiveBookId } = useBooks();
   const createBook = useMutation(api.books.create);
@@ -33,6 +61,11 @@ export function BookSwitcher({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
+
+  // Kantong yang sudah diundang orang lain dikelompokkan terpisah, biar jelas
+  // mana yang punyamu sendiri dan mana yang dipakai bareng.
+  const soloBooks = books.filter((book) => book.memberCount <= 1);
+  const sharedBooks = books.filter((book) => book.memberCount > 1);
 
   const handleCreate = async () => {
     const clean = name.trim();
@@ -75,7 +108,11 @@ export function BookSwitcher({ className }: { className?: string }) {
                 {activeBook?.name ?? "Memuat kantong..."}
               </span>
               <span className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground">
-                {activeBook?.role === "owner" ? "Pemilik" : "Teman"}
+                {activeBook && activeBook.memberCount > 1
+                  ? "Kantong bersama"
+                  : activeBook?.role === "owner"
+                    ? "Pemilik"
+                    : "Teman"}
                 <Users className="size-3" />
                 {activeBook?.memberCount ?? 1}
               </span>
@@ -84,24 +121,44 @@ export function BookSwitcher({ className }: { className?: string }) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64">
-          <DropdownMenuLabel>Kantong kamu</DropdownMenuLabel>
-          {books.map((book) => (
-            <DropdownMenuItem
-              key={book._id}
-              onSelect={() => setActiveBookId(book._id)}
-              className="gap-2"
-            >
-              <span className="grid size-6 place-items-center rounded-lg bg-primary/12 text-[11px] font-black text-primary">
-                {book.name.charAt(0).toUpperCase()}
-              </span>
-              <span className="min-w-0 flex-1 truncate text-sm font-semibold">
-                {book.name}
-              </span>
-              {book._id === activeBook?._id && (
-                <Check className="size-4 text-primary" />
-              )}
-            </DropdownMenuItem>
-          ))}
+          {soloBooks.length > 0 && (
+            <>
+              <DropdownMenuLabel>Kantong kamu</DropdownMenuLabel>
+              {soloBooks.map((book) => (
+                <BookItem
+                  key={book._id}
+                  book={book}
+                  active={book._id === activeBook?._id}
+                  onSelect={() => setActiveBookId(book._id)}
+                />
+              ))}
+            </>
+          )}
+
+          {sharedBooks.length > 0 && (
+            <>
+              {soloBooks.length > 0 && <DropdownMenuSeparator />}
+              <DropdownMenuLabel className="flex items-center gap-1.5">
+                <Users className="size-3.5" />
+                Kantong bersama
+              </DropdownMenuLabel>
+              {sharedBooks.map((book) => (
+                <BookItem
+                  key={book._id}
+                  book={book}
+                  active={book._id === activeBook?._id}
+                  onSelect={() => setActiveBookId(book._id)}
+                />
+              ))}
+            </>
+          )}
+
+          {books.length === 0 && (
+            <p className="px-2 py-4 text-center text-sm text-muted-foreground">
+              Belum ada kantong.
+            </p>
+          )}
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={(event) => {

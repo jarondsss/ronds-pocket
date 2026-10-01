@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import {
   logActivity,
+  notifyMembers,
   requireMember,
   requireOwnerOrCreator,
   rupiah,
@@ -170,6 +171,13 @@ export const adjustFunds = mutation({
       target: "target",
       label: goal.name,
       detail: `${amount > 0 ? "Setor" : "Tarik"} ${rupiah(Math.abs(amount))}`,
+    });
+    await notifyMembers(ctx, {
+      bookId: goal.book_id,
+      actorId: userId,
+      message: amount > 0 ? "menambah dana target" : "menarik dana target",
+      label: goal.name,
+      detail: `${amount > 0 ? "+" : "−"}${rupiah(Math.abs(amount))}`,
     });
 
     if (args.wallet_id) {

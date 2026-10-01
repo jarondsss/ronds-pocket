@@ -4,6 +4,7 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import {
   logActivity,
+  notifyMembers,
   requireMember,
   requireOwnerOrCreator,
   rupiah,
@@ -283,21 +284,43 @@ export const transfer = mutation({
     if (from) await requireWalletInBook(ctx, args.bookId, from);
     if (to) await requireWalletInBook(ctx, args.bookId, to);
 
+    const amount = cleanAmount(args.amount);
+    const note = (args.note ?? "").trim();
+    const title = note || (from && to ? "Pindah antar dompet" : "Set saldo");
+    const walletNames = new Map<string, string>();
+    for (const walletId of [from, to]) {
+      if (!walletId || walletNames.has(walletId)) continue;
+      const wallet = await ctx.db.get(walletId);
+      if (wallet !== null) walletNames.set(walletId, wallet.name);
+    }
+    const nameOf = (walletId: Id<"wallets"> | undefined) =>
+      walletId ? (walletNames.get(walletId) ?? "Dompet") : "luar pocket";
+    const route = `${nameOf(from)} → ${nameOf(to)}`;
+
     await logActivity(ctx, {
       bookId: args.bookId,
       actorId: userId,
       action: "create",
       target: "perpindahan",
-      label: args.note?.trim() || (from && to ? "Pindah antar dompet" : "Set saldo"),
-      detail: rupiah(cleanAmount(args.amount)),
+      label: title,
+      detail: rupiah(amount),
+    });
+    await notifyMembers(ctx, {
+      bookId: args.bookId,
+      actorId: userId,
+      message: from
+        ? "memindahkan uang"
+        : "menyetor uang dari luar pocket",
+      label: title,
+      detail: `${route} · ${rupiah(amount)}`,
     });
 
     return await ctx.db.insert("wallet_transfers", {
       book_id: args.bookId,
       from_wallet_id: from,
       to_wallet_id: to,
-      amount: cleanAmount(args.amount),
-      note: (args.note ?? "").trim().slice(0, 120),
+      amount: amount,
+      note: note.slice(0, 120),
       occurred_at: args.occurred_at,
       created_by: userId,
       created_at: Date.now(),

@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import {
   logActivity,
+  notifyMembers,
   requireMember,
   requireOwnerOrCreator,
   rupiah,
@@ -239,6 +240,13 @@ export const deposit = mutation({
       label: account.name,
       detail: `Setor ${rupiah(amount)}`,
     });
+    await notifyMembers(ctx, {
+      bookId: account.book_id,
+      actorId: userId,
+      message: "menyetor ke tabungan",
+      label: account.name,
+      detail: `+${rupiah(amount)}`,
+    });
     await ctx.db.insert("savings_entries", {
       book_id: account.book_id,
       savings_id: args.id,
@@ -288,6 +296,13 @@ export const withdraw = mutation({
       target: "tabungan",
       label: account.name,
       detail: `Tarik ${rupiah(amount)}`,
+    });
+    await notifyMembers(ctx, {
+      bookId: account.book_id,
+      actorId: userId,
+      message: "menarik dana dari tabungan",
+      label: account.name,
+      detail: `−${rupiah(amount)}`,
     });
 
     await ctx.db.insert("savings_entries", {

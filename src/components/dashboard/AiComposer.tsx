@@ -5,18 +5,11 @@ import type { AiDraft } from "@/convex/ai";
 import type { Id } from "@/convex/_generated/dataModel";
 import { toDateInput } from "@/lib/format";
 import { toastError } from "@/lib/error-message";
-import { cn } from "@/lib/utils";
 import { useAction } from "convex/react";
 import { motion } from "framer-motion";
 import { Loader2, Sparkles } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
-
-const EXAMPLES = [
-  "kopi 35rb tadi pagi",
-  "gaji 5jt masuk BCA",
-  "bayar listrik 250rb kemarin",
-];
 
 /**
  * Kotak "catat pakai AI": user menulis bebas, server meraciknya jadi draft,
@@ -87,29 +80,11 @@ export function AiComposer({
             void submit();
           }
         }}
-        placeholder='mis. "bakso 25rb sama es teh 8rb tadi siang"'
         maxLength={500}
         rows={2}
         disabled={thinking}
         className="resize-none"
       />
-
-      <div className="flex flex-wrap gap-2">
-        {EXAMPLES.map((example) => (
-          <button
-            key={example}
-            type="button"
-            disabled={thinking}
-            onClick={() => setText(example)}
-            className={cn(
-              "clay-sm clay-press px-3 py-1.5 text-xs font-bold text-muted-foreground",
-              "hover:text-primary disabled:opacity-50",
-            )}
-          >
-            {example}
-          </button>
-        ))}
-      </div>
 
       <Button
         type="button"

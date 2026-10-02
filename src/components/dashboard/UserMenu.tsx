@@ -15,7 +15,7 @@ import {
   LogOut,
   UserRound,
   Users,
-} from "lucide-react";
+} from "@/components/icons";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 

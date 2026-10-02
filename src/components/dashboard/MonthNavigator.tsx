@@ -4,7 +4,7 @@ import {
   shiftMonthKey,
   toMonthKey,
 } from "@/lib/format";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/icons";
 import { useState } from "react";
 
 export function MonthNavigator({

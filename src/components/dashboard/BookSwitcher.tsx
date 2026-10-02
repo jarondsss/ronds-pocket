@@ -23,7 +23,7 @@ import { toastError } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 import { useSaveTracker } from "@/lib/save-status";
 import { useMutation } from "convex/react";
-import { Check, ChevronDown, Loader2, Plus, Users } from "lucide-react";
+import { Check, ChevronDown, Loader2, Plus, Users } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
 

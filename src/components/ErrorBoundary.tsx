@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { toastError } from "@/lib/error-message";
-import { RotateCcw, TriangleAlert } from "lucide-react";
+import { RotateCcw, TriangleAlert } from "@/components/icons";
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
 interface Props {

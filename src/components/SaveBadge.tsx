@@ -1,6 +1,6 @@
 import { useSaveStatus } from "@/lib/save-status";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2 } from "@/components/icons";
 
 /** Muncul sebentar setiap kali ada perubahan yang sedang dikirim ke server. */
 export function SaveBadge() {

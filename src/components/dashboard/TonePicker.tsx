@@ -1,6 +1,6 @@
 import { TONES } from "@/lib/palette";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Check } from "@/components/icons";
 
 export function TonePicker({
   value,

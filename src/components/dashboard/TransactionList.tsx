@@ -4,7 +4,7 @@ import { formatDay, formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
-import { Receipt } from "lucide-react";
+import { Receipt } from "@/components/icons";
 import { useMemo } from "react";
 
 export interface LedgerTransaction {

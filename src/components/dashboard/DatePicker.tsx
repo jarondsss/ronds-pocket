@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays } from "@/components/icons";
 
 /**
  * Pemilih tanggal bergaya clay: label di atas, cekungan input dengan ikon

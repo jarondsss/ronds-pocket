@@ -23,7 +23,7 @@ import {
   PencilLine,
   Plus,
   Wallet as WalletIcon,
-} from "lucide-react";
+} from "@/components/icons";
 import { useRef, useState } from "react";
 
 export default function Wallet() {

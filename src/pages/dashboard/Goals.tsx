@@ -1,16 +1,7 @@
 import { GoalDialog, type GoalSession } from "@/components/dashboard/GoalDialog";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -211,7 +202,25 @@ export default function Goals() {
     setFormOpen(true);
   };
   const [fundSession, setFundSession] = useState<FundSession | null>(null);
-  const [deleting, setDeleting] = useState<GoalRow | null>(null);
+
+  const confirm = useConfirm();
+
+  const handleDelete = async (goal: GoalRow) => {
+    const ok = await confirm({
+      title: `Hapus target ${goal.name}?`,
+      description:
+        "Progress dan catatan dananya akan hilang. Saldo dompet yang sudah terlanjur dipindahkan tidak ikut kembali.",
+      confirmLabel: "Ya, hapus",
+      tone: "destructive",
+    });
+    if (!ok) return;
+    try {
+      await save(() => removeGoal({ id: goal._id }));
+      toast.success("Targetnya sudah dihapus.");
+    } catch (error) {
+      toastError(error, "Targetnya gagal dihapus.");
+    }
+  };
 
   if (!activeBook || !bookId) return null;
 
@@ -381,7 +390,7 @@ export default function Goals() {
                     <button
                       type="button"
                       aria-label={`Hapus ${goal.name}`}
-                      onClick={() => setDeleting(goal)}
+                      onClick={() => void handleDelete(goal)}
                       className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-destructive"
                     >
                       <Trash2 className="size-4" />
@@ -408,42 +417,6 @@ export default function Goals() {
         session={fundSession ?? { key: 0, goal: null }}
         wallets={wallets}
       />
-
-      <AlertDialog
-        open={deleting !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleting(null);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Hapus target {deleting?.name}?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Progress dan catatan dananya akan hilang. Saldo dompet yang sudah
-              terlanjur dipindahkan tidak ikut kembali.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(event) => {
-                event.preventDefault();
-                if (!deleting) return;
-                const target = deleting;
-                setDeleting(null);
-                void save(() => removeGoal({ id: target._id }))
-                  .then(() => toast.success("Targetnya sudah dihapus."))
-                  .catch(() => toast.error("Targetnya gagal dihapus."));
-              }}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
-              Ya, hapus
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

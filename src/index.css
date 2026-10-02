@@ -93,6 +93,11 @@
   --clay-inset-light: rgba(255, 255, 255, 0.92);
   --clay-primary-dark: rgba(84, 42, 190, 0.42);
   --clay-primary-light: rgba(208, 184, 255, 0.5);
+  /* Cahaya ambient: satu lapis lebar dan tipis supaya permukaan clay terasa
+     mengambang tanpa bayangan gelap yang kasar. */
+  --clay-ambient: rgba(104, 74, 180, 0.09);
+  /* Satu kurva gerak untuk seluruh app: turun cepat, mendarat pelan. */
+  --ease-clay: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .dark {
@@ -136,6 +141,7 @@
   --clay-inset-light: rgba(255, 255, 255, 0.07);
   --clay-primary-dark: rgba(0, 0, 0, 0.45);
   --clay-primary-light: rgba(255, 255, 255, 0.16);
+  --clay-ambient: rgba(0, 0, 0, 0.42);
 }
 
 @layer base {
@@ -153,6 +159,12 @@
   h4 {
     font-family: var(--font-display);
     letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  /* Garis ikon sedikit lebih tipis: stroke tipis terasa lebih mahal daripada
+     stroke default yang tebal, dan tetap satu keluarga (lucide). */
+  svg.lucide {
+    stroke-width: 1.75px;
   }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
@@ -178,6 +190,7 @@
     border-radius: calc(var(--radius) + 0.35rem);
     background-color: var(--card);
     box-shadow:
+      0 1.4rem 2.4rem -1.2rem var(--clay-ambient),
       0.7rem 0.7rem 1.6rem var(--clay-dark),
       -0.5rem -0.5rem 1.3rem var(--clay-light),
       inset -0.25rem -0.25rem 0.7rem var(--clay-inset-dark),
@@ -188,6 +201,7 @@
     border-radius: var(--radius);
     background-color: var(--card);
     box-shadow:
+      0 0.9rem 1.6rem -0.9rem var(--clay-ambient),
       0.4rem 0.4rem 0.9rem var(--clay-dark),
       -0.3rem -0.3rem 0.8rem var(--clay-light),
       inset -0.15rem -0.15rem 0.45rem var(--clay-inset-dark),
@@ -203,6 +217,7 @@
     );
     color: var(--primary-foreground);
     box-shadow:
+      0 1.6rem 2.6rem -1.2rem var(--clay-ambient),
       0.7rem 0.7rem 1.6rem var(--clay-primary-dark),
       -0.5rem -0.5rem 1.3rem var(--clay-primary-light),
       inset -0.3rem -0.3rem 0.8rem rgba(0, 0, 0, 0.16),
@@ -217,10 +232,23 @@
       inset -0.35rem -0.35rem 0.8rem var(--clay-inset-light);
   }
 
+  /* Double-bezel: permukaan luar yang menahan core di dalamnya. Dipakai untuk
+     visual utama (preview produk, CTA penutup) supaya terasa seperti benda
+     yang dirakit, bukan kotak datar di atas latar. */
+  .clay-shell {
+    border-radius: calc(var(--radius) + 0.6rem);
+    background-color: color-mix(in oklab, var(--secondary) 55%, var(--card));
+    padding: 0.5rem;
+    box-shadow:
+      0 1.6rem 2.6rem -1.2rem var(--clay-ambient),
+      0.8rem 0.8rem 1.8rem var(--clay-dark),
+      -0.5rem -0.5rem 1.4rem var(--clay-light);
+  }
+
   .clay-press {
     transition:
-      transform 160ms ease,
-      box-shadow 160ms ease;
+      transform 320ms var(--ease-clay),
+      box-shadow 320ms var(--ease-clay);
   }
   .clay-press:active {
     transform: translateY(2px);
@@ -236,9 +264,9 @@
     border-radius: var(--radius);
     font-weight: 600;
     transition:
-      transform 150ms ease,
-      box-shadow 150ms ease,
-      background-color 150ms ease;
+      transform 260ms var(--ease-clay),
+      box-shadow 260ms var(--ease-clay),
+      background-color 260ms var(--ease-clay);
   }
   [data-slot="button"]:not(:disabled):active {
     transform: translateY(1px) scale(0.985);
@@ -323,6 +351,14 @@
 @media (prefers-reduced-motion: reduce) {
   .clay-float {
     animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

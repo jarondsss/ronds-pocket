@@ -10,6 +10,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { friendlyError } from "@/lib/error-message";
 import { ArrowRight, Check, Mail, ShieldCheck, UserX } from "lucide-react";
 import { motion } from "framer-motion";
+
+/** Satu kurva gerak untuk seluruh halaman: turun cepat, mendarat pelan. */
+const EASE: [number, number, number, number] = [0.32, 0.72, 0, 1];
 import { Suspense, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
@@ -108,7 +111,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
+          transition={{ duration: 0.7, ease: EASE }}
           className="hidden lg:block"
         >
           <Brand />
@@ -136,7 +139,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: "easeOut", delay: 0.08 }}
+          transition={{ duration: 0.7, ease: EASE, delay: 0.08 }}
           className="clay mx-auto w-full max-w-md p-6 sm:p-8"
         >
           <div className="flex justify-center lg:hidden">

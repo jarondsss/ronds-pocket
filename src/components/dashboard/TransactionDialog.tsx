@@ -1,13 +1,4 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -113,7 +104,8 @@ function TransactionForm({
     initial ? toDateInput(initial.occurred_at) : session.today,
   );
   const [saving, setSaving] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const confirm = useConfirm();
 
   const options = categories
     .filter((item) => item.type === type)
@@ -158,11 +150,17 @@ function TransactionForm({
 
   const handleDelete = async () => {
     if (!editing) return;
+    const ok = await confirm({
+      title: "Hapus catatan ini?",
+      description: "Catatan ini akan hilang dan tidak bisa dikembalikan lagi.",
+      confirmLabel: "Ya, hapus",
+      tone: "destructive",
+    });
+    if (!ok) return;
     setSaving(true);
     try {
       await save(() => removeTransaction({ id: editing._id }));
       toast.success("Catatan sudah dihapus.");
-      setConfirmDelete(false);
       onOpenChange(false);
     } catch (error) {
       toastError(error, "Catatannya gagal dihapus.");
@@ -184,71 +182,73 @@ function TransactionForm({
               ? "AI sudah mengisi drafnya. Cek dulu, baru simpan ya."
               : "Isi nominalnya dulu, sisanya bisa menyusul."}
         </DialogDescription>
-      </DialogHeader>        <div className="flex flex-col gap-5">
-          <SegmentedChips
-            options={[
-              { value: "expense", label: "Pengeluaran", tone: "expense" },
-              { value: "income", label: "Pemasukan", tone: "income" },
-            ]}
-            value={type}
-            onChange={handleTypeChange}
-          />
+      </DialogHeader>
+
+      <div className="flex flex-col gap-5">
+      <SegmentedChips
+        options={[
+          { value: "expense", label: "Pengeluaran", tone: "expense" },
+          { value: "income", label: "Pemasukan", tone: "income" },
+        ]}
+        value={type}
+        onChange={handleTypeChange}
+      />
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="tx-amount">Nominal (Rp)</Label>
-          <RupiahInput
-            id="tx-amount"
-            value={amount}
-            onChange={setAmount}
-            size="lg"
-          />
-          <div className="flex flex-wrap gap-2">
-            {QUICK_AMOUNTS.map((value) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setAmount(amount + value)}
-                className="clay-sm clay-press px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-primary"
-              >
-                +{value / 1000}rb
-              </button>
-            ))}
-            {amount > 0 && (
-              <button
-                type="button"
-                onClick={() => setAmount(0)}
-                className="px-2 py-1.5 text-xs font-bold text-muted-foreground underline decoration-dotted hover:text-destructive"
-              >
-                kosongkan
-              </button>
-            )}
-          </div>
+        <Label htmlFor="tx-amount">Nominal (Rp)</Label>
+        <RupiahInput
+          id="tx-amount"
+          value={amount}
+          onChange={setAmount}
+          size="lg"
+        />
+        <div className="flex flex-wrap gap-2">
+          {QUICK_AMOUNTS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setAmount(amount + value)}
+              className="clay-sm clay-press px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-primary"
+            >
+              +{value / 1000}rb
+            </button>
+          ))}
           {amount > 0 && (
-            <p className="text-xs font-semibold text-muted-foreground">
-              {formatRupiah(amount)}
-            </p>
+            <button
+              type="button"
+              onClick={() => setAmount(0)}
+              className="px-2 py-1.5 text-xs font-bold text-muted-foreground underline decoration-dotted hover:text-destructive"
+            >
+              kosongkan
+            </button>
           )}
         </div>
+        {amount > 0 && (
+          <p className="text-xs font-semibold text-muted-foreground">
+            {formatRupiah(amount)}
+          </p>
+        )}
+      </div>
 
-        <div className="flex flex-col gap-2">
-          <Label>Dompet</Label>
-          <Select value={walletId} onValueChange={setWalletId}>
-            <SelectTrigger className="h-11 w-full">
-              <SelectValue placeholder="Pilih dompet" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={NO_WALLET}>Tanpa dompet</SelectItem>
-              {wallets.map((wallet) => (
-                <SelectItem key={wallet._id} value={wallet._id}>
-                  <span className="mr-1.5">{wallet.icon}</span>
-                  {wallet.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="flex flex-col gap-2">
+        <Label>Dompet</Label>
+        <Select value={walletId} onValueChange={setWalletId}>
+          <SelectTrigger className="h-11 w-full">
+            <SelectValue placeholder="Pilih dompet" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={NO_WALLET}>Tanpa dompet</SelectItem>
+            {wallets.map((wallet) => (
+              <SelectItem key={wallet._id} value={wallet._id}>
+                <span className="mr-1.5">{wallet.icon}</span>
+                {wallet.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        <CategoryCombobox
+      <CategoryCombobox
           id="tx-category"
           label="Kategori"
           value={category}
@@ -256,7 +256,7 @@ function TransactionForm({
           options={options}
         />
 
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
           <Label htmlFor="tx-note">Catatan</Label>
           <Input
             id="tx-note"
@@ -281,7 +281,7 @@ function TransactionForm({
             type="button"
             variant="ghost"
             className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => setConfirmDelete(true)}
+            onClick={() => void handleDelete()}
             disabled={saving}
           >
             <Trash2 className="size-4" />
@@ -304,30 +304,6 @@ function TransactionForm({
           </Button>
         </div>
       </DialogFooter>
-
-      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Hapus catatan ini?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Catatan ini akan hilang dan tidak bisa dikembalikan lagi.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={saving}>Batal</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(event) => {
-                event.preventDefault();
-                void handleDelete();
-              }}
-              disabled={saving}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
-              {saving ? <Loader2 className="size-4 animate-spin" /> : "Ya, hapus"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

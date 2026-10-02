@@ -3,16 +3,7 @@ import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
 import { DatePicker } from "@/components/dashboard/DatePicker";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -248,7 +239,24 @@ export default function Savings() {
   const [moveSession, setMoveSession] = useState<MoveSession | null>(null);
   const [moving, setMoving] = useState<SavingsRow | null>(null);
   const [historyFor, setHistoryFor] = useState<SavingsRow | null>(null);
-  const [deleting, setDeleting] = useState<SavingsRow | null>(null);
+
+  const confirm = useConfirm();
+
+  const handleDelete = async (account: SavingsRow) => {
+    const ok = await confirm({
+      title: `Hapus tabungan ${account.name}?`,
+      description: "Semua riwayat setoran dan penarikannya ikut terhapus.",
+      confirmLabel: "Ya, hapus",
+      tone: "destructive",
+    });
+    if (!ok) return;
+    try {
+      await save(() => removeAccount({ id: account._id }));
+      toast.success("Tabungannya sudah dihapus.");
+    } catch (error) {
+      toastError(error, "Tabungannya gagal dihapus.");
+    }
+  };
   const sessionKey = useRef(0);
 
   if (!activeBook || !bookId) return null;
@@ -424,7 +432,7 @@ export default function Savings() {
                     <button
                       type="button"
                       aria-label={`Hapus ${account.name}`}
-                      onClick={() => setDeleting(account)}
+                      onClick={() => void handleDelete(account)}
                       className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-destructive"
                     >
                       <Trash2 className="size-4" />
@@ -462,41 +470,6 @@ export default function Savings() {
         }}
         account={historyFor}
       />
-
-      <AlertDialog
-        open={deleting !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleting(null);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Hapus tabungan {deleting?.name}?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Semua riwayat setoran dan penarikannya ikut terhapus.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(event) => {
-                event.preventDefault();
-                if (!deleting) return;
-                const target = deleting;
-                setDeleting(null);
-                void save(() => removeAccount({ id: target._id }))
-                  .then(() => toast.success("Tabungannya sudah dihapus."))
-                  .catch(() => toast.error("Tabungannya gagal dihapus."));
-              }}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
-              Ya, hapus
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

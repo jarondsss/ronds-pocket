@@ -2,16 +2,7 @@ import { ChoiceChips } from "@/components/dashboard/ChoiceChips";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { TonePicker } from "@/components/dashboard/TonePicker";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -76,7 +67,8 @@ function WalletForm({
   const [color, setColor] = useState(wallet?.color ?? "mint");
   const [opening, setOpening] = useState(wallet?.opening_balance ?? 0);
   const [saving, setSaving] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const confirm = useConfirm();
 
   const handleType = (next: string) => {
     setType(next);
@@ -126,11 +118,18 @@ function WalletForm({
 
   const handleDelete = async () => {
     if (!wallet) return;
+    const ok = await confirm({
+      title: "Hapus dompet ini?",
+      description:
+        "Catatan transaksi yang pernah masuk ke dompet ini tetap ada, tapi saldonya tidak lagi ikut dihitung.",
+      confirmLabel: "Ya, hapus",
+      tone: "destructive",
+    });
+    if (!ok) return;
     setSaving(true);
     try {
       await save(() => removeWallet({ id: wallet._id }));
       toast.success("Dompetnya sudah dihapus.");
-      setConfirmDelete(false);
       onOpenChange(false);
     } catch (error) {
       toastError(error, "Dompetnya gagal dihapus.");
@@ -209,7 +208,7 @@ function WalletForm({
             type="button"
             variant="ghost"
             className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => setConfirmDelete(true)}
+            onClick={() => void handleDelete()}
             disabled={saving}
           >
             <Trash2 className="size-4" />
@@ -232,31 +231,6 @@ function WalletForm({
           </Button>
         </div>
       </DialogFooter>
-
-      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Hapus dompet ini?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Catatan transaksi yang pernah masuk ke dompet ini tetap ada, tapi
-              saldonya tidak lagi ikut dihitung.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={saving}>Batal</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(event) => {
-                event.preventDefault();
-                void handleDelete();
-              }}
-              disabled={saving}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
-              {saving ? <Loader2 className="size-4 animate-spin" /> : "Ya, hapus"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

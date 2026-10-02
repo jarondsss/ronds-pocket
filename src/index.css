@@ -434,28 +434,6 @@
       0 0.35rem 0.6rem -0.15rem var(--clay-primary-dark),
       inset -0.1rem -0.1rem 0.28rem rgba(0, 0, 0, 0.16),
       inset 0.1rem 0.1rem 0.28rem rgba(255, 255, 255, 0.34);
-    animation: clay-loader-hop 1.15s var(--ease-clay) infinite;
-  }
-  .clay-loader > span:nth-child(2) {
-    animation-delay: 0.13s;
-  }
-  .clay-loader > span:nth-child(3) {
-    animation-delay: 0.26s;
-  }
-
-}
-
-@keyframes clay-loader-hop {
-  0%,
-  55%,
-  100% {
-    transform: translateY(0) scale(1, 1);
-  }
-  22% {
-    transform: translateY(-0.5rem) scale(0.94, 1.08);
-  }
-  40% {
-    transform: translateY(0) scale(1.16, 0.84);
   }
 }
 

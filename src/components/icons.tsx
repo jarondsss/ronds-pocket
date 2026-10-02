@@ -9,6 +9,9 @@
  * acuan desain memakai ikon garis tipis. Lucide juga tree-shake, jadi bundle
  * tetap kecil: hanya ikon yang benar-benar dipakai yang ikut ter-bundle.
  *
+ * Catatan: semua nama ikon di-import dengan awalan `Lucide` supaya nama
+ * ekspor di bawah tidak bentrok dengan impor aslinya.
+ *
  * Lisensi: Lucide (ISC), lihat https://lucide.dev
  */
 import {

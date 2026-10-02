@@ -1,4 +1,5 @@
 import { formatRupiah } from "@/lib/format";
+import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import { ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react";
 
@@ -17,7 +18,7 @@ export function SummaryHero({ summary }: { summary: Summary }) {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
+        transition={{ duration: 0.35, ease: EASE }}
         className="clay-primary relative overflow-hidden p-5 sm:p-6"
       >
         <div
@@ -51,7 +52,7 @@ export function SummaryHero({ summary }: { summary: Summary }) {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.05, ease: "easeOut" }}
+          transition={{ duration: 0.35, delay: 0.05, ease: EASE }}
           className="clay-sm p-4"
         >
           <span className="grid size-9 place-items-center rounded-xl bg-income/15 text-income">
@@ -68,7 +69,7 @@ export function SummaryHero({ summary }: { summary: Summary }) {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.1, ease: "easeOut" }}
+          transition={{ duration: 0.35, delay: 0.1, ease: EASE }}
           className="clay-sm p-4"
         >
           <span className="grid size-9 place-items-center rounded-xl bg-expense/15 text-expense">

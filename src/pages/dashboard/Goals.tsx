@@ -32,6 +32,7 @@ import { useSaveTracker } from "@/lib/save-status";
 import type { GoalRow, WalletRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
+import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import {
   CalendarClock,
@@ -351,7 +352,7 @@ export default function Goals() {
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.max(percent, 3)}%` }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        transition={{ duration: 0.5, ease: EASE }}
                         className="h-full rounded-full"
                         style={{
                           backgroundColor: done

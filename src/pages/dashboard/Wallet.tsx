@@ -15,6 +15,7 @@ import { toneValue, walletTypeOf } from "@/lib/palette";
 import type { TransferRow, WalletRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
+import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import {
   ArrowLeftRight,
@@ -103,7 +104,7 @@ export default function Wallet() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
+            transition={{ duration: 0.35, ease: EASE }}
             className="clay-primary relative overflow-hidden p-5 sm:p-6"
           >
             <div

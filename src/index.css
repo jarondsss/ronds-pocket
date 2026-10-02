@@ -87,15 +87,15 @@
   --sidebar-ring: oklch(0.63 0.185 295);
 
   /* Clay light model: warm shadow below, soft highlight above */
-  --clay-dark: rgba(104, 74, 180, 0.19);
+  --clay-dark: rgba(104, 74, 180, 0.13);
   --clay-light: rgba(255, 255, 255, 0.96);
-  --clay-inset-dark: rgba(120, 92, 190, 0.12);
+  --clay-inset-dark: rgba(120, 92, 190, 0.09);
   --clay-inset-light: rgba(255, 255, 255, 0.92);
-  --clay-primary-dark: rgba(84, 42, 190, 0.42);
+  --clay-primary-dark: rgba(84, 42, 190, 0.3);
   --clay-primary-light: rgba(208, 184, 255, 0.5);
   /* Cahaya ambient: satu lapis lebar dan tipis supaya permukaan clay terasa
      mengambang tanpa bayangan gelap yang kasar. */
-  --clay-ambient: rgba(104, 74, 180, 0.09);
+  --clay-ambient: rgba(104, 74, 180, 0.055);
   /* Satu kurva gerak untuk seluruh app: turun cepat, mendarat pelan. */
   --ease-clay: cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -135,13 +135,13 @@
   --sidebar-border: oklch(0.39 0.035 300);
   --sidebar-ring: oklch(0.72 0.15 296);
 
-  --clay-dark: rgba(0, 0, 0, 0.5);
+  --clay-dark: rgba(0, 0, 0, 0.38);
   --clay-light: rgba(255, 255, 255, 0.06);
-  --clay-inset-dark: rgba(0, 0, 0, 0.38);
+  --clay-inset-dark: rgba(0, 0, 0, 0.3);
   --clay-inset-light: rgba(255, 255, 255, 0.07);
-  --clay-primary-dark: rgba(0, 0, 0, 0.45);
+  --clay-primary-dark: rgba(0, 0, 0, 0.34);
   --clay-primary-light: rgba(255, 255, 255, 0.16);
-  --clay-ambient: rgba(0, 0, 0, 0.42);
+  --clay-ambient: rgba(0, 0, 0, 0.28);
 }
 
 @layer base {
@@ -193,19 +193,19 @@
       0 1.4rem 2.4rem -1.2rem var(--clay-ambient),
       0.7rem 0.7rem 1.6rem var(--clay-dark),
       -0.5rem -0.5rem 1.3rem var(--clay-light),
-      inset -0.25rem -0.25rem 0.7rem var(--clay-inset-dark),
-      inset 0.25rem 0.25rem 0.7rem var(--clay-inset-light);
+      inset -0.2rem -0.2rem 0.6rem var(--clay-inset-dark),
+      inset 0.2rem 0.2rem 0.6rem var(--clay-inset-light);
   }
 
   .clay-sm {
     border-radius: var(--radius);
     background-color: var(--card);
     box-shadow:
-      0 0.9rem 1.6rem -0.9rem var(--clay-ambient),
-      0.4rem 0.4rem 0.9rem var(--clay-dark),
-      -0.3rem -0.3rem 0.8rem var(--clay-light),
-      inset -0.15rem -0.15rem 0.45rem var(--clay-inset-dark),
-      inset 0.15rem 0.15rem 0.45rem var(--clay-inset-light);
+      0 0.7rem 1.3rem -0.8rem var(--clay-ambient),
+      0.28rem 0.28rem 0.7rem var(--clay-dark),
+      -0.2rem -0.2rem 0.6rem var(--clay-light),
+      inset -0.1rem -0.1rem 0.35rem var(--clay-inset-dark),
+      inset 0.1rem 0.1rem 0.35rem var(--clay-inset-light);
   }
 
   .clay-primary {
@@ -220,16 +220,16 @@
       0 1.6rem 2.6rem -1.2rem var(--clay-ambient),
       0.7rem 0.7rem 1.6rem var(--clay-primary-dark),
       -0.5rem -0.5rem 1.3rem var(--clay-primary-light),
-      inset -0.3rem -0.3rem 0.8rem rgba(0, 0, 0, 0.16),
-      inset 0.3rem 0.3rem 0.8rem rgba(255, 255, 255, 0.32);
+      inset -0.24rem -0.24rem 0.65rem rgba(0, 0, 0, 0.13),
+      inset 0.24rem 0.24rem 0.65rem rgba(255, 255, 255, 0.3);
   }
 
   .clay-sunken {
     border-radius: var(--radius);
     background-color: color-mix(in oklab, var(--muted) 70%, var(--card));
     box-shadow:
-      inset 0.4rem 0.4rem 0.9rem var(--clay-inset-dark),
-      inset -0.35rem -0.35rem 0.8rem var(--clay-inset-light);
+      inset 0.32rem 0.32rem 0.75rem var(--clay-inset-dark),
+      inset -0.28rem -0.28rem 0.65rem var(--clay-inset-light);
   }
 
   /* Double-bezel: permukaan luar yang menahan core di dalamnya. Dipakai untuk
@@ -240,9 +240,9 @@
     background-color: color-mix(in oklab, var(--secondary) 55%, var(--card));
     padding: 0.5rem;
     box-shadow:
-      0 1.6rem 2.6rem -1.2rem var(--clay-ambient),
-      0.8rem 0.8rem 1.8rem var(--clay-dark),
-      -0.5rem -0.5rem 1.4rem var(--clay-light);
+      0 1.4rem 2.2rem -1.1rem var(--clay-ambient),
+      0.6rem 0.6rem 1.4rem var(--clay-dark),
+      -0.4rem -0.4rem 1.1rem var(--clay-light);
   }
 
   .clay-press {
@@ -253,10 +253,10 @@
   .clay-press:active {
     transform: translateY(2px);
     box-shadow:
-      0.25rem 0.25rem 0.6rem var(--clay-dark),
-      -0.2rem -0.2rem 0.5rem var(--clay-light),
-      inset -0.3rem -0.3rem 0.7rem var(--clay-inset-dark),
-      inset 0.3rem 0.3rem 0.7rem var(--clay-inset-light);
+      0.18rem 0.18rem 0.45rem var(--clay-dark),
+      -0.15rem -0.15rem 0.4rem var(--clay-light),
+      inset -0.24rem -0.24rem 0.6rem var(--clay-inset-dark),
+      inset 0.24rem 0.24rem 0.6rem var(--clay-inset-light);
   }
 
   /* Shadcn primitives inherit the clay language app-wide */
@@ -273,18 +273,18 @@
   }
   [data-slot="button"][data-variant="default"] {
     box-shadow:
-      0.45rem 0.45rem 1rem var(--clay-primary-dark),
-      -0.3rem -0.3rem 0.8rem var(--clay-primary-light),
-      inset -0.2rem -0.2rem 0.55rem rgba(0, 0, 0, 0.16),
-      inset 0.2rem 0.2rem 0.55rem rgba(255, 255, 255, 0.28);
+      0.3rem 0.3rem 0.75rem var(--clay-primary-dark),
+      -0.22rem -0.22rem 0.6rem var(--clay-primary-light),
+      inset -0.15rem -0.15rem 0.4rem rgba(0, 0, 0, 0.14),
+      inset 0.15rem 0.15rem 0.4rem rgba(255, 255, 255, 0.26);
   }
   [data-slot="button"][data-variant="outline"],
   [data-slot="button"][data-variant="secondary"] {
     box-shadow:
-      0.35rem 0.35rem 0.85rem var(--clay-dark),
-      -0.25rem -0.25rem 0.7rem var(--clay-light),
-      inset -0.12rem -0.12rem 0.4rem var(--clay-inset-dark),
-      inset 0.12rem 0.12rem 0.4rem var(--clay-inset-light);
+      0.24rem 0.24rem 0.6rem var(--clay-dark),
+      -0.18rem -0.18rem 0.5rem var(--clay-light),
+      inset -0.1rem -0.1rem 0.32rem var(--clay-inset-dark),
+      inset 0.1rem 0.1rem 0.32rem var(--clay-inset-light);
   }
 
   [data-slot="input"],
@@ -294,16 +294,16 @@
     background-color: var(--card);
     border-color: transparent;
     box-shadow:
-      inset 0.32rem 0.32rem 0.7rem var(--clay-inset-dark),
-      inset -0.28rem -0.28rem 0.65rem var(--clay-inset-light),
+      inset 0.26rem 0.26rem 0.6rem var(--clay-inset-dark),
+      inset -0.22rem -0.22rem 0.55rem var(--clay-inset-light),
       0 0 0 1px color-mix(in oklab, var(--border) 80%, transparent);
   }
   [data-slot="input"]:focus-visible,
   [data-slot="textarea"]:focus-visible,
   [data-slot="select-trigger"]:focus-visible {
     box-shadow:
-      inset 0.32rem 0.32rem 0.7rem var(--clay-inset-dark),
-      inset -0.28rem -0.28rem 0.65rem var(--clay-inset-light),
+      inset 0.26rem 0.26rem 0.6rem var(--clay-inset-dark),
+      inset -0.22rem -0.22rem 0.55rem var(--clay-inset-light),
       0 0 0 3px color-mix(in oklab, var(--ring) 35%, transparent);
   }
 
@@ -318,17 +318,17 @@
   [data-slot="dialog-content"],
   [data-slot="alert-dialog-content"] {
     box-shadow:
-      1rem 1rem 2.4rem var(--clay-dark),
-      -0.6rem -0.6rem 1.6rem var(--clay-light),
-      inset -0.25rem -0.25rem 0.7rem var(--clay-inset-dark),
-      inset 0.25rem 0.25rem 0.7rem var(--clay-inset-light);
+      0.75rem 0.75rem 1.9rem var(--clay-dark),
+      -0.45rem -0.45rem 1.2rem var(--clay-light),
+      inset -0.2rem -0.2rem 0.55rem var(--clay-inset-dark),
+      inset 0.2rem 0.2rem 0.55rem var(--clay-inset-light);
   }
   [data-slot="select-content"],
   [data-slot="dropdown-menu-content"],
   [data-slot="popover-content"] {
     box-shadow:
-      0.6rem 0.6rem 1.4rem var(--clay-dark),
-      -0.4rem -0.4rem 1rem var(--clay-light);
+      0.45rem 0.45rem 1.1rem var(--clay-dark),
+      -0.3rem -0.3rem 0.8rem var(--clay-light);
   }
 
   /* A little bounce, for the playful bits */

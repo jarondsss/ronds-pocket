@@ -21,6 +21,7 @@ import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
+import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import {
   ChartPie,
@@ -126,7 +127,7 @@ function BudgetRow({
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${Math.max(percent, target > 0 ? 3 : 0)}%` }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: EASE }}
           className="h-full rounded-full"
           style={{
             backgroundColor: over

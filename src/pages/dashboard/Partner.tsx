@@ -1,19 +1,11 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useBooks } from "@/lib/book-context";
+import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
@@ -35,6 +27,7 @@ import { toast } from "sonner";
 
 export default function Partner() {
   const { activeBook, isOwner, setActiveBookId } = useBooks();
+  const confirm = useConfirm();
   const bookId = activeBook?._id;
 
   const members = useQuery(
@@ -57,10 +50,6 @@ export default function Partner() {
   const [creating, setCreating] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [leaving, setLeaving] = useState(false);
-  const [removing, setRemoving] = useState<{
-    userId: Id<"users">;
-    name: string;
-  } | null>(null);
 
   if (!activeBook || !bookId) return null;
 
@@ -81,9 +70,7 @@ export default function Partner() {
       await copyCode(generated);
       toast.success(`Kode ${generated} siap dibagikan.`);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Kodenya gagal dibuat. Coba lagi ya.",
-      );
+      toastError(error, "Kodenya gagal dibuat. Coba lagi ya.");
     } finally {
       setCreating(false);
     }
@@ -102,24 +89,38 @@ export default function Partner() {
       setCode("");
       toast.success("Berhasil bergabung! Kantongnya sudah muncul di daftarmu.");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Kodenya sepertinya salah.");
+      toastError(error, "Kodenya sepertinya salah.");
     } finally {
       setJoining(false);
     }
   };
 
-  const handleRevoke = async (inviteId: Id<"invites">) => {
+  const handleRevoke = async (inviteId: Id<"invites">, code: string) => {
+    const ok = await confirm({
+      title: `Cabut kode ${code}?`,
+      description:
+        "Kodenya langsung tidak berlaku dan tidak bisa dipakai siapa pun lagi.",
+      confirmLabel: "Ya, cabut",
+      tone: "destructive",
+    });
+    if (!ok) return;
     try {
       await save(() => revokeInvite({ bookId, inviteId }));
       toast.success("Kodenya dicabut, nggak bisa dipakai lagi.");
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Gagal mencabut kode ini.",
-      );
+      toastError(error, "Gagal mencabut kode ini.");
     }
   };
 
   const handleLeave = async () => {
+    const ok = await confirm({
+      title: "Keluar dari Pocket ini?",
+      description:
+        "Kamu nggak bisa buka lagi sampai diundang ulang. Catatan yang sudah ada tetap milik pemilik.",
+      confirmLabel: "Ya, keluar",
+      tone: "destructive",
+    });
+    if (!ok) return;
     setLeaving(true);
     try {
       await save(() => leaveBook({ bookId }));
@@ -127,22 +128,24 @@ export default function Partner() {
       toast.success("Kamu sudah keluar dari kantong ini.");
     } catch (error) {
       setLeaving(false);
-      toast.error(
-        error instanceof Error ? error.message : "Gagal keluar dari sini.",
-      );
+      toastError(error, "Gagal keluar dari sini.");
     }
   };
 
-  const handleRemove = async () => {
-    if (!removing) return;
+  const handleRemove = async (userId: Id<"users">, name: string) => {
+    const ok = await confirm({
+      title: `Keluarkan ${name} dari kantong ini?`,
+      description:
+        "Setelah dikeluarkan, dia tidak bisa lagi melihat atau menambah catatan di sini. Catatan yang sudah ada tetap aman.",
+      confirmLabel: "Ya, keluarkan",
+      tone: "destructive",
+    });
+    if (!ok) return;
     try {
-      await save(() => removeMember({ bookId, userId: removing.userId }));
-      toast.success(`${removing.name} sudah dikeluarkan dari kantong ini.`);
-      setRemoving(null);
+      await save(() => removeMember({ bookId, userId }));
+      toast.success(`${name} sudah dikeluarkan dari Pocket ini.`);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Gagal mengeluarkan orang ini.",
-      );
+      toastError(error, "Gagal mengeluarkan orang ini.");
     }
   };
 
@@ -209,7 +212,7 @@ export default function Partner() {
                   type="button"
                   aria-label={`Keluarkan ${member.name}`}
                   onClick={() =>
-                    setRemoving({ userId: member.userId, name: member.name })
+                    void handleRemove(member.userId, member.name)
                   }
                   className="grid size-8 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-destructive"
                 >
@@ -319,7 +322,7 @@ export default function Partner() {
                   <button
                     type="button"
                     aria-label={`Cabut kode ${invite.code}`}
-                    onClick={() => void handleRevoke(invite._id)}
+                    onClick={() => void handleRevoke(invite._id, invite.code)}
                     className="grid size-8 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-destructive"
                   >
                     <X className="size-4" />
@@ -373,36 +376,6 @@ export default function Partner() {
         </div>
       </section>
 
-      <AlertDialog
-        open={removing !== null}
-        onOpenChange={(open) => {
-          if (!open) setRemoving(null);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Keluarkan {removing?.name} dari kantong ini?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Setelah dikeluarkan, dia tidak bisa lagi melihat atau menambah
-              catatan di kantong ini. Catatan yang sudah ada tetap aman.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(event) => {
-                event.preventDefault();
-                void handleRemove();
-              }}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
-              Ya, hapus
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+      </div>
   );
 }

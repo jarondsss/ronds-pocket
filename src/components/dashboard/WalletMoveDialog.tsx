@@ -25,6 +25,7 @@ import {
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { fromDateInput } from "@/lib/format";
+import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import type { WalletRow } from "@/lib/types";
 import { useMutation } from "convex/react";
@@ -130,11 +131,7 @@ function MoveForm({
       );
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Perubahannya gagal disimpan.",
-      );
+      toastError(error, "Perubahannya gagal disimpan.");
     } finally {
       setSaving(false);
     }

@@ -30,6 +30,7 @@ import {
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useBooks } from "@/lib/book-context";
+import { toastError } from "@/lib/error-message";
 import {
   describeDaysLeft,
   daysUntil,
@@ -102,9 +103,7 @@ function FundDialog({
       onOpenChange(false);
       setAmount(0);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Dananya gagal dipindahkan.",
-      );
+      toastError(error, "Dananya gagal dipindahkan.");
     } finally {
       setSaving(false);
     }

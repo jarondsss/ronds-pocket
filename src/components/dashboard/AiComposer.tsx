@@ -4,6 +4,7 @@ import { api } from "@/convex/_generated/api";
 import type { AiDraft } from "@/convex/ai";
 import type { Id } from "@/convex/_generated/dataModel";
 import { toDateInput } from "@/lib/format";
+import { toastError } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 import { useAction } from "convex/react";
 import { motion } from "framer-motion";
@@ -50,11 +51,7 @@ export function AiComposer({
       setText("");
       toast.success("Drafnya siap. Cek dulu sebelum disimpan ya.");
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "AI-nya gagal membaca catatanmu. Coba lagi ya.",
-      );
+      toastError(error, "AI-nya gagal membaca catatanmu. Coba lagi ya.");
     } finally {
       setThinking(false);
     }

@@ -34,6 +34,7 @@ import { api } from "@/convex/_generated/api";
 import type { AiDraft } from "@/convex/ai";
 import type { Id } from "@/convex/_generated/dataModel";
 import { formatRupiah, fromDateInput, toDateInput } from "@/lib/format";
+import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow, WalletRow } from "@/lib/types";
 import { useMutation } from "convex/react";
@@ -149,9 +150,7 @@ function TransactionForm({
       }
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Catatannya gagal disimpan.",
-      );
+      toastError(error, "Catatannya gagal disimpan.");
     } finally {
       setSaving(false);
     }
@@ -166,9 +165,7 @@ function TransactionForm({
       setConfirmDelete(false);
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Catatannya gagal dihapus.",
-      );
+      toastError(error, "Catatannya gagal dihapus.");
     } finally {
       setSaving(false);
     }

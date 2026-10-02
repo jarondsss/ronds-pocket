@@ -1,5 +1,7 @@
 import '@vly-ai/integrations';
 import { Toaster } from "@/components/ui/sonner";
+import { ConfirmProvider } from "@/components/ConfirmDialog";
+import { GlobalErrorListener } from "@/components/GlobalErrorListener";
 import { GuestOnly } from "@/components/GuestOnly";
 import { RequireAuth } from "@/components/RequireAuth";
 import { VlyToolbar } from "../vly-toolbar-readonly.tsx";
@@ -126,43 +128,46 @@ createRoot(document.getElementById("root")!).render(
       <ConvexAuthProvider client={convex}>
         <BrowserRouter>
           <RouteSyncer />
-          <Suspense fallback={<RouteLoading />}>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <GuestOnly redirectTo="/dashboard">
-                    <Landing />
-                  </GuestOnly>
-                }
-              />
-              <Route
-                path="/auth"
-                element={<AuthPage redirectAfterAuth="/dashboard" />}
-              />
-              <Route
-                path="/dashboard"
-                element={
-                  <RequireAuth
-                    title="Masuk untuk membuka kantongmu"
-                    description="Catatan uangmu tersimpan rapi di dalam. Cukup masuk sebentar, lalu lanjut mencatat."
-                  >
-                    <Dashboard />
-                  </RequireAuth>
-                }
-              >
-                <Route index element={<Ledger />} />
-                <Route path="dompet" element={<Wallet />} />
-                <Route path="anggaran" element={<Budget />} />
-                <Route path="goals" element={<Goals />} />
-                <Route path="tabungan" element={<Savings />} />
-                <Route path="rekap" element={<Reports />} />
-                <Route path="riwayat" element={<Activity />} />
-                <Route path="partner" element={<Partner />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+          <GlobalErrorListener />
+          <ConfirmProvider>
+            <Suspense fallback={<RouteLoading />}>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <GuestOnly redirectTo="/dashboard">
+                      <Landing />
+                    </GuestOnly>
+                  }
+                />
+                <Route
+                  path="/auth"
+                  element={<AuthPage redirectAfterAuth="/dashboard" />}
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <RequireAuth
+                      title="Masuk untuk membuka kantongmu"
+                      description="Catatan uangmu tersimpan rapi di dalam. Cukup masuk sebentar, lalu lanjut mencatat."
+                    >
+                      <Dashboard />
+                    </RequireAuth>
+                  }
+                >
+                  <Route index element={<Ledger />} />
+                  <Route path="dompet" element={<Wallet />} />
+                  <Route path="anggaran" element={<Budget />} />
+                  <Route path="goals" element={<Goals />} />
+                  <Route path="tabungan" element={<Savings />} />
+                  <Route path="rekap" element={<Reports />} />
+                  <Route path="riwayat" element={<Activity />} />
+                  <Route path="partner" element={<Partner />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </ConfirmProvider>
         </BrowserRouter>
         <Toaster />
       </ConvexAuthProvider>

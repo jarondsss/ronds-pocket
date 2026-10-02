@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import { useBooks } from "@/lib/book-context";
+import { toastError } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 import { useSaveTracker } from "@/lib/save-status";
 import { useMutation } from "convex/react";
@@ -81,9 +82,7 @@ export function BookSwitcher({ className }: { className?: string }) {
       setName("");
       setOpen(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Kantong barunya gagal dibuat.",
-      );
+      toastError(error, "Kantong barunya gagal dibuat.");
     } finally {
       setSaving(false);
     }

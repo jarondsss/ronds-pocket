@@ -29,7 +29,7 @@ export function AiComposer({
   const submit = async () => {
     const value = text.trim();
     if (value.length < 2) {
-      toast.error('Tulis dulu, misalnya "kopi 35rb tadi pagi".');
+      toast.error("Tulis dulu ya, minimal dua huruf.");
       return;
     }
     setThinking(true);

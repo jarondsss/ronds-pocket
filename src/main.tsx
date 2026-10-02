@@ -1,5 +1,6 @@
 import '@vly-ai/integrations';
 import { Toaster } from "@/components/ui/sonner";
+import { GuestOnly } from "@/components/GuestOnly";
 import { RequireAuth } from "@/components/RequireAuth";
 import { VlyToolbar } from "../vly-toolbar-readonly.tsx";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
@@ -127,7 +128,14 @@ createRoot(document.getElementById("root")!).render(
           <RouteSyncer />
           <Suspense fallback={<RouteLoading />}>
             <Routes>
-              <Route path="/" element={<Landing />} />
+              <Route
+                path="/"
+                element={
+                  <GuestOnly redirectTo="/dashboard">
+                    <Landing />
+                  </GuestOnly>
+                }
+              />
               <Route
                 path="/auth"
                 element={<AuthPage redirectAfterAuth="/dashboard" />}

@@ -3,6 +3,7 @@ import { BookSwitcher } from "@/components/dashboard/BookSwitcher";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SaveBadge } from "@/components/SaveBadge";
 import { NotificationBell } from "@/components/dashboard/NotificationBell";
+import { UserMenu, UserMenuSkeleton } from "@/components/dashboard/UserMenu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +23,6 @@ import {
   ChartPie,
   HandCoins,
   History,
-  LogOut,
   MoreHorizontal,
   PiggyBank,
   Receipt,
@@ -31,12 +31,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
-import {
-  NavLink,
-  useLocation,
-  useNavigate,
-  useOutlet,
-} from "react-router";
+import { NavLink, useLocation, useOutlet } from "react-router";
 
 const PRIMARY_TABS = [
   { to: "/dashboard", label: "Transaksi", icon: Receipt, end: true },
@@ -145,38 +140,6 @@ function SidebarNav() {
   );
 }
 
-function UserCard() {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-  const label = user?.name ?? user?.email?.split("@")[0] ?? "Pengguna";
-
-  return (
-    <div className="clay-sm flex items-center gap-3 p-3">
-      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-accent text-sm font-black text-accent-foreground">
-        {label.charAt(0).toUpperCase()}
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-bold">{label}</span>
-        <span className="block truncate text-[11px] text-muted-foreground">
-          {user?.email ?? "Masuk sebagai tamu"}
-        </span>
-      </span>
-      <button
-        type="button"
-        aria-label="Keluar"
-        title="Keluar"
-        onClick={async () => {
-          await signOut();
-          navigate("/");
-        }}
-        className="clay-sm clay-press grid size-9 shrink-0 place-items-center text-muted-foreground hover:text-destructive"
-      >
-        <LogOut className="size-4" />
-      </button>
-    </div>
-  );
-}
-
 function TotalBalance({ total, wide }: { total: number; wide?: boolean }) {
   return (
     <div
@@ -202,6 +165,8 @@ function TotalBalance({ total, wide }: { total: number; wide?: boolean }) {
 
 function Shell() {
   const { activeBook, isLoading } = useBooks();
+  const { isLoading: authLoading } = useAuth();
+  const authReady = !authLoading;
   const location = useLocation();
   const outlet = useOutlet();
   const bookId = activeBook?._id;
@@ -244,7 +209,7 @@ function Shell() {
             <TotalBalance total={total} wide />
             <BookSwitcher />
             <SidebarNav />
-            <UserCard />
+            {authReady ? <UserMenu /> : <UserMenuSkeleton />}
           </div>
         </aside>
 
@@ -255,6 +220,7 @@ function Shell() {
               <div className="flex items-center gap-2">
                 <SaveBadge />
                 <NotificationBell />
+                {authReady && <UserMenu variant="compact" />}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
@@ -297,6 +263,7 @@ function Shell() {
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
             <NotificationBell />
+            {authReady && <UserMenu variant="compact" />}
           </div>
 
           {isLoading ? (

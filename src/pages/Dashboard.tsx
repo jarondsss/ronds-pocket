@@ -53,7 +53,7 @@ const SECONDARY_TABS = [
 
 function BottomNav() {
   return (
-    <nav className="clay fixed bottom-3 left-1/2 z-40 flex w-[min(96vw,30rem)] -translate-x-1/2 items-center gap-0.5 p-1.5 lg:hidden">
+    <nav className="clay-nav fixed bottom-4 left-1/2 z-40 flex w-[min(94vw,28rem)] -translate-x-1/2 items-center gap-0.5 p-1.5 lg:hidden">
       {PRIMARY_TABS.map((tab) => {
         const Icon = tab.icon;
         return (
@@ -63,21 +63,21 @@ function BottomNav() {
             end={tab.end}
             className={({ isActive }) =>
               cn(
-                "flex flex-1 flex-col items-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-bold transition-colors",
+                "flex flex-1 flex-col items-center gap-1 rounded-full px-1 py-1.5 text-[10px] font-bold transition-colors",
                 isActive
                   ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground",
+                  : "text-muted-foreground hover:text-primary",
               )
             }
           >
             {({ isActive }) => (
               <>
                 <motion.span
-                  animate={{ y: isActive ? -2 : 0 }}
+                  animate={{ y: isActive ? -1 : 0 }}
                   transition={{ type: "spring", stiffness: 420, damping: 18 }}
                   className={cn(
-                    "grid size-9 place-items-center rounded-xl transition-all",
-                    isActive && "clay-primary",
+                    "grid size-9 place-items-center rounded-full transition-all",
+                    isActive && "clay-nav-active",
                   )}
                 >
                   <Icon className="size-5" />
@@ -105,10 +105,10 @@ function SidebarNav() {
               end={tab.end}
               className={({ isActive }) =>
                 cn(
-                  "clay-press flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition-all",
+                  "clay-press flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-bold transition-colors",
                   isActive
-                    ? "clay-primary"
-                    : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground",
+                    ? "clay-nav-active"
+                    : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground",
                 )
               }
             >
@@ -127,7 +127,7 @@ function SidebarNav() {
               to={tab.to}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-colors",
+                  "flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors",
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground",

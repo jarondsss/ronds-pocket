@@ -105,25 +105,21 @@ export default function Wallet() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: EASE }}
-            className="clay-primary relative overflow-hidden p-5 sm:p-6"
+            className="clay relative overflow-hidden p-5 sm:p-6"
           >
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-10 -top-14 size-40 rounded-full bg-white/20 blur-2xl"
-            />
             <div className="relative flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-white/75">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Total saldo semua dompet
                 </p>
-                <p className="mt-2 font-display text-3xl font-extrabold leading-none sm:text-4xl">
+                <p className="mt-2 bg-gradient-to-br from-[#8b7cff] to-[#5b4fe8] bg-clip-text font-display text-3xl font-extrabold leading-none text-transparent sm:text-4xl">
                   {formatRupiah(data.total)}
                 </p>
-                <p className="mt-3 text-xs font-medium text-white/80">
+                <p className="mt-3 text-xs font-medium text-muted-foreground">
                   {wallets.length} dompet aktif
                 </p>
               </div>
-              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/20 text-white">
+              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
                 <WalletIcon className="size-6" />
               </span>
             </div>
@@ -140,7 +136,7 @@ export default function Wallet() {
               <button
                 type="button"
                 onClick={() => startForm(null)}
-                className="clay-primary clay-press mt-4 px-5 py-2.5 text-sm font-bold"
+                className="clay-primary clay-press mt-4 rounded-full px-5 py-2.5 text-sm font-bold"
               >
                 Dompet baru
               </button>
@@ -159,7 +155,7 @@ export default function Wallet() {
                 >
                   <span className="flex items-center gap-3">
                     <span
-                      className="grid size-11 shrink-0 place-items-center rounded-2xl text-xl"
+                      className="grid size-11 shrink-0 place-items-center rounded-full text-xl shadow-[0_0.25rem_0.6rem_-0.2rem_var(--clay-dark)]"
                       style={{
                         backgroundColor: `color-mix(in oklab, ${toneValue(
                           wallet.color,

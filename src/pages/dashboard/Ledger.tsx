@@ -182,7 +182,7 @@ export default function Ledger() {
         transition={{ delay: 0.15, type: "spring", stiffness: 320, damping: 22 }}
         onClick={openNew}
         aria-label="Catat uang"
-        className="clay-primary fixed bottom-24 right-5 z-40 grid size-14 place-items-center lg:hidden"
+        className="clay-primary fixed bottom-24 right-5 z-40 grid size-14 place-items-center rounded-full lg:hidden"
       >
         <Plus className="size-7" />
       </motion.button>

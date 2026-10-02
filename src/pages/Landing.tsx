@@ -11,6 +11,8 @@ import {
   Loader2,
   PiggyBank,
   ShieldCheck,
+  Target,
+  Wallet,
 } from "@/components/icons";
 import { useNavigate } from "react-router";
 
@@ -33,19 +35,19 @@ const FEATURES = [
     icon: PiggyBank,
     title: "Kantong sebanyak yang kamu mau",
     body: "Pisahkan uang harian, tabungan, dan dana liburan jadi beberapa kantong.",
-    tone: "bg-income/15 text-income",
+    tone: "bg-income/12 text-income",
   },
   {
     icon: ChartPie,
     title: "Rekap yang gampang dibaca",
     body: "Grafik kategori dan tren enam bulan bikin kelihatan uangmu pergi ke mana.",
-    tone: "bg-expense/15 text-expense",
+    tone: "bg-expense/12 text-expense",
   },
   {
     icon: ShieldCheck,
     title: "Punyamu sendiri",
     body: "Cuma kamu yang bisa membuka kantongmu. Tidak ada yang bisa mengintip.",
-    tone: "bg-accent/60 text-accent-foreground",
+    tone: "bg-accent text-accent-foreground",
   },
 ];
 
@@ -60,6 +62,14 @@ const FACTS = [
   "Gratis, tanpa kartu kredit",
   "Enak dipakai di HP",
   "Catatanmu cuma punyamu",
+];
+
+/** Ikon garis yang melayang di sekitar kartu contoh, seperti di layar acuan. */
+const FLOATING_ICONS = [
+  { icon: Wallet, label: "Dompet", pos: "-top-5 -left-6" },
+  { icon: ChartPie, label: "Rekap", pos: "top-16 -right-7" },
+  { icon: PiggyBank, label: "Tabungan", pos: "bottom-24 -left-8" },
+  { icon: Target, label: "Target", pos: "-bottom-4 right-10" },
 ];
 
 const STEPS = [
@@ -86,77 +96,96 @@ function MockPreview() {
     (sum, row) => sum + Math.abs(row.amount),
     0,
   );
+  const usedPercent = Math.round((expense / (income + expense)) * 100);
 
   return (
     <div className="relative w-full max-w-sm">
+      {/* Ikon garis mengambang di sekeliling kartu, seperti di layar acuan. */}
+      {FLOATING_ICONS.map((item, index) => {
+        const Glyph = item.icon;
+        return (
+          <motion.span
+            key={item.label}
+            aria-hidden
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: EASE, delay: 0.5 + index * 0.12 }}
+            className={`clay clay-float absolute z-10 grid size-11 place-items-center text-primary ${item.pos}`}
+          >
+            <Glyph className="size-5" />
+          </motion.span>
+        );
+      })}
+
       <motion.div
         initial={{ opacity: 0, y: 30, rotate: -2 }}
         animate={{ opacity: 1, y: 0, rotate: -2 }}
         transition={{ duration: 0.9, ease: EASE, delay: 0.12 }}
-        className="clay-shell"
+        className="clay p-5"
       >
-        <span
-          aria-hidden
-          className="clay-float absolute -top-4 -right-4 z-10 grid size-12 place-items-center rounded-2xl bg-accent text-2xl"
-        >
-          👛
-        </span>
-
-        <div className="clay-sunken p-3">
-          <div className="clay-primary p-4">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-white/75">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Sisa uang bulan ini
             </p>
-            <p className="mt-1.5 font-display text-2xl font-extrabold">
+            <p className="mt-1.5 bg-gradient-to-br from-[#8b7cff] to-[#5b4fe8] bg-clip-text font-display text-2xl font-extrabold text-transparent">
               {formatRupiah(income - expense)}
             </p>
-            <div className="mt-3 flex gap-4 text-xs font-semibold text-white/85">
-              <span>Masuk {formatRupiah(income)}</span>
-              <span>Keluar {formatRupiah(expense)}</span>
-            </div>
           </div>
-
-          {/* Baris catatan: dipisah garis tipis, bukan lima kartu mengambang. */}
-          <ul className="mt-3 divide-y divide-border/60">
-            {MOCK_ROWS.map((row, index) => (
-              <motion.li
-                key={row.label}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{
-                  delay: 0.4 + index * 0.1,
-                  duration: 0.6,
-                  ease: EASE,
-                }}
-                className="flex items-center gap-3 py-2.5 first:pt-1 last:pb-1"
-              >
-                <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary/80 text-base">
-                  {row.emoji}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-xs font-bold">
-                    {row.label}
-                  </span>
-                  <span className="block truncate text-[11px] text-muted-foreground">
-                    {row.note}
-                  </span>
-                </span>
-                <span
-                  className="shrink-0 text-xs font-extrabold"
-                  style={{
-                    color: row.amount > 0 ? "var(--income)" : "var(--expense)",
-                  }}
-                >
-                  {row.amount > 0 ? "+" : "−"}
-                  {formatRupiah(Math.abs(row.amount))}
-                </span>
-              </motion.li>
-            ))}
-          </ul>
+          <span className="clay-chip mt-1">{usedPercent}% terpakai</span>
         </div>
+
+        <div className="mt-4 flex gap-4 text-xs font-semibold">
+          <span className="flex items-center gap-1.5 text-income">
+            <span className="size-2 rounded-full bg-income" />
+            Masuk {formatRupiah(income)}
+          </span>
+          <span className="flex items-center gap-1.5 text-expense">
+            <span className="size-2 rounded-full bg-expense" />
+            Keluar {formatRupiah(expense)}
+          </span>
+        </div>
+
+        {/* Baris catatan: dipisah garis tipis, bukan lima kartu mengambang. */}
+        <ul className="mt-4 divide-y divide-border/60">
+          {MOCK_ROWS.map((row, index) => (
+            <motion.li
+              key={row.label}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                delay: 0.4 + index * 0.1,
+                duration: 0.6,
+                ease: EASE,
+              }}
+              className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0"
+            >
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary/80 text-base">
+                {row.emoji}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-xs font-bold">
+                  {row.label}
+                </span>
+                <span className="block truncate text-[11px] text-muted-foreground">
+                  {row.note}
+                </span>
+              </span>
+              <span
+                className="shrink-0 text-xs font-extrabold"
+                style={{
+                  color: row.amount > 0 ? "var(--income)" : "var(--expense)",
+                }}
+              >
+                {row.amount > 0 ? "+" : "−"}
+                {formatRupiah(Math.abs(row.amount))}
+              </span>
+            </motion.li>
+          ))}
+        </ul>
       </motion.div>
 
-      <p className="mt-3 text-center text-[11px] font-semibold text-muted-foreground">
+      <p className="mt-4 text-center text-[11px] font-semibold text-muted-foreground">
         Contoh tampilan. Angkanya cuma contoh, bukan catatan orang beneran.
       </p>
     </div>

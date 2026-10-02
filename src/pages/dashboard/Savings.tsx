@@ -312,7 +312,7 @@ export default function Savings() {
           <button
             type="button"
             onClick={() => startForm(null)}
-            className="clay-primary clay-press mt-2 px-5 py-2.5 text-sm font-bold"
+            className="clay-primary clay-press mt-2 rounded-full px-5 py-2.5 text-sm font-bold"
           >
             Tambah tabungan
           </button>

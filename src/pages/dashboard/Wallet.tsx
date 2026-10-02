@@ -7,6 +7,7 @@ import {
   type MoveMode,
   type MoveSession,
 } from "@/components/dashboard/WalletMoveDialog";
+import { ClayLoader } from "@/components/ClayLoader";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useBooks } from "@/lib/book-context";
@@ -19,7 +20,6 @@ import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import {
   ArrowLeftRight,
-  Loader2,
   PencilLine,
   Plus,
   Wallet as WalletIcon,
@@ -97,7 +97,7 @@ export default function Wallet() {
 
       {data === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <ClayLoader label="Memuat dompet..." />
         </div>
       ) : (
         <>

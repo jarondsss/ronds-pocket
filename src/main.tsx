@@ -1,6 +1,7 @@
 import '@vly-ai/integrations';
 import { Toaster } from "@/components/ui/sonner";
 import { ConfirmProvider } from "@/components/ConfirmDialog";
+import { ClayPageLoader } from "@/components/ClayLoader";
 import { GlobalErrorListener } from "@/components/GlobalErrorListener";
 import { GuestOnly } from "@/components/GuestOnly";
 import { RequireAuth } from "@/components/RequireAuth";
@@ -28,11 +29,7 @@ const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse text-muted-foreground">Loading...</div>
-    </div>
-  );
+  return <ClayPageLoader label="Menyiapkan halaman..." />;
 }
 
 /** Silent error boundary — if VlyToolbar crashes it renders nothing instead of

@@ -1,5 +1,5 @@
+import { ClayPageLoader } from "@/components/ClayLoader";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Navigate } from "react-router";
 
@@ -19,11 +19,7 @@ export function GuestOnly({
   const { isLoading, isAuthenticated } = useAuth();
 
   if (isLoading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="size-6 animate-spin text-muted-foreground" />
-      </main>
-    );
+    return <ClayPageLoader label="Sebentar ya..." />;
   }
 
   if (isAuthenticated) {

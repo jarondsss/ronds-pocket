@@ -4,6 +4,7 @@ import {
 } from "@/components/dashboard/CategoryDialog";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import { RupiahInput } from "@/components/RupiahInput";
+import { ClayLoader } from "@/components/ClayLoader";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -25,7 +26,6 @@ import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import {
   ChartPie,
-  Loader2,
   PencilLine,
   Plus,
   ShieldAlert,
@@ -335,7 +335,7 @@ export default function Budget() {
 
       {data === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <ClayLoader label="Memuat anggaran..." />
         </div>
       ) : (
         <>

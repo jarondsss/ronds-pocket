@@ -43,7 +43,7 @@ import {
   Plus,
   Target,
   Trash2,
-} from "lucide-react";
+} from "@/components/icons";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 

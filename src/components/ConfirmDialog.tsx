@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert } from "@/components/icons";
 import {
   createContext,
   useCallback,

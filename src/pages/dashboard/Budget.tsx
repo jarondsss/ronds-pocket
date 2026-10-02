@@ -30,7 +30,7 @@ import {
   Plus,
   ShieldAlert,
   Trash2,
-} from "lucide-react";
+} from "@/components/icons";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/input-otp";
 import { useAuth } from "@/hooks/use-auth";
 import { friendlyError } from "@/lib/error-message";
-import { ArrowRight, Check, Mail, ShieldCheck, UserX } from "lucide-react";
+import { ArrowRight, Check, Mail, ShieldCheck, UserX } from "@/components/icons";
 import { motion } from "framer-motion";
 
 /** Satu kurva gerak untuk seluruh halaman: turun cepat, mendarat pelan. */

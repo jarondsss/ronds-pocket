@@ -31,7 +31,7 @@ import {
   Target,
   Users,
   Wallet,
-} from "lucide-react";
+} from "@/components/icons";
 import { useEffect, useRef } from "react";
 import { NavLink, useLocation, useOutlet } from "react-router";
 

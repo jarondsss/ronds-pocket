@@ -1,7 +1,7 @@
 import { formatRupiah } from "@/lib/format";
 import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
-import { ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, Wallet } from "@/components/icons";
 
 interface Summary {
   income: number;

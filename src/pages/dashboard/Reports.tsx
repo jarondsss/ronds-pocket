@@ -11,7 +11,7 @@ import {
   toMonthKey,
 } from "@/lib/format";
 import { useQuery } from "convex/react";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb } from "@/components/icons";
 import { useMemo, useState } from "react";
 import {
   Bar,

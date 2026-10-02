@@ -10,12 +10,12 @@ import {
   Plus,
   Share2,
   Trash2,
-  type LucideIcon,
-} from "lucide-react";
+  type IconComponent,
+} from "@/components/icons";
 
 const ACTION_STYLE: Record<
   ActivityAction,
-  { icon: LucideIcon; chip: string; label: string }
+  { icon: IconComponent; chip: string; label: string }
 > = {
   create: {
     icon: Plus,

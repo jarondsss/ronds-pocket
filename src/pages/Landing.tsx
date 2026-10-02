@@ -11,7 +11,7 @@ import {
   Loader2,
   PiggyBank,
   ShieldCheck,
-} from "lucide-react";
+} from "@/components/icons";
 import { useNavigate } from "react-router";
 
 /** Satu kurva gerak untuk seluruh halaman: turun cepat, mendarat pelan. */

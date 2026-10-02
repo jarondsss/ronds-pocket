@@ -8,7 +8,7 @@ import { toastError } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 import { useAction } from "convex/react";
 import { motion } from "framer-motion";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
 

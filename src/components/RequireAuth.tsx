@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { ClayPageLoader } from "@/components/ClayLoader";
 import { useAuth } from "@/hooks/use-auth";
-import { Lock } from "lucide-react";
+import { Lock } from "@/components/icons";
 import type { ReactNode } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router";
 

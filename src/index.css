@@ -161,8 +161,9 @@
     letter-spacing: -0.015em;
     text-wrap: balance;
   }
-  /* Garis ikon sedikit lebih tipis: stroke tipis terasa lebih mahal daripada
-     stroke default yang tebal, dan tetap satu keluarga (lucide). */
+  /* Ikon app memakai CoreUI Icons lewat src/components/icons.tsx. Rule ini
+     cuma menyisakan ikon lucide milik toolbar platform supaya berat garisnya
+     tetap sepadan dengan set CoreUI. */
   svg.lucide {
     stroke-width: 1.75px;
   }

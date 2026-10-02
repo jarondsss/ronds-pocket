@@ -19,7 +19,7 @@ import { monthRange, toDateInput, toMonthKey } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/icons";
 import { useMemo, useRef, useState } from "react";
 
 type Filter = "all" | "expense" | "income";

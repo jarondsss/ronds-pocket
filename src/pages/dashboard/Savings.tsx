@@ -31,6 +31,7 @@ import {
   toDateInput,
 } from "@/lib/format";
 import { savingKindOf } from "@/lib/palette";
+import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import type { SavingsRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -104,9 +105,7 @@ function MoveDialog({
       );
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Catatannya gagal disimpan.",
-      );
+      toastError(error, "Catatannya gagal disimpan.");
     } finally {
       setSaving(false);
     }

@@ -15,6 +15,7 @@ import { TonePicker } from "@/components/dashboard/TonePicker";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useSaveTracker } from "@/lib/save-status";
+import { toastError } from "@/lib/error-message";
 import type { CategoryRow } from "@/lib/types";
 import { useMutation } from "convex/react";
 import { Loader2 } from "lucide-react";
@@ -97,9 +98,7 @@ function CategoryForm({
       }
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Kategorinya gagal disimpan.",
-      );
+      toastError(error, "Kategorinya gagal disimpan.");
     } finally {
       setSaving(false);
     }

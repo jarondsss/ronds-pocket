@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { WALLET_TYPES, walletTypeOf } from "@/lib/palette";
+import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import type { WalletRow } from "@/lib/types";
 import { useMutation } from "convex/react";
@@ -117,9 +118,7 @@ function WalletForm({
       }
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Dompetnya gagal disimpan.",
-      );
+      toastError(error, "Dompetnya gagal disimpan.");
     } finally {
       setSaving(false);
     }
@@ -134,9 +133,7 @@ function WalletForm({
       setConfirmDelete(false);
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Dompetnya gagal dihapus.",
-      );
+      toastError(error, "Dompetnya gagal dihapus.");
     } finally {
       setSaving(false);
     }

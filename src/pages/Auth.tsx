@@ -7,6 +7,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useAuth } from "@/hooks/use-auth";
+import { friendlyError } from "@/lib/error-message";
 import { ArrowRight, Check, Mail, ShieldCheck, UserX } from "lucide-react";
 import { motion } from "framer-motion";
 import { Suspense, useEffect, useState } from "react";
@@ -61,11 +62,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       setStep({ email: formData.get("email") as string });
     } catch (caught) {
       console.error("Email sign-in error:", caught);
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : "Kodenya gagal dikirim. Coba sekali lagi ya.",
-      );
+      setError(friendlyError(caught, "Kodenya gagal dikirim. Coba sekali lagi ya."));
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +78,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       navigate(redirect);
     } catch (caught) {
       console.error("OTP verification error:", caught);
-      setError("Kodenya belum cocok. Coba periksa lagi ya.");
+      setError(friendlyError(caught, "Kodenya belum cocok. Coba periksa lagi ya."));
       setOtp("");
       setIsLoading(false);
     }
@@ -95,7 +92,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       navigate(redirect);
     } catch (caught) {
       console.error("Guest login error:", caught);
-      setError("Masuk sebagai tamu gagal. Pakai email saja ya.");
+      setError(friendlyError(caught, "Masuk sebagai tamu gagal. Pakai email saja ya."));
       setIsLoading(false);
     }
   };

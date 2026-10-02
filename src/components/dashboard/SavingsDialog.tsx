@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { fromDateInput, toDateInput } from "@/lib/format";
+import { toastError } from "@/lib/error-message";
 import { SAVING_KINDS } from "@/lib/palette";
 import { useSaveTracker } from "@/lib/save-status";
 import type { SavingsRow } from "@/lib/types";
@@ -104,9 +105,7 @@ function SavingsForm({
       }
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Tabungannya gagal disimpan.",
-      );
+      toastError(error, "Tabungannya gagal disimpan.");
     } finally {
       setSaving(false);
     }

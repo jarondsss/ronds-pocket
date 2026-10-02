@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { toastError } from "@/lib/error-message";
 import { RotateCcw, TriangleAlert } from "lucide-react";
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
@@ -11,7 +12,11 @@ interface State {
   error: Error | null;
 }
 
-/** Batas error supaya satu halaman rusak tidak membuat seluruh app kosong. */
+/**
+ * Batas error supaya satu halaman rusak tidak membuat seluruh app kosong.
+ * Sekalian memberi tahu user lewat toast, karena halaman yang tampil setelah
+ * crash biasanya cuma-this saja (tidak ada lagi tombol "coba lagi" di layar).
+ */
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { error: null };
 
@@ -21,6 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("[Ronds Pocket] Terjadi kesalahan:", error, info.componentStack);
+    toastError(error, "Ada yang tidak beres di halaman ini.");
   }
 
   render() {

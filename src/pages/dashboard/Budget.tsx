@@ -14,6 +14,7 @@ import {
   toneBackground,
 } from "@/lib/categories";
 import { WRITE_DEBOUNCE_MS, useDebouncedCallback } from "@/lib/debounce";
+import { toastError } from "@/lib/error-message";
 import { formatRupiah, monthRange, toMonthKey } from "@/lib/format";
 import { toneValue } from "@/lib/palette";
 import { useSaveTracker } from "@/lib/save-status";
@@ -65,11 +66,7 @@ function BudgetRow({
     if (next <= 0) return;
     void save(() => setAmount({ bookId, category, amount: next })).catch(
       (error: unknown) => {
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : "Anggarannya gagal disimpan.",
-        );
+        toastError(error, "Anggarannya gagal disimpan.");
       },
     );
   }, WRITE_DEBOUNCE_MS);

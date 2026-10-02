@@ -103,10 +103,6 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
         aria-hidden
         className="pointer-events-none fixed -left-28 -top-28 size-80 rounded-full bg-primary/18 blur-3xl"
       />
-      <div
-        aria-hidden
-        className="pointer-events-none fixed -right-24 bottom-0 size-72 rounded-full bg-accent/50 blur-3xl"
-      />
 
       <div className="relative mx-auto grid w-full max-w-5xl items-center gap-8 lg:grid-cols-2 lg:gap-14">
         <motion.div
@@ -153,8 +149,8 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                 Masuk atau daftar
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Masukkan emailmu. Kalau belum punya akun, kami buatkan sekalian —
-                daftar dan masuk lewat pintu yang sama.
+                Masukkan emailmu. Kalau belum punya akun, kami buatkan
+                sekalian: daftar dan masuk lewat pintu yang sama.
               </p>
 
               <form onSubmit={handleEmailSubmit} className="mt-6">

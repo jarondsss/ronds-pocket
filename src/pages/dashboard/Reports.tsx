@@ -10,7 +10,7 @@ import {
   toMonthKey,
 } from "@/lib/format";
 import { useQuery } from "convex/react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Lightbulb, Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   Bar,
@@ -194,7 +194,7 @@ export default function Reports() {
           <section className="clay p-4 sm:p-5">
             <div className="flex items-center gap-2">
               <span className="grid size-9 place-items-center rounded-xl bg-accent/40 text-accent-foreground">
-                <Sparkles className="size-4" />
+                <Lightbulb className="size-4" />
               </span>
               <h3 className="font-display text-base font-extrabold">
                 Sorotan bulan ini
@@ -224,7 +224,7 @@ export default function Reports() {
                 <dd className="mt-1 truncate font-display text-lg font-extrabold">
                   {highlight.biggest
                     ? formatRupiah(highlight.biggest.amount)
-                    : "—"}
+                    : "Belum ada"}
                 </dd>
                 {highlight.biggest && (
                   <p className="truncate text-xs text-muted-foreground">

@@ -11,7 +11,6 @@ import {
   Loader2,
   PiggyBank,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
@@ -137,12 +136,9 @@ function MockPreview() {
         ))}
       </ul>
 
-      <div className="mt-3 flex items-center gap-2 rounded-2xl bg-secondary/70 px-3 py-2.5">
-        <Sparkles className="size-4 shrink-0 text-primary" />
-        <p className="text-[11px] font-semibold text-foreground/80">
-          Uang keluar-masuk, sisanya kami hitung ✨
-        </p>
-      </div>
+      <p className="mt-3 px-1 text-[11px] font-semibold text-muted-foreground">
+        Contoh tampilan. Angkanya cuma contoh, bukan catatan orang beneran.
+      </p>
     </motion.div>
   );
 }
@@ -158,10 +154,6 @@ export default function Landing() {
       <div
         aria-hidden
         className="pointer-events-none fixed -left-32 -top-32 size-96 rounded-full bg-primary/18 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none fixed -right-28 top-40 size-80 rounded-full bg-accent/50 blur-3xl"
       />
 
       <div className="relative">
@@ -191,7 +183,6 @@ export default function Landing() {
               ) : (
                 "Masuk"
               )}
-              {!isLoading && <ArrowRight className="size-4" />}
             </Button>
           </div>
         </header>
@@ -205,18 +196,14 @@ export default function Landing() {
               animate="show"
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <span className="clay-sm inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-primary">
-                <Sparkles className="size-3.5" />
-                Kantong digital buat uangmu
-              </span>
-              <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
                 Uangmu, rapi
                 <span className="text-primary"> di satu kantong.</span>
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Ronds Pocket menampung semua catatan uangmu — uang jajan, gaji,
+                Ronds Pocket menampung semua catatan uangmu: uang jajan, gaji,
                 sampai pengeluaran kecil yang biasanya bikin lupa. Kamu tulis
-                tiga detik, sisa hitung-hitungannya biar kami yang urus.
+                tiga detik, sisa hitung-hittingannya biar kami yang urus.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Button
@@ -298,6 +285,7 @@ export default function Landing() {
             <div className="mt-8 grid gap-5 sm:grid-cols-2">
               {FEATURES.map((feature, index) => {
                 const Icon = feature.icon;
+                const featured = index === 0;
                 return (
                   <motion.article
                     key={feature.title}
@@ -307,17 +295,25 @@ export default function Landing() {
                     viewport={{ once: true, amount: 0.4 }}
                     transition={{ duration: 0.4, delay: index * 0.06 }}
                     whileHover={{ y: -5 }}
-                    className="clay p-5 sm:p-6"
+                    className={
+                      featured ? "clay-primary p-5 sm:p-6" : "clay p-5 sm:p-6"
+                    }
                   >
                     <span
-                      className={`grid size-11 place-items-center rounded-2xl ${feature.tone}`}
+                      className={`grid size-11 place-items-center rounded-2xl ${
+                        featured ? "bg-white/25" : feature.tone
+                      }`}
                     >
                       <Icon className="size-5" />
                     </span>
                     <h3 className="mt-4 font-display text-lg font-extrabold">
                       {feature.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    <p
+                      className={`mt-2 text-sm leading-relaxed ${
+                        featured ? "text-white/85" : "text-muted-foreground"
+                      }`}
+                    >
                       {feature.body}
                     </p>
                   </motion.article>
@@ -328,35 +324,44 @@ export default function Landing() {
 
           {/* How it works */}
           <section id="cara" className="scroll-mt-28 py-6">
-            <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-              Mulai dalam tiga langkah
-            </h2>
-            <p className="mt-3 max-w-xl text-muted-foreground">
-              Nggak ada setup panjang. Kantong pertamamu sudah menunggu begitu
-              kamu masuk.
-            </p>
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {STEPS.map((step, index) => (
-                <motion.div
-                  key={step.title}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.4 }}
-                  transition={{ duration: 0.4, delay: index * 0.08 }}
-                  className="clay p-5 sm:p-6"
-                >
-                  <span className="clay-primary grid size-10 place-items-center rounded-2xl font-display text-lg font-extrabold">
-                    {index + 1}
-                  </span>
-                  <h3 className="mt-4 font-display text-lg font-extrabold">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {step.body}
-                  </p>
-                </motion.div>
-              ))}
+            <div className="clay grid gap-8 p-6 sm:p-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+              <div>
+                <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+                  Mulai dalam tiga langkah
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Nggak ada setup panjang. Kantong pertamamu sudah menunggu
+                  begitu kamu masuk.
+                </p>
+                <Button asChild size="lg" variant="outline" className="mt-6">
+                  <a href="#kantong">Lihat isi kantong</a>
+                </Button>
+              </div>
+              <ol className="flex flex-col gap-3">
+                {STEPS.map((step, index) => (
+                  <motion.li
+                    key={step.title}
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, amount: 0.6 }}
+                    transition={{ duration: 0.35, delay: index * 0.08 }}
+                    className="clay-sunken flex items-start gap-4 px-4 py-4 sm:px-5"
+                  >
+                    <span className="clay-primary grid size-9 shrink-0 place-items-center font-display text-base font-extrabold">
+                      {index + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block font-display text-base font-extrabold">
+                        {step.title}
+                      </span>
+                      <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                        {step.body}
+                      </span>
+                    </span>
+                  </motion.li>
+                ))}
+              </ol>
             </div>
           </section>
 
@@ -434,7 +439,6 @@ export default function Landing() {
                   disabled={isLoading}
                 >
                   {primaryLabel}
-                  <ArrowRight className="size-4" />
                 </Button>
               </div>
             </motion.div>

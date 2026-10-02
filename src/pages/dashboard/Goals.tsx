@@ -35,10 +35,10 @@ import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import {
   CalendarClock,
+  Coins,
   Loader2,
   PencilLine,
   Plus,
-  Sparkles,
   Target,
   Trash2,
 } from "lucide-react";
@@ -280,7 +280,7 @@ export default function Goals() {
         <>
           <div className="clay-sm flex items-center gap-3 p-4">
             <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary/12 text-primary">
-              <Sparkles className="size-5" />
+              <Coins className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">

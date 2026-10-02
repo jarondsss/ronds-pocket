@@ -118,7 +118,7 @@ function SavingsForm({
           {isEdit ? "Ubah tabungan" : "Tabungan baru"}
         </DialogTitle>
         <DialogDescription>
-          Deposito, reksa dana, emas, atau tabungan biasa — catat semuanya di
+          Deposito, reksa dana, emas, atau tabungan biasa: catat semuanya di
           satu tempat.
         </DialogDescription>
       </DialogHeader>

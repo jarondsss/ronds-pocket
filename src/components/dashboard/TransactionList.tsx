@@ -2,6 +2,7 @@ import type { Id } from "@/convex/_generated/dataModel";
 import { categoryEmoji, categoryTone, toneBackground } from "@/lib/categories";
 import { formatDay, formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import { Receipt } from "lucide-react";
 import { useMemo } from "react";
@@ -93,7 +94,7 @@ export function TransactionList({
             transition={{
               duration: 0.3,
               delay: Math.min(groupIndex * 0.04, 0.2),
-              ease: "easeOut",
+              ease: EASE,
             }}
             className="clay overflow-hidden"
           >

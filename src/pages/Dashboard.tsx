@@ -18,6 +18,7 @@ import { formatRupiah } from "@/lib/format";
 import { SaveStatusProvider } from "@/lib/save-status";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
+import { EASE } from "@/lib/motion";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChartPie,
@@ -104,7 +105,7 @@ function SidebarNav() {
                   "clay-press flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold transition-all",
                   isActive
                     ? "clay-primary"
-                    : "clay-sm text-muted-foreground hover:text-foreground",
+                    : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground",
                 )
               }
             >
@@ -284,7 +285,7 @@ function Shell() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                transition={{ duration: 0.2, ease: EASE }}
               >
                 <ErrorBoundary>{outlet}</ErrorBoundary>
               </motion.div>

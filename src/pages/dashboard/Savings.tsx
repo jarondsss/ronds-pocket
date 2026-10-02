@@ -283,7 +283,7 @@ export default function Savings() {
             Tabungan
           </h1>
           <p className="text-sm text-muted-foreground">
-            Deposito, reksa dana, emas — catat semuanya beserta bunganya.
+            Deposito, reksa dana, emas: catat semuanya beserta bunganya.
           </p>
         </div>
         <Button type="button" onClick={() => startForm(null)}>

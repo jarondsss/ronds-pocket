@@ -197,10 +197,6 @@ function Shell() {
         aria-hidden
         className="pointer-events-none fixed -left-24 -top-24 size-72 rounded-full bg-primary/15 blur-3xl"
       />
-      <div
-        aria-hidden
-        className="pointer-events-none fixed -right-24 top-1/3 size-72 rounded-full bg-accent/50 blur-3xl"
-      />
 
       <div className="relative mx-auto flex w-full max-w-6xl gap-6 px-4 pb-28 pt-4 sm:px-6 lg:pb-10">
         <aside className="hidden w-64 shrink-0 lg:block">

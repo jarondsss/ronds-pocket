@@ -91,7 +91,7 @@ export function CategoryCombobox({
         >
           {visible.length === 0 ? (
             <p className="px-3 py-4 text-xs text-muted-foreground">
-              Belum ada yang cocok — tulis kategori bebas, nanti tersimpan
+              Belum ada yang cocok. Tulis kategori bebas, nanti tersimpan
               apa adanya.
             </p>
           ) : (

@@ -1,3 +1,4 @@
+import { ClayLoader } from "@/components/ClayLoader";
 import { AiComposer } from "@/components/dashboard/AiComposer";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import { SummaryHero } from "@/components/dashboard/SummaryHero";
@@ -18,7 +19,7 @@ import { monthRange, toDateInput, toMonthKey } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 
 type Filter = "all" | "expense" | "income";
@@ -129,7 +130,7 @@ export default function Ledger() {
 
       {summary === undefined ? (
         <div className="grid min-h-[24vh] place-items-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <ClayLoader label="Memuat catatan..." />
         </div>
       ) : (
         <SummaryHero summary={summary} />
@@ -155,7 +156,7 @@ export default function Ledger() {
 
       {transactions === undefined ? (
         <div className="grid min-h-[24vh] place-items-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <ClayLoader label="Memuat catatan..." />
         </div>
       ) : (
         <TransactionList

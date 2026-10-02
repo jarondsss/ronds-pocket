@@ -25,6 +25,7 @@ import { savingKindOf } from "@/lib/palette";
 import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import type { SavingsRow } from "@/lib/types";
+import { ClayLoader } from "@/components/ClayLoader";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
@@ -187,7 +188,7 @@ function HistoryDialog({
 
         {entries === undefined ? (
           <div className="grid min-h-[20vh] place-items-center">
-            <Loader2 className="size-5 animate-spin text-muted-foreground" />
+            <ClayLoader label="Memuat catatan setoran..." />
           </div>
         ) : entries.length === 0 ? (
           <p className="clay-sunken rounded-2xl px-4 py-8 text-center text-sm text-muted-foreground">
@@ -294,7 +295,7 @@ export default function Savings() {
 
       {data === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <ClayLoader label="Memuat tabungan..." />
         </div>
       ) : accounts.length === 0 ? (
         <div className="clay flex flex-col items-center gap-3 p-8 text-center">

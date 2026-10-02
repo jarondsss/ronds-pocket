@@ -30,6 +30,7 @@ import {
 } from "@/lib/format";
 import { useSaveTracker } from "@/lib/save-status";
 import type { GoalRow, WalletRow } from "@/lib/types";
+import { ClayLoader } from "@/components/ClayLoader";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { EASE } from "@/lib/motion";
@@ -255,7 +256,7 @@ export default function Goals() {
 
       {goals === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <ClayLoader label="Memuat target..." />
         </div>
       ) : rows.length === 0 ? (
         <div className="clay flex flex-col items-center gap-3 p-8 text-center">

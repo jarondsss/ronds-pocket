@@ -1,3 +1,4 @@
+import { ClayLoader } from "@/components/ClayLoader";
 import { CategoryChart } from "@/components/dashboard/CategoryChart";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import { api } from "@/convex/_generated/api";
@@ -10,7 +11,7 @@ import {
   toMonthKey,
 } from "@/lib/format";
 import { useQuery } from "convex/react";
-import { Lightbulb, Loader2 } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   Bar,
@@ -102,7 +103,7 @@ export default function Reports() {
 
       {summary === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
-          <Loader2 className="size-5 animate-spin text-muted-foreground" />
+          <ClayLoader label="Menyusun rekap..." />
         </div>
       ) : (
         <>

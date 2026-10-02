@@ -1,4 +1,5 @@
 import { Brand } from "@/components/Brand";
+import { ClayLoader } from "@/components/ClayLoader";
 import { BookSwitcher } from "@/components/dashboard/BookSwitcher";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SaveBadge } from "@/components/SaveBadge";
@@ -265,12 +266,11 @@ function Shell() {
 
           {isLoading ? (
             <div className="grid min-h-[50vh] place-items-center">
-              <span className="flex items-center gap-2 text-sm text-muted-foreground">
-                Memuat kantongmu...
-              </span>
+              <ClayLoader label="Memuat kantongmu..." />
             </div>
           ) : activeBook === null ? (
             <div className="clay p-8 text-center">
+              <ClayLoader className="mb-4" />
               <p className="font-display text-lg font-extrabold">
                 Menyiapkan kantong pertamamu...
               </p>

@@ -10,7 +10,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Baloo 2", "Plus Jakarta Sans", ui-sans-serif, system-ui,
+  --font-display: "Poppins", "Plus Jakarta Sans", ui-sans-serif, system-ui,
     sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -51,63 +51,66 @@
 :root {
   --radius: 1.3rem;
 
-  /* Claymorphism palette: blush lavender, grape ink, friendly violet, peach */
-  --background: oklch(0.968 0.018 320);
-  --foreground: oklch(0.32 0.06 300);
-  --card: oklch(0.986 0.008 320);
-  --card-foreground: oklch(0.32 0.06 300);
-  --popover: oklch(0.99 0.006 320);
-  --popover-foreground: oklch(0.32 0.06 300);
-  --primary: oklch(0.63 0.185 295);
-  --primary-foreground: oklch(0.99 0.005 300);
-  --secondary: oklch(0.94 0.028 320);
-  --secondary-foreground: oklch(0.37 0.07 300);
-  --muted: oklch(0.95 0.02 320);
-  --muted-foreground: oklch(0.54 0.05 300);
-  --accent: oklch(0.93 0.07 78);
-  --accent-foreground: oklch(0.4 0.11 55);
-  --destructive: oklch(0.64 0.19 22);
-  --income: oklch(0.68 0.14 165);
-  --expense: oklch(0.7 0.165 42);
-  --border: oklch(0.91 0.022 320);
-  --input: oklch(0.93 0.022 320);
-  --ring: oklch(0.63 0.185 295);
-  --chart-1: oklch(0.63 0.185 295);
-  --chart-2: oklch(0.76 0.155 62);
-  --chart-3: oklch(0.75 0.125 170);
-  --chart-4: oklch(0.72 0.18 350);
-  --chart-5: oklch(0.74 0.12 235);
-  --sidebar: oklch(0.977 0.016 320);
-  --sidebar-foreground: oklch(0.32 0.06 300);
-  --sidebar-primary: oklch(0.63 0.185 295);
-  --sidebar-primary-foreground: oklch(0.99 0.005 300);
-  --sidebar-accent: oklch(0.94 0.028 320);
-  --sidebar-accent-foreground: oklch(0.37 0.07 300);
-  --sidebar-border: oklch(0.91 0.022 320);
-  --sidebar-ring: oklch(0.63 0.185 295);
+  /* Palette acuan: latar biru-lavender sangat lembut, kartu hampir putih,
+     satu ungu jenuh (#5B4FE8) untuk aksi utama. */
+  --background: oklch(0.945 0.024 282);
+  --foreground: oklch(0.3 0.05 285);
+  --card: oklch(0.995 0.004 285);
+  --card-foreground: oklch(0.3 0.05 285);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.3 0.05 285);
+  --primary: oklch(0.55 0.215 283);
+  --primary-foreground: oklch(0.99 0.005 285);
+  --secondary: oklch(0.965 0.012 282);
+  --secondary-foreground: oklch(0.37 0.07 285);
+  --muted: oklch(0.96 0.01 282);
+  --muted-foreground: oklch(0.56 0.05 285);
+  --accent: oklch(0.94 0.035 285);
+  --accent-foreground: oklch(0.42 0.13 283);
+  --destructive: oklch(0.62 0.2 22);
+  --income: oklch(0.72 0.16 155);
+  --expense: oklch(0.6 0.17 255);
+  --border: oklch(0.915 0.016 282);
+  --input: oklch(0.955 0.012 282);
+  --ring: oklch(0.55 0.215 283);
+  --chart-1: oklch(0.55 0.215 283);
+  --chart-2: oklch(0.6 0.17 255);
+  --chart-3: oklch(0.72 0.16 155);
+  --chart-4: oklch(0.72 0.13 195);
+  --chart-5: oklch(0.68 0.18 340);
+  --sidebar: oklch(0.985 0.008 282);
+  --sidebar-foreground: oklch(0.3 0.05 285);
+  --sidebar-primary: oklch(0.55 0.215 283);
+  --sidebar-primary-foreground: oklch(0.99 0.005 285);
+  --sidebar-accent: oklch(0.965 0.012 282);
+  --sidebar-accent-foreground: oklch(0.37 0.07 285);
+  --sidebar-border: oklch(0.915 0.016 282);
+  --sidebar-ring: oklch(0.55 0.215 283);
 
-  /* Clay light model: warm shadow below, soft highlight above */
-  --clay-dark: rgba(104, 74, 180, 0.13);
-  --clay-light: rgba(255, 255, 255, 0.96);
-  --clay-inset-dark: rgba(120, 92, 190, 0.09);
-  --clay-inset-light: rgba(255, 255, 255, 0.92);
-  --clay-primary-dark: rgba(84, 42, 190, 0.3);
-  --clay-primary-light: rgba(208, 184, 255, 0.5);
+  /* Clay light model: bayangan biru lembut di bawah, sorotan putih di atas.
+     Semua warna bayangan memakai nada biru-lavender, bukan cokelat, supaya
+     permukaan terasa seperti plastik lembut yang duduk di atas latar. */
+  --clay-dark: rgba(84, 92, 176, 0.15);
+  --clay-light: rgba(255, 255, 255, 0.92);
+  --clay-inset-dark: rgba(94, 102, 190, 0.1);
+  --clay-inset-light: rgba(255, 255, 255, 0.88);
+  --clay-primary-dark: rgba(76, 62, 198, 0.34);
+  --clay-primary-light: rgba(206, 199, 255, 0.55);
   /* Cahaya ambient: satu lapis lebar dan tipis supaya permukaan clay terasa
      mengambang tanpa bayangan gelap yang kasar. */
-  --clay-ambient: rgba(104, 74, 180, 0.055);
+  --clay-ambient: rgba(88, 96, 184, 0.1);
   /* Satu kurva gerak untuk seluruh app: turun cepat, mendarat pelan. */
   --ease-clay: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .dark {
-  --background: oklch(0.255 0.035 300);
-  --foreground: oklch(0.96 0.012 310);
-  --card: oklch(0.305 0.038 300);
-  --card-foreground: oklch(0.96 0.012 310);
-  --popover: oklch(0.315 0.038 300);
-  --popover-foreground: oklch(0.96 0.012 310);
-  --primary: oklch(0.72 0.15 296);
+  --background: oklch(0.245 0.032 285);
+  --foreground: oklch(0.96 0.01 285);
+  --card: oklch(0.3 0.036 285);
+  --card-foreground: oklch(0.96 0.01 285);
+  --popover: oklch(0.31 0.036 285);
+  --popover-foreground: oklch(0.96 0.01 285);
+  --primary: oklch(0.7 0.16 283);
   --primary-foreground: oklch(0.21 0.045 300);
   --secondary: oklch(0.35 0.042 302);
   --secondary-foreground: oklch(0.96 0.012 310);
@@ -152,6 +155,14 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    /* Cahaya besar di atas: bikin latar terasa seperti dinding yang tertiaryang,
+       bukan warna datar. */
+    background-image: radial-gradient(
+      120% 70% at 50% -12%,
+      color-mix(in oklab, var(--primary) 12%, white) 0%,
+      transparent 62%
+    );
+    background-attachment: fixed;
   }
   h1,
   h2,
@@ -161,9 +172,8 @@
     letter-spacing: -0.015em;
     text-wrap: balance;
   }
-  /* Ikon app memakai CoreUI Icons lewat src/components/icons.tsx. Rule ini
-     cuma menyisakan ikon lucide milik toolbar platform supaya berat garisnya
-     tetap sepadan dengan set CoreUI. */
+  /* Semua ikon app (dan toolbar platform) lewat Lucide, jadi berat garisnya
+     diseragamkan di sini: tipis dan bulat, seperti ikon di acuan desain. */
   svg.lucide {
     stroke-width: 1.75px;
   }
@@ -191,38 +201,86 @@
     border-radius: calc(var(--radius) + 0.35rem);
     background-color: var(--card);
     box-shadow:
-      0 1.4rem 2.4rem -1.2rem var(--clay-ambient),
-      0.7rem 0.7rem 1.6rem var(--clay-dark),
-      -0.5rem -0.5rem 1.3rem var(--clay-light),
-      inset -0.2rem -0.2rem 0.6rem var(--clay-inset-dark),
-      inset 0.2rem 0.2rem 0.6rem var(--clay-inset-light);
+      0 1.6rem 2.6rem -1.5rem var(--clay-ambient),
+      0.45rem 0.45rem 1.2rem var(--clay-dark),
+      -0.35rem -0.35rem 0.9rem var(--clay-light),
+      inset -0.12rem -0.12rem 0.4rem var(--clay-inset-dark),
+      inset 0.12rem 0.12rem 0.4rem var(--clay-inset-light);
   }
 
   .clay-sm {
     border-radius: var(--radius);
     background-color: var(--card);
     box-shadow:
-      0 0.7rem 1.3rem -0.8rem var(--clay-ambient),
-      0.28rem 0.28rem 0.7rem var(--clay-dark),
-      -0.2rem -0.2rem 0.6rem var(--clay-light),
-      inset -0.1rem -0.1rem 0.35rem var(--clay-inset-dark),
-      inset 0.1rem 0.1rem 0.35rem var(--clay-inset-light);
+      0 0.9rem 1.5rem -0.9rem var(--clay-ambient),
+      0.22rem 0.22rem 0.6rem var(--clay-dark),
+      -0.18rem -0.18rem 0.5rem var(--clay-light),
+      inset -0.08rem -0.08rem 0.28rem var(--clay-inset-dark),
+      inset 0.08rem 0.08rem 0.28rem var(--clay-inset-light);
   }
 
+  /* Permukaan ungu: gradien dari ungu muda ke ungu pekat, cahayanya sendiri
+     dibuat halus supaya permukaannya terasa seperti plastik lembut, bukan
+     tombol glossy. */
   .clay-primary {
     border-radius: calc(var(--radius) + 0.35rem);
     background-image: linear-gradient(
-      145deg,
-      color-mix(in oklab, var(--primary) 78%, white),
-      var(--primary)
+      140deg,
+      color-mix(in oklab, var(--primary) 76%, white),
+      color-mix(in oklab, var(--primary) 92%, black 6%)
     );
     color: var(--primary-foreground);
     box-shadow:
-      0 1.6rem 2.6rem -1.2rem var(--clay-ambient),
-      0.7rem 0.7rem 1.6rem var(--clay-primary-dark),
-      -0.5rem -0.5rem 1.3rem var(--clay-primary-light),
-      inset -0.24rem -0.24rem 0.65rem rgba(0, 0, 0, 0.13),
-      inset 0.24rem 0.24rem 0.65rem rgba(255, 255, 255, 0.3);
+      0 1.4rem 2.2rem -1.1rem
+        color-mix(in oklab, var(--primary) 55%, transparent),
+      0.5rem 0.5rem 1.2rem var(--clay-primary-dark),
+      -0.35rem -0.35rem 0.9rem var(--clay-primary-light),
+      inset -0.18rem -0.18rem 0.5rem rgba(0, 0, 0, 0.14),
+      inset 0.18rem 0.18rem 0.5rem rgba(255, 255, 255, 0.32);
+  }
+
+  /* Navigasi mengambang: bilah putih melayang dengan garis ungu sangat tipis,
+     bukan cekungan clay. Dipakai untuk bottom nav dan daftar tab. */
+  .clay-nav {
+    border-radius: 9999px;
+    background-color: var(--card);
+    box-shadow:
+      0 1.3rem 2.2rem -1.1rem var(--clay-ambient),
+      0.35rem 0.35rem 0.9rem var(--clay-dark),
+      -0.3rem -0.3rem 0.7rem var(--clay-light),
+      inset 0 0 0 1px color-mix(in oklab, var(--primary) 9%, transparent);
+  }
+
+  /* Tab aktif: pil putih bertepi ungu dengan ikon dan label ungu. */
+  .clay-nav-active {
+    color: var(--primary);
+    background-color: color-mix(in oklab, var(--primary) 7%, var(--card));
+    box-shadow:
+      0 0.4rem 0.9rem -0.35rem
+        color-mix(in oklab, var(--primary) 55%, transparent),
+      inset 0 0 0 1px color-mix(in oklab, var(--primary) 22%, transparent);
+  }
+
+  /* Chip ungu kecil untuk ringkasan angka (mis. "% terpakai"). */
+  .clay-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 9999px;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    background-image: linear-gradient(
+      140deg,
+      color-mix(in oklab, var(--primary) 78%, white),
+      var(--primary)
+    );
+    box-shadow:
+      0 0.4rem 0.9rem -0.3rem
+        color-mix(in oklab, var(--primary) 65%, transparent),
+      inset 0.08rem 0.08rem 0.3rem rgba(0, 0, 0, 0.14),
+      inset 0.08rem 0.08rem 0.3rem rgba(255, 255, 255, 0.3);
   }
 
   .clay-sunken {
@@ -267,25 +325,44 @@
     transition:
       transform 260ms var(--ease-clay),
       box-shadow 260ms var(--ease-clay),
-      background-color 260ms var(--ease-clay);
+      background-color 260ms var(--ease-clay),
+      background-image 260ms var(--ease-clay);
   }
   [data-slot="button"]:not(:disabled):active {
     transform: translateY(1px) scale(0.985);
   }
+  /* Tombol besar jadi pil penuh, seperti CTA ungu di layar acuan. */
+  [data-slot="button"][data-size="lg"] {
+    border-radius: 9999px;
+  }
   [data-slot="button"][data-variant="default"] {
+    background-image: linear-gradient(
+      140deg,
+      color-mix(in oklab, var(--primary) 80%, white),
+      color-mix(in oklab, var(--primary) 94%, black 8%)
+    );
     box-shadow:
-      0.3rem 0.3rem 0.75rem var(--clay-primary-dark),
-      -0.22rem -0.22rem 0.6rem var(--clay-primary-light),
-      inset -0.15rem -0.15rem 0.4rem rgba(0, 0, 0, 0.14),
-      inset 0.15rem 0.15rem 0.4rem rgba(255, 255, 255, 0.26);
+      0 0.7rem 1.4rem -0.6rem
+        color-mix(in oklab, var(--primary) 60%, transparent),
+      0.25rem 0.25rem 0.6rem var(--clay-primary-dark),
+      -0.18rem -0.18rem 0.5rem var(--clay-primary-light),
+      inset -0.12rem -0.12rem 0.35rem rgba(0, 0, 0, 0.16),
+      inset 0.12rem 0.12rem 0.35rem rgba(255, 255, 255, 0.28);
+  }
+  [data-slot="button"][data-variant="default"]:hover:not(:disabled) {
+    background-image: linear-gradient(
+      140deg,
+      color-mix(in oklab, var(--primary) 90%, white),
+      color-mix(in oklab, var(--primary) 100%, black 4%)
+    );
   }
   [data-slot="button"][data-variant="outline"],
   [data-slot="button"][data-variant="secondary"] {
     box-shadow:
-      0.24rem 0.24rem 0.6rem var(--clay-dark),
-      -0.18rem -0.18rem 0.5rem var(--clay-light),
-      inset -0.1rem -0.1rem 0.32rem var(--clay-inset-dark),
-      inset 0.1rem 0.1rem 0.32rem var(--clay-inset-light);
+      0.2rem 0.2rem 0.55rem var(--clay-dark),
+      -0.15rem -0.15rem 0.45rem var(--clay-light),
+      inset -0.08rem -0.08rem 0.28rem var(--clay-inset-dark),
+      inset 0.08rem 0.08rem 0.28rem var(--clay-inset-light);
   }
 
   [data-slot="input"],

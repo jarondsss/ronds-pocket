@@ -71,7 +71,7 @@ export function TransactionList({
           <button
             type="button"
             onClick={onEmptyAction}
-            className="clay-primary clay-press mt-2 px-5 py-2.5 text-sm font-bold"
+            className="clay-primary clay-press mt-2 rounded-full px-5 py-2.5 text-sm font-bold"
           >
             Catat sekarang
           </button>
@@ -123,7 +123,7 @@ export function TransactionList({
                     className="flex w-full items-center gap-3 rounded-2xl px-2 py-3 text-left transition-colors hover:bg-secondary/60"
                   >
                     <span
-                      className="grid size-11 shrink-0 place-items-center rounded-2xl text-lg"
+                      className="grid size-10 shrink-0 place-items-center rounded-full text-lg shadow-[0_0.25rem_0.6rem_-0.2rem_var(--clay-dark)]"
                       style={{
                         backgroundColor: toneBackground(
                           categoryTone(tx.category || tx.type),
@@ -144,7 +144,7 @@ export function TransactionList({
                       </span>
                       {showAuthor && (
                         <span className="mt-0.5 flex items-center gap-1.5 text-[11px] font-semibold text-primary">
-                          <span className="grid size-5 place-items-center rounded-full bg-primary/15 text-[11px] leading-none">
+                          <span className="grid size-5 place-items-center rounded-full bg-primary/12 text-[11px] leading-none">
                             {tx.createdByAvatar ?? (
                               <span className="font-black">
                                 {tx.createdByName.charAt(0).toUpperCase()}

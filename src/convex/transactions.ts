@@ -3,6 +3,7 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import {
+  displayNameOf,
   logActivity,
   notifyMembers,
   requireMember,
@@ -77,15 +78,17 @@ export const list = query({
     await requireMember(ctx, bookId);
     const rows = await loadTransactions(ctx, bookId, from, to);
 
-    const names = new Map<string, string>();
-    const readName = async (userId: Id<"users">) => {
-      const cached = names.get(userId);
+    const people = new Map<string, { name: string; avatar: string | null }>();
+    const readPerson = async (userId: Id<"users">) => {
+      const cached = people.get(userId);
       if (cached !== undefined) return cached;
       const user = await ctx.db.get(userId);
-      const email = user?.email ?? null;
-      const name = user?.name ?? (email ? email.split("@")[0] : "Pengguna");
-      names.set(userId, name);
-      return name;
+      const person = {
+        name: displayNameOf(user),
+        avatar: user?.avatar ?? null,
+      };
+      people.set(userId, person);
+      return person;
     };
 
     const wallets = await ctx.db
@@ -108,7 +111,8 @@ export const list = query({
           occurred_at: row.occurred_at,
           created_by: row.created_by,
           created_at: row.created_at,
-          createdByName: await readName(row.created_by),
+          createdByName: (await readPerson(row.created_by)).name,
+          createdByAvatar: (await readPerson(row.created_by)).avatar,
           wallet_id: row.wallet_id ?? null,
           walletName: wallet?.name ?? null,
           walletIcon: wallet?.icon ?? null,

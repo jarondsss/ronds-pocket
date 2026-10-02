@@ -17,6 +17,7 @@ export interface LedgerTransaction {
   created_by: Id<"users">;
   created_at: number;
   createdByName: string;
+  createdByAvatar: string | null;
   wallet_id: Id<"wallets"> | null;
   walletName: string | null;
   walletIcon: string | null;
@@ -142,9 +143,13 @@ export function TransactionList({
                         · {tx.note || "Tanpa catatan"}
                       </span>
                       {showAuthor && (
-                        <span className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold text-primary">
-                          <span className="grid size-4 place-items-center rounded-full bg-primary/15 text-[9px] font-black">
-                            {tx.createdByName.charAt(0).toUpperCase()}
+                        <span className="mt-0.5 flex items-center gap-1.5 text-[11px] font-semibold text-primary">
+                          <span className="grid size-5 place-items-center rounded-full bg-primary/15 text-[11px] leading-none">
+                            {tx.createdByAvatar ?? (
+                              <span className="font-black">
+                                {tx.createdByName.charAt(0).toUpperCase()}
+                              </span>
+                            )}
                           </span>
                           {tx.createdByName}
                         </span>

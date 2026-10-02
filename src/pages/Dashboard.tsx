@@ -29,6 +29,7 @@ import {
   PiggyBank,
   Receipt,
   Target,
+  UserRound,
   Users,
   Wallet,
 } from "@/components/icons";
@@ -47,6 +48,7 @@ const SECONDARY_TABS = [
   { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie },
   { to: "/dashboard/riwayat", label: "Riwayat", icon: History },
   { to: "/dashboard/partner", label: "Sharing", icon: Users },
+  { to: "/dashboard/profil", label: "Profil", icon: UserRound },
 ];
 
 function BottomNav() {

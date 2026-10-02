@@ -97,6 +97,19 @@ export function rupiah(value: number) {
 }
 
 /**
+ * Nama yang ditampilkan di seluruh app. Urutannya: nama pilihan user (dari
+ * halaman Profil), lalu nama akun dari auth, lalu bagian depan email.
+ */
+export function displayNameOf(
+  user: { display_name?: string; name?: string; email?: string } | null,
+  fallback = "Pengguna",
+) {
+  return (
+    user?.display_name || user?.name || user?.email?.split("@")[0] || fallback
+  );
+}
+
+/**
  * Catat satu baris riwayat perubahan. Disimpan di server (bukan dari klien)
  * supaya jejaknya tidak bisa dilewati, dan nama pelakunya ikut disimpan sebagai
  * salinan supaya tetap terbaca walau akunnya dihapus.
@@ -116,10 +129,7 @@ export async function logActivity(
   await ctx.db.insert("activity", {
     book_id: entry.bookId,
     actor_id: entry.actorId,
-    actor_name:
-      actor?.name ??
-      actor?.email?.split("@")[0] ??
-      "Pengguna",
+    actor_name: displayNameOf(actor),
     action: entry.action,
     target: entry.target,
     label: entry.label.slice(0, 80),
@@ -150,8 +160,7 @@ export async function notifyMembers(
   if (targets.length === 0) return;
 
   const actor = await ctx.db.get(entry.actorId);
-  const actorName =
-    actor?.name ?? actor?.email?.split("@")[0] ?? "Temanmu";
+  const actorName = displayNameOf(actor, "Temanmu");
   const now = Date.now();
 
   for (const member of targets) {
@@ -302,7 +311,8 @@ export const members = query({
         return {
           userId: row.user_id,
           role: row.role,
-          name: user?.name ?? (email ? email.split("@")[0] : "Pengguna"),
+          name: displayNameOf(user),
+          avatar: user?.avatar ?? null,
           // Email hanya perlu dilihat pemilik; teman cukup tahu namanya.
           email: role === "owner" ? email : null,
         };

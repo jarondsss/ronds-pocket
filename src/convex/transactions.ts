@@ -213,7 +213,7 @@ export const create = mutation({
       label: describeTransaction(args.category, args.note),
       detail: `${args.type === "income" ? "+" : "−"}${rupiah(args.amount)}`,
     });
-    return await ctx.db.insert("transactions", {
+    const txId = await ctx.db.insert("transactions", {
       book_id: args.bookId,
       wallet_id: args.wallet_id,
       type: args.type,
@@ -224,6 +224,70 @@ export const create = mutation({
       created_by: userId,
       created_at: Date.now(),
     });
+
+    // Cek overspend: kalau transaksi ini expense dan ada anggaran untuk kategorinya,
+    // hitung total pengeluaran bulan ini dan kirim notifikasi kalau lewat batas.
+    if (args.type === "expense" && args.category) {
+      const category = (args.category ?? "").trim();
+      if (category) {
+        const budget = await ctx.db
+          .query("budgets")
+          .withIndex("by_book_category", (q) =>
+            q.eq("book_id", args.bookId).eq("category", category),
+          )
+          .unique();
+
+        if (budget !== null) {
+          // Hitung total pengeluaran kategori ini di bulan transaksi
+          const txDate = new Date(args.occurred_at);
+          const monthStart = new Date(
+            txDate.getFullYear(),
+            txDate.getMonth(),
+            1,
+            0,
+            0,
+            0,
+            0,
+          ).getTime();
+          const monthEnd = new Date(
+            txDate.getFullYear(),
+            txDate.getMonth() + 1,
+            1,
+            0,
+            0,
+            0,
+            0,
+          ).getTime();
+
+          const monthTransactions = await ctx.db
+            .query("transactions")
+            .withIndex("by_book_occurred", (q) =>
+              q
+                .eq("book_id", args.bookId)
+                .gte("occurred_at", monthStart)
+                .lt("occurred_at", monthEnd),
+            )
+            .collect();
+
+          const spent = monthTransactions
+            .filter((tx) => tx.type === "expense" && tx.category === category)
+            .reduce((sum, tx) => sum + tx.amount, 0);
+
+          if (spent > budget.amount) {
+            const excess = spent - budget.amount;
+            await notifyMembers(ctx, {
+              bookId: args.bookId,
+              actorId: userId,
+              message: `anggaran ${category} terlampaui`,
+              label: category,
+              detail: `Lewat ${rupiah(excess)} dari ${rupiah(budget.amount)}`,
+            });
+          }
+        }
+      }
+    }
+
+    return txId;
   },
 });
 

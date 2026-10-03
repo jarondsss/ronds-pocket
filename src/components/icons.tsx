@@ -36,6 +36,7 @@ import {
   Coins as LucideCoins,
   Copy as LucideCopy,
   Crown as LucideCrown,
+  Download as LucideDownload,
   Ellipsis as LucideEllipsis,
   ExternalLink as LucideExternalLink,
   GripVertical as LucideGripVertical,
@@ -54,8 +55,11 @@ import {
   PanelLeft as LucidePanelLeft,
   Pencil as LucidePencil,
   PiggyBank as LucidePiggyBank,
+  Play as LucidePlay,
   Plus as LucidePlus,
+  Pause as LucidePause,
   Receipt as LucideReceipt,
+  Repeat as LucideRepeat,
   RotateCcw as LucideRotateCcw,
   Search as LucideSearch,
   Share2 as LucideShare2,
@@ -72,6 +76,8 @@ import {
   UserX as LucideUserX,
   Users as LucideUsers,
   Wallet as LucideWallet,
+  Moon as LucideMoon,
+  Sun as LucideSun,
   X as LucideX,
   type LucideIcon,
   type LucideProps,
@@ -182,3 +188,9 @@ export const CalendarClock = icon("CalendarClock", LucideCalendarCheck);
 export const Sparkles = icon("Sparkles", LucideSparkles);
 export const PanelLeftIcon = icon("PanelLeftIcon", LucidePanelLeft);
 export const GripVerticalIcon = icon("GripVerticalIcon", LucideGripVertical);
+export const Moon = icon("Moon", LucideMoon);
+export const Sun = icon("Sun", LucideSun);
+export const Download = icon("Download", LucideDownload);
+export const Repeat = icon("Repeat", LucideRepeat);
+export const Play = icon("Play", LucidePlay);
+export const Pause = icon("Pause", LucidePause);

@@ -64,7 +64,9 @@ async function deleteBookRows(
     | "activity"
     | "invites"
     | "book_members"
-    | "recurring_transactions",
+    | "recurring_transactions"
+    | "transaction_comments"
+    | "bill_reminders",
   bookId: Id<"books">,
 ) {
   const rows = await ctx.db
@@ -122,6 +124,7 @@ export const deleteAccount = mutation({
         // per-user bukan per-book)
 
         await deleteBookRows(ctx, "transactions", bookId);
+        await deleteBookRows(ctx, "transaction_comments", bookId);
         await deleteBookRows(ctx, "wallet_transfers", bookId);
         await deleteBookRows(ctx, "wallets", bookId);
         await deleteBookRows(ctx, "categories", bookId);
@@ -129,6 +132,7 @@ export const deleteAccount = mutation({
         await deleteBookRows(ctx, "goals", bookId);
         await deleteBookRows(ctx, "savings", bookId);
         await deleteBookRows(ctx, "recurring_transactions", bookId);
+        await deleteBookRows(ctx, "bill_reminders", bookId);
         await deleteBookRows(ctx, "activity", bookId);
         // Notifications: tidak punya index by_book, jadi hapus per-member
         const members = await ctx.db

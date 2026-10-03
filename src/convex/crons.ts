@@ -9,4 +9,10 @@ crons.interval(
   internal.recurring.processDue,
 );
 
+crons.daily(
+  "process bill reminders",
+  { hourUTC: 1, minuteUTC: 0 }, // 1 AM UTC setiap hari
+  internal.billReminders.processReminders,
+);
+
 export default crons;

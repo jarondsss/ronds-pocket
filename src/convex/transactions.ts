@@ -193,6 +193,9 @@ export const create = mutation({
     category: v.optional(v.string()),
     note: v.optional(v.string()),
     occurred_at: v.number(),
+    paid_by: v.optional(v.id("users")),
+    split_with: v.optional(v.id("users")),
+    split_amount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { userId } = await requireMember(ctx, args.bookId);
@@ -223,6 +226,9 @@ export const create = mutation({
       occurred_at: args.occurred_at,
       created_by: userId,
       created_at: Date.now(),
+      paid_by: args.paid_by ?? userId,
+      split_with: args.split_with,
+      split_amount: args.split_amount ? cleanAmount(args.split_amount) : undefined,
     });
 
     // Cek overspend: kalau transaksi ini expense dan ada anggaran untuk kategorinya,
@@ -300,6 +306,9 @@ export const update = mutation({
     category: v.optional(v.string()),
     note: v.optional(v.string()),
     occurred_at: v.number(),
+    paid_by: v.optional(v.id("users")),
+    split_with: v.optional(v.id("users")),
+    split_amount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db.get(args.id);
@@ -327,6 +336,9 @@ export const update = mutation({
       category: (args.category ?? "").trim().slice(0, 40),
       note: (args.note ?? "").trim().slice(0, 200),
       occurred_at: args.occurred_at,
+      paid_by: args.paid_by,
+      split_with: args.split_with,
+      split_amount: args.split_amount ? cleanAmount(args.split_amount) : undefined,
     });
   },
 });

@@ -21,6 +21,7 @@ import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { CategoryCombobox } from "@/components/dashboard/CategoryCombobox";
 import { DatePicker } from "@/components/dashboard/DatePicker";
 import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
+import { TransactionComments } from "@/components/dashboard/TransactionComments";
 import { api } from "@/convex/_generated/api";
 import type { AiDraft } from "@/convex/ai";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -32,6 +33,7 @@ import { useMutation } from "convex/react";
 import { Loader2, Trash2 } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 export interface EditableTransaction {
   _id: Id<"transactions">;
@@ -41,6 +43,9 @@ export interface EditableTransaction {
   note: string;
   occurred_at: number;
   wallet_id: Id<"wallets"> | null;
+  paid_by?: Id<"users">;
+  split_with?: Id<"users">;
+  split_amount?: number;
 }
 
 /**
@@ -92,6 +97,11 @@ function TransactionForm({
   const updateTransaction = useMutation(api.transactions.update);
   const removeTransaction = useMutation(api.transactions.remove);
   const save = useSaveTracker();
+  const { userId } = useAuth();
+
+  // Query partner untuk split
+  const members = useQuery(api.books.listMembers, { bookId }) ?? [];
+  const partner = members.find((m) => m.user_id !== userId);
 
   const [type, setType] = useState<TxType>(initial?.type ?? "expense");
   const [amount, setAmount] = useState(initial?.amount ?? 0);
@@ -104,6 +114,12 @@ function TransactionForm({
     initial ? toDateInput(initial.occurred_at) : session.today,
   );
   const [saving, setSaving] = useState(false);
+  
+  // Split state
+  const [enableSplit, setEnableSplit] = useState(
+    !!initial?.split_with && !!initial?.split_amount
+  );
+  const [splitAmount, setSplitAmount] = useState(initial?.split_amount ?? 0);
 
   const confirm = useConfirm();
 
@@ -122,6 +138,14 @@ function TransactionForm({
       toast.error("Nominalnya harus lebih dari 0 ya.");
       return;
     }
+    if (enableSplit && splitAmount <= 0) {
+      toast.error("Nominal splitnya harus lebih dari 0.");
+      return;
+    }
+    if (enableSplit && splitAmount > amount) {
+      toast.error("Nominal split tidak boleh lebih besar dari total.");
+      return;
+    }
     setSaving(true);
     try {
       const payload = {
@@ -132,6 +156,9 @@ function TransactionForm({
         occurred_at: fromDateInput(dateValue),
         wallet_id:
           walletId === NO_WALLET ? undefined : (walletId as Id<"wallets">),
+        paid_by: userId,
+        split_with: enableSplit && partner ? partner.user_id : undefined,
+        split_amount: enableSplit ? splitAmount : undefined,
       };
       if (editing) {
         await save(() => updateTransaction({ id: editing._id, ...payload }));
@@ -273,6 +300,72 @@ function TransactionForm({
           value={dateValue}
           onChange={setDateValue}
         />
+
+        {partner && type === "expense" && (
+          <div className="flex flex-col gap-3 clay-sm rounded-xl p-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="enable-split" className="cursor-pointer">
+                Split dengan {partner.name}
+              </Label>
+              <input
+                id="enable-split"
+                type="checkbox"
+                checked={enableSplit}
+                onChange={(e) => {
+                  setEnableSplit(e.target.checked);
+                  if (e.target.checked && splitAmount === 0) {
+                    setSplitAmount(Math.floor(amount / 2));
+                  }
+                }}
+                className="size-4 cursor-pointer"
+              />
+            </div>
+            {enableSplit && (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="split-amount">
+                  {partner.name} harus bayar
+                </Label>
+                <RupiahInput
+                  id="split-amount"
+                  value={splitAmount}
+                  onChange={setSplitAmount}
+                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSplitAmount(Math.floor(amount / 2))}
+                    className="text-xs"
+                  >
+                    50%
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSplitAmount(amount)}
+                    className="text-xs"
+                  >
+                    100%
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Kamu bayar: {formatRupiah(amount - splitAmount)}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {isEdit && editing && userId && (
+          <div className="clay-sunken rounded-2xl p-4">
+            <TransactionComments
+              transactionId={editing._id}
+              currentUserId={userId}
+            />
+          </div>
+        )}
       </div>
 
       <DialogFooter className="gap-2 sm:justify-between">

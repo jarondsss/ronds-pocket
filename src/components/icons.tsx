@@ -76,6 +76,7 @@ import {
   UserX as LucideUserX,
   Users as LucideUsers,
   Wallet as LucideWallet,
+  WifiOff as LucideWifiOff,
   Moon as LucideMoon,
   Sun as LucideSun,
   X as LucideX,
@@ -194,3 +195,4 @@ export const Download = icon("Download", LucideDownload);
 export const Repeat = icon("Repeat", LucideRepeat);
 export const Play = icon("Play", LucidePlay);
 export const Pause = icon("Pause", LucidePause);
+export const WifiOff = icon("WifiOff", LucideWifiOff);

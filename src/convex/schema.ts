@@ -37,6 +37,14 @@ export const activityActionValidator = v.union(
 );
 export type ActivityAction = Infer<typeof activityActionValidator>;
 
+export const frequencyValidator = v.union(
+  v.literal("daily"),
+  v.literal("weekly"),
+  v.literal("monthly"),
+  v.literal("yearly"),
+);
+export type Frequency = Infer<typeof frequencyValidator>;
+
 const schema = defineSchema(
   {
     // default auth tables using convex auth.
@@ -214,6 +222,24 @@ const schema = defineSchema(
     })
       .index("by_savings", ["savings_id"])
       .index("by_book", ["book_id"]),
+
+    // Template transaksi berulang (harian/mingguan/bulanan/tahunan).
+    // Cron job memproses yang sudah jatuh tempo dan membuat transaksi asli.
+    recurring_transactions: defineTable({
+      book_id: v.id("books"),
+      wallet_id: v.optional(v.id("wallets")),
+      type: transactionTypeValidator,
+      amount: v.number(),
+      category: v.string(),
+      note: v.string(),
+      frequency: frequencyValidator,
+      next_due: v.number(), // timestamp kapan transaksi berikutnya harus dibuat
+      enabled: v.boolean(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    })
+      .index("by_book", ["book_id"])
+      .index("by_next_due", ["enabled", "next_due"]),
   },
   {
     schemaValidation: true,

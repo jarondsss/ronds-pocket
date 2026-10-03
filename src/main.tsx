@@ -9,6 +9,7 @@ import { VlyToolbar } from "../vly-toolbar-readonly.tsx";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
 import { ConnectionBanner } from "@/components/ConnectionBanner";
+import { ThemeProvider } from "next-themes";
 import React, { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
@@ -123,6 +124,7 @@ createRoot(document.getElementById("root")!).render(
         <VlyToolbar />
       </ToolbarErrorBoundary>
       <ConvexAuthProvider client={convex}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <BrowserRouter>
           <RouteSyncer />
           <GlobalErrorListener />
@@ -169,6 +171,7 @@ createRoot(document.getElementById("root")!).render(
           </ConfirmProvider>
         </BrowserRouter>
         <Toaster />
+        </ThemeProvider>
       </ConvexAuthProvider>
     </RootErrorBoundary>
   </StrictMode>,

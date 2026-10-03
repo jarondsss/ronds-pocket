@@ -1,6 +1,15 @@
 import { ClayLoader } from "@/components/ClayLoader";
 import { AiComposer } from "@/components/dashboard/AiComposer";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
+import {
+  RecurringDialog,
+  type EditableRecurring,
+  type RecurringEditorSession,
+} from "@/components/dashboard/RecurringDialog";
+import {
+  RecurringList,
+  type RecurringRow,
+} from "@/components/dashboard/RecurringList";
 import { SummaryHero } from "@/components/dashboard/SummaryHero";
 import {
   TransactionDialog,
@@ -13,14 +22,17 @@ import {
 } from "@/components/dashboard/TransactionList";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 import type { AiDraft } from "@/convex/ai";
 import { useBooks } from "@/lib/book-context";
 import { monthRange, toDateInput, toMonthKey } from "@/lib/format";
+import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { Plus } from "@/components/icons";
+import { ChevronDown, Plus, Repeat, SearchIcon, X } from "@/components/icons";
 import { useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 type Filter = "all" | "expense" | "income";
 
@@ -36,7 +48,16 @@ export default function Ledger() {
   const [filter, setFilter] = useState<Filter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [session, setSession] = useState<EditorSession | null>(null);
+  const [search, setSearch] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
   const sessionKey = useRef(0);
+
+  // Recurring transactions state
+  const [recDialogOpen, setRecDialogOpen] = useState(false);
+  const [recSession, setRecSession] = useState<RecurringEditorSession | null>(null);
+  const recSessionKey = useRef(0);
+  const [recExpanded, setRecExpanded] = useState(false);
+  const toggleRecurring = useMutation(api.recurring.toggle);
 
   const range = useMemo(() => monthRange(monthKey), [monthKey]);
   const bookId = activeBook?._id;
@@ -54,12 +75,29 @@ export default function Ledger() {
     api.categories.list,
     bookId ? { bookId } : "skip",
   );
+  const recurring = useQuery(
+    api.recurring.list,
+    bookId ? { bookId } : "skip",
+  );
 
   const visible = useMemo(() => {
-    const rows: LedgerTransaction[] = transactions ?? [];
-    if (filter === "all") return rows;
-    return rows.filter((row) => row.type === filter);
-  }, [transactions, filter]);
+    let rows: LedgerTransaction[] = transactions ?? [];
+    if (filter !== "all") {
+      rows = rows.filter((row) => row.type === filter);
+    }
+    const q = search.trim().toLowerCase();
+    if (q) {
+      rows = rows.filter(
+        (row) =>
+          row.category.toLowerCase().includes(q) ||
+          row.note.toLowerCase().includes(q) ||
+          (row.walletName ?? "").toLowerCase().includes(q) ||
+          formatRupiah(row.amount).includes(q) ||
+          row.createdByName.toLowerCase().includes(q),
+      );
+    }
+    return rows;
+  }, [transactions, filter, search]);
 
   if (!activeBook || !bookId) return null;
 
@@ -101,6 +139,44 @@ export default function Ledger() {
       null,
     );
 
+  const openNewRecurring = () => {
+    recSessionKey.current += 1;
+    setRecSession({
+      key: recSessionKey.current,
+      mode: "new",
+      today: toDateInput(Date.now()),
+      recurring: null,
+    });
+    setRecDialogOpen(true);
+  };
+
+  const openEditRecurring = (item: RecurringRow) => {
+    recSessionKey.current += 1;
+    setRecSession({
+      key: recSessionKey.current,
+      mode: "edit",
+      today: toDateInput(Date.now()),
+      recurring: {
+        _id: item._id,
+        type: item.type,
+        amount: item.amount,
+        category: item.category,
+        note: item.note,
+        frequency: item.frequency,
+        next_due: item.next_due,
+        enabled: item.enabled,
+        wallet_id: item.wallet_id,
+      },
+    });
+    setRecDialogOpen(true);
+  };
+
+  const handleToggleRecurring = (id: Id<"recurring_transactions">, enabled: boolean) => {
+    toggleRecurring({ id, enabled }).catch(() => {
+      toast.error("Gagal mengubah status.");
+    });
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -136,6 +212,52 @@ export default function Ledger() {
         <SummaryHero summary={summary} />
       )}
 
+      {/* Transaksi berulang */}
+      {recurring && (
+        <section className="clay overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setRecExpanded(!recExpanded)}
+            className="flex w-full items-center gap-2 p-4 text-left"
+          >
+            <Repeat className="size-4 text-primary" />
+            <span className="flex-1 text-sm font-bold">
+              Transaksi berulang
+              {recurring.length > 0 && (
+                <span className="ml-1.5 text-xs font-semibold text-muted-foreground">
+                  ({recurring.length})
+                </span>
+              )}
+            </span>
+            <ChevronDown
+              className={cn(
+                "size-4 text-muted-foreground transition-transform",
+                recExpanded && "rotate-180",
+              )}
+            />
+          </button>
+          {recExpanded && (
+            <div className="border-t border-border px-4 pb-4">
+              <RecurringList
+                items={recurring as RecurringRow[]}
+                onEdit={openEditRecurring}
+                onToggle={handleToggleRecurring}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-3 w-full"
+                onClick={openNewRecurring}
+              >
+                <Plus className="size-4" />
+                Tambah berulang
+              </Button>
+            </div>
+          )}
+        </section>
+      )}
+
       <div className="clay-sunken flex items-center gap-1.5 p-1.5">
         {FILTERS.map((item) => (
           <button
@@ -154,6 +276,31 @@ export default function Ledger() {
         ))}
       </div>
 
+      <div className="clay-sm flex items-center gap-2 px-3 py-2">
+        <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
+        <input
+          ref={searchRef}
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cari catatan, kategori, dompet..."
+          className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/60"
+        />
+        {search && (
+          <button
+            type="button"
+            aria-label="Hapus pencarian"
+            onClick={() => {
+              setSearch("");
+              searchRef.current?.focus();
+            }}
+            className="grid size-5 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
+          >
+            <X className="size-3" />
+          </button>
+        )}
+      </div>
+
       {transactions === undefined ? (
         <div className="grid min-h-[24vh] place-items-center">
           <ClayLoader label="Memuat catatan..." />
@@ -164,14 +311,20 @@ export default function Ledger() {
           onEdit={openEdit}
           showAuthor={(activeBook?.memberCount ?? 1) > 1}
           emptyTitle={
-            filter === "all" ? "Bulan ini masih kosong" : "Belum ada isinya"
+            search
+              ? "Tidak ditemukan"
+              : filter === "all"
+                ? "Bulan ini masih kosong"
+                : "Belum ada isinya"
           }
           emptyDescription={
-            filter === "all"
-              ? "Catat pengeluaran atau pemasukan pertamamu, nanti sisanya kami hitung."
-              : "Coba ganti filternya atau pilih bulan lain ya."
+            search
+              ? `Tidak ada catatan yang cocok dengan "${search}".`
+              : filter === "all"
+                ? "Catat pengeluaran atau pemasukan pertamamu, nanti sisanya kami hitung."
+                : "Coba ganti filternya atau pilih bulan lain ya."
           }
-          onEmptyAction={filter === "all" ? openNew : undefined}
+          onEmptyAction={!search && filter === "all" ? openNew : undefined}
         />
       )}
 
@@ -194,6 +347,15 @@ export default function Ledger() {
         wallets={walletData?.wallets ?? []}
         categories={categories ?? []}
         session={session}
+      />
+
+      <RecurringDialog
+        open={recDialogOpen}
+        onOpenChange={setRecDialogOpen}
+        bookId={bookId}
+        wallets={walletData?.wallets ?? []}
+        categories={categories ?? []}
+        session={recSession}
       />
     </div>
   );

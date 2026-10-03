@@ -25,9 +25,11 @@ import {
   ChartPie,
   HandCoins,
   History,
+  Moon,
   MoreHorizontal,
   PiggyBank,
   Receipt,
+  Sun,
   Target,
   UserRound,
   Users,
@@ -35,6 +37,7 @@ import {
 } from "@/components/icons";
 import { useEffect, useRef } from "react";
 import { NavLink, useLocation, useOutlet } from "react-router";
+import { useTheme } from "next-themes";
 
 const PRIMARY_TABS = [
   { to: "/dashboard", label: "Transaksi", icon: Receipt, end: true },
@@ -144,6 +147,24 @@ function SidebarNav() {
   );
 }
 
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  return (
+    <button
+      type="button"
+      aria-label="Ganti tema"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground"
+    >
+      {resolvedTheme === "dark" ? (
+        <Sun className="size-4" />
+      ) : (
+        <Moon className="size-4" />
+      )}
+    </button>
+  );
+}
+
 function TotalBalance({ total, wide }: { total: number; wide?: boolean }) {
   return (
     <div
@@ -220,6 +241,7 @@ function Shell() {
               <div className="flex items-center gap-2">
                 <SaveBadge />
                 <NotificationBell />
+                <ThemeToggle />
                 {authReady && <UserMenu variant="compact" />}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -263,6 +285,7 @@ function Shell() {
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
             <NotificationBell />
+            <ThemeToggle />
             {authReady && <UserMenu variant="compact" />}
           </div>
 

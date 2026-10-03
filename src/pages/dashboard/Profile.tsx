@@ -1,4 +1,5 @@
 import { ClayLoader } from "@/components/ClayLoader";
+import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,10 +10,11 @@ import { ANIMAL_AVATARS } from "@/lib/avatars";
 import { toastError } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
-import { ShieldCheck, Loader2, LogOut } from "@/components/icons";
+import { ShieldCheck, Loader2, LogOut, Moon, Sun, Trash2 } from "@/components/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { useTheme } from "next-themes";
 
 const NAME_MAX_LENGTH = 24;
 
@@ -20,7 +22,10 @@ export default function Profile() {
   const profile = useProfile();
   const { signOut } = useAuth();
   const saveProfile = useMutation(api.profile.update);
+  const deleteAccountMutation = useMutation(api.profile.deleteAccount);
   const navigate = useNavigate();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const confirm = useConfirm();
 
   // Draft lokal: null berarti "belum disentuh", jadi nilai dari server selalu
   // dipakai sampai user benar-benar mengubahnya. Tidak perlu effect reset.
@@ -28,6 +33,7 @@ export default function Profile() {
   const [avatarDraft, setAvatarDraft] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const name = nameDraft ?? profile.name;
   const avatar = avatarDraft ?? profile.avatar;
@@ -59,6 +65,27 @@ export default function Profile() {
     } catch (caught) {
       toastError(caught, "Gagal keluar. Coba lagi ya.");
       setIsLeaving(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = await confirm({
+      title: "Hapus akun secara permanen?",
+      description:
+        "Semua data kamu akan dihapus dan tidak bisa dikembalikan: kantong, transaksi, dompet, anggaran, goals, tabungan, dan riwayat.",
+      confirmLabel: "Hapus akun",
+      tone: "destructive",
+    });
+    if (!confirmed) return;
+    setIsDeleting(true);
+    try {
+      await deleteAccountMutation();
+      await signOut();
+      navigate("/", { replace: true });
+      toast.success("Akun berhasil dihapus.");
+    } catch (caught) {
+      toastError(caught, "Gagal menghapus akun. Coba lagi ya.");
+      setIsDeleting(false);
     }
   };
 
@@ -181,6 +208,39 @@ export default function Profile() {
         </div>
       </section>
 
+      {/* Tampilan */}
+      <section className="clay p-5 sm:p-6">
+        <h2 className="font-display text-lg font-extrabold">Tampilan</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Pilih tema terang, gelap, atau ikuti pengaturan perangkat.
+        </p>
+        <div className="clay-sunken mt-4 grid grid-cols-3 gap-1.5 p-1.5">
+          {([
+            { value: "light", label: "Terang", Icon: Sun },
+            { value: "dark", label: "Gelap", Icon: Moon },
+            { value: "system", label: "Sistem", Icon: null },
+          ] as const).map((item) => {
+            const active = theme === item.value;
+            return (
+              <button
+                key={item.value}
+                type="button"
+                onClick={() => setTheme(item.value)}
+                className={cn(
+                  "flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold transition-colors sm:text-sm",
+                  active
+                    ? "clay-primary"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {item.Icon && <item.Icon className="size-4" />}
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Akun */}
       <section className="clay p-5 sm:p-6">
         <h2 className="font-display text-lg font-extrabold">Akun</h2>
@@ -210,6 +270,33 @@ export default function Profile() {
             )}
           </Button>
         </div>
+      </section>
+
+      {/* Zona bahaya */}
+      <section className="clay border border-destructive/20 p-5 sm:p-6">
+        <h2 className="font-display text-lg font-extrabold text-destructive">
+          Zona bahaya
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Menghapus akun akan menghilangkan semua data secara permanen. Tindakan
+          ini tidak bisa dibatalkan.
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => void handleDeleteAccount()}
+          disabled={isDeleting}
+          className="mt-4 text-destructive hover:bg-destructive/10 hover:text-destructive"
+        >
+          {isDeleting ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <>
+              <Trash2 className="size-4" />
+              Hapus akun
+            </>
+          )}
+        </Button>
       </section>
     </div>
   );

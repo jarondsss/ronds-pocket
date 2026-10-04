@@ -301,7 +301,11 @@ its own database and its own environment variables.
 | Environment | Deployment                            | Convex URL                                      |
 | ----------- | ------------------------------------- | ----------------------------------------------- |
 | dev         | `jajangs:rondspocket:dev`             | `https://reminiscent-cardinal-825.convex.cloud` |
-| prod        | the project's default prod deployment | `https://<prod-deployment>.convex.cloud`        |
+| prod        | `production` (`courteous-peccary-614`) | `https://courteous-peccary-614.convex.cloud`    |
+
+Both deployments live in the same Convex project, but each has its own database
+and its own environment variables. The prod deployment may still be running an
+older function set until code has been pushed to it with `convex deploy`.
 
 ## Scripts
 

@@ -304,8 +304,28 @@ its own database and its own environment variables.
 | prod        | `production` (`courteous-peccary-614`) | `https://courteous-peccary-614.convex.cloud`    |
 
 Both deployments live in the same Convex project, but each has its own database
-and its own environment variables. The prod deployment may still be running an
-older function set until code has been pushed to it with `convex deploy`.
+and its own environment variables. Both currently serve the same function set;
+run `convex deploy` after backend changes so prod does not drift behind dev.
+
+## Verifying a deployment
+
+`auth:signIn` is an **action**, and its `provider` argument is a plain string.
+Calling it as a mutation, or passing `{ type: "anonymous" }`, returns an error
+that looks like a broken deployment but is only a bad call:
+
+```bash
+# correct
+curl -s -X POST https://<deployment>.convex.cloud/api/action \
+  -H 'Content-Type: application/json' \
+  -d '{"path":"auth:signIn","args":{"provider":"anonymous"},"format":"json"}'
+
+# returns the token under value.tokens.token, not value.token
+```
+
+Most read paths require a `bookId`; call `books:ensureDefault` first, then pass
+that id to `wallets:list`, `transactions:list`, and `categories:list`. Calling
+them without args returns a `Server Error` that is an argument-validation
+failure, not a backend fault.
 
 ## Scripts
 

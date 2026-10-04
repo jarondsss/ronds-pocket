@@ -291,3 +291,66 @@ When using convex, make sure:
 - This includes importing generated files like `@/convex/_generated/server`, `@/convex/_generated/api`
 - Remember to import functions like useQuery, useMutation, useAction, etc. from `convex/react`
 - NEVER have return type validators.
+
+# Dev vs Prod deployments
+
+Git branching is not available in this environment (Vly manages version
+control), so "dev vs prod" here means **separate Convex deployments**, each with
+its own database and its own environment variables.
+
+| Environment | Deployment                            | Convex URL                                      |
+| ----------- | ------------------------------------- | ----------------------------------------------- |
+| dev         | `jajangs:rondspocket:dev`             | `https://reminiscent-cardinal-825.convex.cloud` |
+| prod        | the project's default prod deployment | `https://<prod-deployment>.convex.cloud`        |
+
+## Scripts
+
+```bash
+bun run convex:dev    # watch + push functions to the dev deployment
+bun run convex:push   # one-shot push to the dev deployment
+bun run convex:prod   # deploy to the production deployment
+```
+
+`convex deploy` targets the project's **default production** deployment. Inside
+this sandbox the CLI authenticates with `CONVEX_DEPLOY_KEY`, which is pinned to
+a single deployment, so `--prod` flags are silently ignored
+("Ignoring `--prod` ... using deployment from CONVEX_DEPLOY_KEY") and creating
+deployments is refused ("Creating a deployment isn't supported with a deploy
+key"). Use the Convex dashboard or a project key for those operations.
+
+## Pointing the frontend at a deployment
+
+`src/main.tsx` builds the client from `import.meta.env.VITE_CONVEX_URL`. Set
+`VITE_CONVEX_URL` to the matching deployment's `.convex.cloud` URL for the
+environment you are building. Switching `VITE_CONVEX_URL` without also pushing
+functions to that same deployment is what produces a blank or broken preview.
+
+## Auth env vars — the trap that breaks sign-in
+
+Every Convex deployment needs its **own** auth key pair:
+
+- `JWT_PRIVATE_KEY` — the RSA private key used to sign session tokens.
+- `JWKS` — the matching public key set, served verbatim from
+  `<deployment>.convex.site/.well-known/jwks.json`.
+- `SITE_URL` / `CONVEX_SITE_URL` — that deployment's own `.convex.site` domain.
+
+If `JWKS` does not match `JWT_PRIVATE_KEY`, or `CONVEX_SITE_URL` points at a
+different deployment, sign-in appears to succeed but the token can never be
+verified. `getAuthUserId` then fails, `users:currentUser` never resolves, and
+`useAuth().isLoading` stays `true` forever — the UI sits on "Sebentar ya..." or
+"Memeriksa sesimu..." indefinitely with no error shown.
+
+After creating a new deployment, verify it before trusting it:
+
+```bash
+curl -s https://<deployment>.convex.site/.well-known/openid-configuration
+# the issuer must be that deployment's own .convex.site domain
+
+curl -s -X POST https://<deployment>.convex.cloud/api/mutation \
+  -H 'Content-Type: application/json' \
+  -d '{"path":"auth:signIn","args":{"provider":{"type":"anonymous"}},"format":"json"}'
+```
+
+A deployment can also be paused, in which case every function call answers
+"Cannot run functions while this deployment is paused" — that looks similar to
+the broken-auth case above. Resume it in the dashboard settings.

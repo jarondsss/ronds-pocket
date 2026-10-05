@@ -29,7 +29,7 @@ import { formatRupiah, fromDateInput, toDateInput } from "@/lib/format";
 import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow, WalletRow } from "@/lib/types";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { Loader2, Trash2 } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -97,11 +97,12 @@ function TransactionForm({
   const updateTransaction = useMutation(api.transactions.update);
   const removeTransaction = useMutation(api.transactions.remove);
   const save = useSaveTracker();
-  const { userId } = useAuth();
+  const { user } = useAuth();
+  const userId = user?._id;
 
   // Query partner untuk split
-  const members = useQuery(api.books.listMembers, { bookId }) ?? [];
-  const partner = members.find((m) => m.user_id !== userId);
+  const members = useQuery(api.books.members, { bookId }) ?? [];
+  const partner = members.find((m) => m.userId !== userId);
 
   const [type, setType] = useState<TxType>(initial?.type ?? "expense");
   const [amount, setAmount] = useState(initial?.amount ?? 0);
@@ -115,11 +116,12 @@ function TransactionForm({
   );
   const [saving, setSaving] = useState(false);
   
-  // Split state
+  // Split hanya relevan saat mengubah transaksi yang sudah ada (draf AI tidak
+  // punya info split).
   const [enableSplit, setEnableSplit] = useState(
-    !!initial?.split_with && !!initial?.split_amount
+    !!editing?.split_with && !!editing?.split_amount,
   );
-  const [splitAmount, setSplitAmount] = useState(initial?.split_amount ?? 0);
+  const [splitAmount, setSplitAmount] = useState(editing?.split_amount ?? 0);
 
   const confirm = useConfirm();
 
@@ -157,7 +159,7 @@ function TransactionForm({
         wallet_id:
           walletId === NO_WALLET ? undefined : (walletId as Id<"wallets">),
         paid_by: userId,
-        split_with: enableSplit && partner ? partner.user_id : undefined,
+        split_with: enableSplit && partner ? partner.userId : undefined,
         split_amount: enableSplit ? splitAmount : undefined,
       };
       if (editing) {

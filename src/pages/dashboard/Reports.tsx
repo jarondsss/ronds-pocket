@@ -11,8 +11,10 @@ import {
   toMonthKey,
 } from "@/lib/format";
 import { useQuery } from "convex/react";
-import { Lightbulb } from "@/components/icons";
-import { useMemo, useState } from "react";
+import { Download, Lightbulb } from "@/components/icons";
+import { useCallback, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Bar,
   BarChart,
@@ -86,17 +88,80 @@ export default function Reports() {
     return { biggest, average, count: rows.length };
   }, [all, range.from, range.to]);
 
+  const monthTransactions = useMemo(() => {
+    if (!all) return [];
+    return all.filter(
+      (row) => row.occurred_at >= range.from && row.occurred_at < range.to,
+    );
+  }, [all, range.from, range.to]);
+
+  const handleExportCsv = useCallback(() => {
+    if (monthTransactions.length === 0) {
+      toast.info("Belum ada transaksi di bulan ini untuk diekspor.");
+      return;
+    }
+
+    const escCsv = (value: string) => {
+      if (value.includes(",") || value.includes('"') || value.includes("\n")) {
+        return `"${value.replace(/"/g, '""')}"`;
+      }
+      return value;
+    };
+
+    const dateFmt = new Intl.DateTimeFormat("id-ID", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+
+    const header = "Tanggal,Tipe,Kategori,Catatan,Nominal,Dompet,Dicatat oleh";
+    const rows = monthTransactions.map((row) => {
+      const date = dateFmt.format(new Date(row.occurred_at));
+      const type = row.type === "income" ? "Pemasukan" : "Pengeluaran";
+      const category = escCsv(row.category || "");
+      const note = escCsv(row.note || "");
+      const amount = String(row.amount);
+      const wallet = escCsv(row.walletName || "");
+      const author = escCsv(row.createdByName || "");
+      return `${date},${type},${category},${note},${amount},${wallet},${author}`;
+    });
+
+    const bom = "\uFEFF";
+    const csv = bom + [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `transaksi-${monthKey}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV berhasil diunduh.");
+  }, [monthTransactions, monthKey]);
+
   if (!activeBook || !bookId) return null;
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Rekap uangmu
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Lihat ke mana uangmu pergi bulan ini.
-        </p>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+            Rekap uangmu
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Lihat ke mana uangmu pergi bulan ini.
+          </p>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleExportCsv}
+          disabled={!all}
+          className="shrink-0"
+        >
+          <Download className="size-4" />
+          <span className="hidden sm:inline">Ekspor CSV</span>
+        </Button>
       </header>
 
       <MonthNavigator monthKey={monthKey} onChange={setMonthKey} />

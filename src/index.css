@@ -164,6 +164,13 @@
     );
     background-attachment: fixed;
   }
+  .dark body {
+    background-image: radial-gradient(
+      120% 70% at 50% -12%,
+      color-mix(in oklab, var(--primary) 8%, black) 0%,
+      transparent 62%
+    );
+  }
   h1,
   h2,
   h3,

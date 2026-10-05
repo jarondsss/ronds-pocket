@@ -3,18 +3,41 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { formatRupiah } from "@/lib/format";
 import { MotionConfig, motion } from "framer-motion";
+import { useTheme } from "next-themes";
 import {
   ArrowRight,
   ChartPie,
   Check,
   HandCoins,
   Loader2,
+  Moon,
   PiggyBank,
   ShieldCheck,
+  Sun,
   Target,
   Wallet,
 } from "@/components/icons";
 import { useNavigate } from "react-router";
+
+/** Tema tokolades (clay) yang mengikuti kamar: terang ke gelap, tanpa
+ * DarkMode-nya Tailwind. Gambar ikon terang/ gelap sesuai tema aktif. */
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  return (
+    <button
+      type="button"
+      aria-label="Ganti tema"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground"
+    >
+      {resolvedTheme === "dark" ? (
+        <Sun className="size-4" />
+      ) : (
+        <Moon className="size-4" />
+      )}
+    </button>
+  );
+}
 
 /** Satu kurva gerak untuk seluruh halaman: turun cepat, mendarat pelan. */
 const EASE: [number, number, number, number] = [0.32, 0.72, 0, 1];
@@ -229,6 +252,7 @@ export default function Landing() {
           <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6">
             <div className="clay mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-2.5">
               <Brand />
+              <ThemeToggle />
               <nav className="hidden items-center gap-6 text-sm font-semibold text-muted-foreground md:flex">
                 <a href="#fitur" className="transition-colors hover:text-primary">
                   Fitur

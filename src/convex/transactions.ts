@@ -193,6 +193,9 @@ export const create = mutation({
     category: v.optional(v.string()),
     note: v.optional(v.string()),
     occurred_at: v.number(),
+    paid_by: v.optional(v.id("users")),
+    split_with: v.optional(v.id("users")),
+    split_amount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { userId } = await requireMember(ctx, args.bookId);
@@ -213,7 +216,7 @@ export const create = mutation({
       label: describeTransaction(args.category, args.note),
       detail: `${args.type === "income" ? "+" : "−"}${rupiah(args.amount)}`,
     });
-    return await ctx.db.insert("transactions", {
+    const txId = await ctx.db.insert("transactions", {
       book_id: args.bookId,
       wallet_id: args.wallet_id,
       type: args.type,
@@ -223,7 +226,74 @@ export const create = mutation({
       occurred_at: args.occurred_at,
       created_by: userId,
       created_at: Date.now(),
+      paid_by: args.paid_by ?? userId,
+      split_with: args.split_with,
+      split_amount: args.split_amount ? cleanAmount(args.split_amount) : undefined,
     });
+
+    // Cek overspend: kalau transaksi ini expense dan ada anggaran untuk kategorinya,
+    // hitung total pengeluaran bulan ini dan kirim notifikasi kalau lewat batas.
+    if (args.type === "expense" && args.category) {
+      const category = (args.category ?? "").trim();
+      if (category) {
+        const budget = await ctx.db
+          .query("budgets")
+          .withIndex("by_book_category", (q) =>
+            q.eq("book_id", args.bookId).eq("category", category),
+          )
+          .unique();
+
+        if (budget !== null) {
+          // Hitung total pengeluaran kategori ini di bulan transaksi
+          const txDate = new Date(args.occurred_at);
+          const monthStart = new Date(
+            txDate.getFullYear(),
+            txDate.getMonth(),
+            1,
+            0,
+            0,
+            0,
+            0,
+          ).getTime();
+          const monthEnd = new Date(
+            txDate.getFullYear(),
+            txDate.getMonth() + 1,
+            1,
+            0,
+            0,
+            0,
+            0,
+          ).getTime();
+
+          const monthTransactions = await ctx.db
+            .query("transactions")
+            .withIndex("by_book_occurred", (q) =>
+              q
+                .eq("book_id", args.bookId)
+                .gte("occurred_at", monthStart)
+                .lt("occurred_at", monthEnd),
+            )
+            .collect();
+
+          const spent = monthTransactions
+            .filter((tx) => tx.type === "expense" && tx.category === category)
+            .reduce((sum, tx) => sum + tx.amount, 0);
+
+          if (spent > budget.amount) {
+            const excess = spent - budget.amount;
+            await notifyMembers(ctx, {
+              bookId: args.bookId,
+              actorId: userId,
+              message: `anggaran ${category} terlampaui`,
+              label: category,
+              detail: `Lewat ${rupiah(excess)} dari ${rupiah(budget.amount)}`,
+            });
+          }
+        }
+      }
+    }
+
+    return txId;
   },
 });
 
@@ -236,6 +306,9 @@ export const update = mutation({
     category: v.optional(v.string()),
     note: v.optional(v.string()),
     occurred_at: v.number(),
+    paid_by: v.optional(v.id("users")),
+    split_with: v.optional(v.id("users")),
+    split_amount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db.get(args.id);
@@ -263,6 +336,9 @@ export const update = mutation({
       category: (args.category ?? "").trim().slice(0, 40),
       note: (args.note ?? "").trim().slice(0, 200),
       occurred_at: args.occurred_at,
+      paid_by: args.paid_by,
+      split_with: args.split_with,
+      split_amount: args.split_amount ? cleanAmount(args.split_amount) : undefined,
     });
   },
 });

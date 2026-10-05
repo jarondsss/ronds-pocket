@@ -37,6 +37,14 @@ export const activityActionValidator = v.union(
 );
 export type ActivityAction = Infer<typeof activityActionValidator>;
 
+export const frequencyValidator = v.union(
+  v.literal("daily"),
+  v.literal("weekly"),
+  v.literal("monthly"),
+  v.literal("yearly"),
+);
+export type Frequency = Infer<typeof frequencyValidator>;
+
 const schema = defineSchema(
   {
     // default auth tables using convex auth.
@@ -83,6 +91,10 @@ const schema = defineSchema(
       occurred_at: v.number(),
       created_by: v.id("users"),
       created_at: v.number(),
+      // Expense splitting: siapa yang bayar dan bagaimana pembagiannya
+      paid_by: v.optional(v.id("users")), // siapa yang bayar (default: created_by)
+      split_with: v.optional(v.id("users")), // dibagi dengan siapa (partner)
+      split_amount: v.optional(v.number()), // berapa yang harus dibayar partner
     })
       .index("by_book", ["book_id"])
       .index("by_book_occurred", ["book_id", "occurred_at"]),
@@ -214,6 +226,51 @@ const schema = defineSchema(
     })
       .index("by_savings", ["savings_id"])
       .index("by_book", ["book_id"]),
+
+    // Template transaksi berulang (harian/mingguan/bulanan/tahunan).
+    // Cron job memproses yang sudah jatuh tempo dan membuat transaksi asli.
+    recurring_transactions: defineTable({
+      book_id: v.id("books"),
+      wallet_id: v.optional(v.id("wallets")),
+      type: transactionTypeValidator,
+      amount: v.number(),
+      category: v.string(),
+      note: v.string(),
+      frequency: frequencyValidator,
+      next_due: v.number(), // timestamp kapan transaksi berikutnya harus dibuat
+      enabled: v.boolean(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    })
+      .index("by_book", ["book_id"])
+      .index("by_next_due", ["enabled", "next_due"]),
+
+    // Komentar pada transaksi, untuk komunikasi antar partner.
+    transaction_comments: defineTable({
+      transaction_id: v.id("transactions"),
+      book_id: v.id("books"),
+      user_id: v.id("users"),
+      text: v.string(),
+      created_at: v.number(),
+    })
+      .index("by_transaction", ["transaction_id"])
+      .index("by_book", ["book_id"]),
+
+    // Pengingat tagihan yang akan datang, dengan notifikasi otomatis.
+    bill_reminders: defineTable({
+      book_id: v.id("books"),
+      title: v.string(),
+      amount: v.number(),
+      category: v.string(),
+      due_date: v.number(), // timestamp tanggal jatuh tempo
+      remind_days_before: v.number(), // berapa hari sebelum jatuh tempo kirim notif
+      last_reminded_at: v.optional(v.number()), // kapan terakhir notif dikirim
+      enabled: v.boolean(),
+      created_by: v.id("users"),
+      created_at: v.number(),
+    })
+      .index("by_book", ["book_id"])
+      .index("by_due_date", ["enabled", "due_date"]),
   },
   {
     schemaValidation: true,

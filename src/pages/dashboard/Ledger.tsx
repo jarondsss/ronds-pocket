@@ -237,6 +237,9 @@ export default function Ledger() {
         <UpcomingBillRemindersCard
           bookId={bookId}
           onAdd={openNewBillReminder}
+          onEdit={(reminder) => {
+            void openBillReminder(reminder);
+          }}
         />
       )}
       {bookId && <NotificationInsightCard bookId={bookId} />}

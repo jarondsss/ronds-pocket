@@ -30,11 +30,22 @@ function daysSeverity(dueDate: number) {
 interface UpcomingBillRemindersCardProps {
   bookId: Id<"books">;
   onAdd: () => void;
+  onEdit: (reminder: {
+    _id: Id<"bill_reminders">;
+    title: string;
+    amount: number;
+    category: string;
+    due_date: number;
+    remind_days_before: number;
+    enabled: boolean;
+    wallet_id?: Id<"wallets">;
+  }) => void;
 }
 
 export function UpcomingBillRemindersCard({
   bookId,
   onAdd,
+  onEdit,
 }: UpcomingBillRemindersCardProps) {
   const reminders = useQuery(
     api.billReminders.list,
@@ -117,7 +128,8 @@ export function UpcomingBillRemindersCard({
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.25, ease: EASE, delay: idx * 0.04 }}
-            className="flex items-center justify-between rounded-xl border border-border/50 bg-card/80 p-3"
+            className="flex items-center justify-between rounded-xl border border-border/50 bg-card/80 p-3 cursor-pointer hover:bg-primary/[2%]"
+            onClick={() => onEdit(item)}
           >
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold">{item.title}</p>

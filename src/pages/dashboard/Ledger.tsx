@@ -10,6 +10,8 @@ import {
   type RecurringRow,
 } from "@/components/dashboard/RecurringList";
 import { SummaryHero } from "@/components/dashboard/SummaryHero";
+import { BudgetPeek } from "@/components/dashboard/BudgetPeek";
+import { UpcomingBills } from "@/components/dashboard/UpcomingBills";
 import {
   TransactionDialog,
   type EditableTransaction,
@@ -209,6 +211,9 @@ export default function Ledger() {
       ) : (
         <SummaryHero summary={summary} />
       )}
+
+      {bookId && <BudgetPeek bookId={bookId} range={range} />}
+      {bookId && <UpcomingBills bookId={bookId} />}
 
       {/* Transaksi berulang */}
       {recurring && (

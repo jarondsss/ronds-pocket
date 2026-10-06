@@ -7,6 +7,7 @@ import type { Id } from "@/convex/_generated/dataModel";
 import { useQuery, useMutation } from "convex/react";
 import { motion } from "framer-motion";
 import { Bell, Check, History } from "@/components/icons";
+import { useMemo } from "react";
 import { useNavigate } from "react-router";
 
 function relativeLabel(ts: number) {
@@ -120,7 +121,7 @@ export function NotificationInsightCard({ bookId }: NotificationInsightCardProps
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               {recent.length > 2 ? `3 terbaru` : `${recent.length} terbaru`}
             </p>
-            {recent.slice(0, 3).map((item, idx) => (
+            {recent.slice(0, 3).map((item) => (
               <div
                 key={item._id}
                 className="flex items-center gap-2 text-xs text-muted-foreground py-1"

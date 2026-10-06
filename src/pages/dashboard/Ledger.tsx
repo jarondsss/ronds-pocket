@@ -10,8 +10,9 @@ import {
   type RecurringRow,
 } from "@/components/dashboard/RecurringList";
 import { SummaryHero } from "@/components/dashboard/SummaryHero";
-import { BudgetPeek } from "@/components/dashboard/BudgetPeek";
-import { UpcomingBills } from "@/components/dashboard/UpcomingBills";
+import { BudgetSnapshotCard } from "@/components/dashboard/BudgetSnapshotCard";
+import { UpcomingBillRemindersCard } from "@/components/dashboard/UpcomingBillRemindersCard";
+import { NotificationInsightCard } from "@/components/dashboard/NotificationInsightCard";
 import {
   TransactionDialog,
   type EditableTransaction,
@@ -212,8 +213,17 @@ export default function Ledger() {
         <SummaryHero summary={summary} />
       )}
 
-      {bookId && <BudgetPeek bookId={bookId} range={range} />}
-      {bookId && <UpcomingBills bookId={bookId} />}
+      {bookId && <BudgetSnapshotCard bookId={bookId} range={range} />}
+      {bookId && (
+        <UpcomingBillRemindersCard
+          bookId={bookId}
+          onAdd={() => {
+            // TODO: buka dialog tambah pengingat tagihan
+            toast.info("Fitur tambah pengingat tagihan akan segera tersedia.");
+          }}
+        />
+      )}
+      {bookId && <NotificationInsightCard bookId={bookId} />}
 
       {/* Transaksi berulang */}
       {recurring && (

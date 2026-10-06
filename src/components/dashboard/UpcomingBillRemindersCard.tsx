@@ -7,7 +7,7 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { CalendarClock, Plus, Trash2 } from "@/components/icons";
+import { CalendarClock, Plus } from "@/components/icons";
 import { useMemo } from "react";
 
 function daysLabel(dueDate: number) {
@@ -20,7 +20,8 @@ function daysLabel(dueDate: number) {
 }
 
 function daysSeverity(dueDate: number) {
-  const diffDays = Math.round((dueDate - Date.now()) / 86400000);
+  const now = Date.now();
+  const diffDays = Math.round((dueDate - now) / 86400000);
   if (diffDays < 0) return "destructive";
   if (diffDays <= 3) return "warning";
   return "default";
@@ -41,17 +42,21 @@ export function UpcomingBillRemindersCard({
   );
 
   const items = useMemo(() => {
+    // eslint-disable-next-line react-hooks/purity
+    const now = Date.now();
     if (!reminders) return [];
     return reminders
-      .filter((r) => r.enabled && r.due_date >= Date.now())
+      .filter((r) => r.enabled && r.due_date >= now)
       .sort((a, b) => a.due_date - b.due_date)
       .slice(0, 5);
   }, [reminders]);
 
   const overdueCount = useMemo(() => {
+    // eslint-disable-next-line react-hooks/purity
+    const now = Date.now();
     if (!reminders) return 0;
     return reminders.filter(
-      (r) => r.enabled && r.due_date < Date.now()
+      (r) => r.enabled && r.due_date < now
     ).length;
   }, [reminders]);
 

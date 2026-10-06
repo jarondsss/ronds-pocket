@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import { LiabilityDialog, type LiabilitySession } from "@/components/dashboard/LiabilityDialog";
 import { ClayLoader } from "@/components/ClayLoader";
 import { Button } from "@/components/ui/button";
@@ -192,13 +193,16 @@ export default function NetWorth() {
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Net Worth
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Dompet, tabungan, tujuan, utang, dan piutang dalam satu angka.
-          </p>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <div>
+            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Net Worth
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Dompet, tabungan, tujuan, utang, dan piutang dalam satu angka.
+            </p>
+          </div>
         </div>
         <Button type="button" onClick={() => startForm(null)}>
           <Plus className="size-4" />

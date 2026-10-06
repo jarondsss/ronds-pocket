@@ -141,7 +141,7 @@ export function NotificationBell() {
             variant="ghost"
             size="sm"
             className="w-full gap-2 text-xs"
-            onClick={() => navigate("/dashboard/riwayat")}
+            onClick={() => navigate("/dashboard/riwayat/aktivitas")}
           >
             <History className="size-3.5" />
             Buka Riwayat buat lihat semua

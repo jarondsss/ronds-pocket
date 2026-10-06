@@ -80,6 +80,14 @@ export const list = query({
       totalBudget: rows.reduce((sum, row) => sum + row.amount, 0),
       totalSpent: rows.reduce((sum, row) => sum + row.spent, 0),
       overspent: rows.filter((row) => row.spent > row.amount).length,
+      // Peringatan dini ala kynan.id: kategori yang sudah mentok 80% atau
+      // lebih tapi belum lewat, supaya bisa direm sebelum kebablasan.
+      nearLimit: rows.filter(
+        (row) =>
+          row.amount > 0 &&
+          row.spent <= row.amount &&
+          row.spent >= row.amount * 0.8,
+      ).length,
     };
   },
 });

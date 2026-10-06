@@ -25,6 +25,7 @@ import {
   ChartPie,
   HandCoins,
   History,
+  Landmark,
   Moon,
   MoreHorizontal,
   PiggyBank,
@@ -48,6 +49,7 @@ const PRIMARY_TABS = [
 ];
 
 const SECONDARY_TABS = [
+  { to: "/dashboard/net-worth", label: "Net Worth", icon: Landmark },
   { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie },
   { to: "/dashboard/riwayat", label: "Riwayat", icon: History },
   { to: "/dashboard/partner", label: "Sharing", icon: Users },

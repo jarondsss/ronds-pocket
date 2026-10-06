@@ -30,6 +30,7 @@ import {
   Plus,
   ShieldAlert,
   Trash2,
+  TriangleAlert,
 } from "@/components/icons";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -375,6 +376,13 @@ export default function Budget() {
             <p className="flex items-center gap-2 rounded-2xl bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
               <ShieldAlert className="size-4 shrink-0" />
               {data.overspent} kategori sudah lewat anggaran bulan ini.
+            </p>
+          )}
+
+          {data.nearLimit > 0 && data.overspent === 0 && (
+            <p className="flex items-center gap-2 rounded-2xl bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-600 dark:text-amber-400">
+              <TriangleAlert className="size-4 shrink-0" />
+              {data.nearLimit} kategori sudah mentok 80% anggarannya. Rem sedikit biar nggak kelewat.
             </p>
           )}
 

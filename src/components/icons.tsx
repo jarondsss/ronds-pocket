@@ -45,12 +45,14 @@ import {
   Home as LucideHome,
   Info as LucideInfo,
   KeyRound as LucideKeyRound,
+  Landmark as LucideLandmark,
   LayoutDashboard as LucideLayoutDashboard,
   Lightbulb as LucideLightbulb,
   LoaderCircle as LucideLoaderCircle,
   Lock as LucideLock,
   LogOut as LucideLogOut,
   Mail as LucideMail,
+  MessageCircle as LucideMessageCircle,
   Minus as LucideMinus,
   PanelLeft as LucidePanelLeft,
   Pencil as LucidePencil,
@@ -61,6 +63,7 @@ import {
   Receipt as LucideReceipt,
   Repeat as LucideRepeat,
   RotateCcw as LucideRotateCcw,
+  Scale as LucideScale,
   Search as LucideSearch,
   Share2 as LucideShare2,
   ShieldAlert as LucideShieldAlert,
@@ -176,11 +179,14 @@ export const Trash2 = icon("Trash2", LucideTrash2);
 export const Copy = icon("Copy", LucideCopy);
 export const SearchIcon = icon("SearchIcon", LucideSearch);
 export const RotateCcw = icon("RotateCcw", LucideRotateCcw);
+export const Landmark = icon("Landmark", LucideLandmark);
+export const Scale = icon("Scale", LucideScale);
 export const MoreHorizontal = icon("MoreHorizontal", LucideEllipsis);
 export const MoreHorizontalIcon = MoreHorizontal;
 export const ExternalLink = icon("ExternalLink", LucideExternalLink);
 export const Bell = icon("Bell", LucideBell);
 export const Mail = icon("Mail", LucideMail);
+export const MessageCircle = icon("MessageCircle", LucideMessageCircle);
 export const Lock = icon("Lock", LucideLock);
 export const ShieldCheck = icon("ShieldCheck", LucideShieldCheck);
 export const ShieldAlert = icon("ShieldAlert", LucideShieldAlert);

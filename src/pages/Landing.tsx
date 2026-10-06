@@ -1,5 +1,11 @@
 import { Brand } from "@/components/Brand";
 import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useAuth } from "@/hooks/use-auth";
 import { formatRupiah } from "@/lib/format";
 import { MotionConfig, motion } from "framer-motion";
@@ -9,12 +15,17 @@ import {
   ChartPie,
   Check,
   HandCoins,
+  Landmark,
   Loader2,
+  MessageCircle,
   Moon,
   PiggyBank,
+  Receipt,
+  Repeat,
   ShieldCheck,
   Sun,
   Target,
+  Users,
   Wallet,
 } from "@/components/icons";
 import { useNavigate } from "react-router";
@@ -47,30 +58,65 @@ const fadeUp = {
   show: { opacity: 1, y: 0 },
 };
 
-const FEATURES = [
+/** Enam kartu "Everything in one place", mengikuti struktur kynan.id. */
+const PILLARS = [
   {
-    icon: HandCoins,
-    title: "Catat secepat bales chat",
+    icon: MessageCircle,
+    title: "Catat dari chat",
     body: "Nominal, kategori, tanggal. Selesai sebelum lampu lalu lintas berubah hijau.",
-    tone: "bg-primary/12 text-primary",
-  },
-  {
-    icon: PiggyBank,
-    title: "Kantong sebanyak yang kamu mau",
-    body: "Pisahkan uang harian, tabungan, dan dana liburan jadi beberapa kantong.",
-    tone: "bg-income/12 text-income",
   },
   {
     icon: ChartPie,
-    title: "Rekap yang gampang dibaca",
+    title: "Rekap & insight",
     body: "Grafik kategori dan tren enam bulan bikin kelihatan uangmu pergi ke mana.",
-    tone: "bg-expense/12 text-expense",
   },
   {
-    icon: ShieldCheck,
+    icon: HandCoins,
+    title: "Anggaran yang kejaga",
+    body: "Kasih jatah tiap kategori, sisa kehitung sendiri, dan ada peringatan sebelum mentok.",
+  },
+  {
+    icon: Wallet,
+    title: "Wealth Hub",
+    body: "Tunai, bank, e-wallet, sampai investasi: semua saldo tersambung dalam satu gambaran.",
+  },
+  {
+    icon: Repeat,
+    title: "Tagihan rutin & gaji",
+    body: "Pengeluaran rutin tercatat otomatis tiap periode, tanpa input ulang.",
+  },
+  {
+    icon: Users,
+    title: "Catat bareng pasangan",
+    body: "Undang orang tersayang ke kantong yang sama, catat dan pantau berdua.",
+  },
+];
+
+/** Kartu "What you'll accomplish" — tujuan yang bisa dicapai pengguna. */
+const ACCOMPLISHMENTS = [
+  { emoji: "🧘", title: "Berhenti kehabisan uang", body: "Tahu sisa duit sebelum akhir bulan, bukan sesudahnya." },
+  { emoji: "🛟", title: "Bangun dana darurat", body: "Sisihin pelan-pelan tiap bulan sampai jadi bantalan." },
+  { emoji: "🏷️", title: "Lunasin utang lebih cepat", body: "Lihat utang dan piutang di satu papan, bayar yang paling dulu." },
+  { emoji: "🏝️", title: "Nabung buat target besar", body: "DP rumah, nikahan, liburan: pantau progresnya bareng." },
+  { emoji: "🔍", title: "Tahu uang pergi ke mana", body: "Rekap per kategori bikin kebocoran kelihatan cepat." },
+];
+
+const WHY = [
+  {
+    title: "Secepat ketik",
+    body: "Satu baris isian, transaksi langsung kecatat. Nggak perlu buka-buka menu.",
+  },
+  {
+    title: "Buat keluarga Indonesia",
+    body: "Format rupiah, kategori lokal, dan dibuat dikelola bareng pasangan.",
+  },
+  {
+    title: "Bukan sekadar catatan",
+    body: "Anggaran, tabungan, tujuan, dan kekayaan bersih tersambung jadi satu.",
+  },
+  {
     title: "Punyamu sendiri",
-    body: "Cuma kamu yang bisa membuka kantongmu. Tidak ada yang bisa mengintip.",
-    tone: "bg-accent text-accent-foreground",
+    body: "Cuma kamu dan orang yang kamu undang yang bisa membuka kantongmu.",
   },
 ];
 
@@ -97,16 +143,46 @@ const FLOATING_ICONS = [
 
 const STEPS = [
   {
-    title: "Daftar sebentar",
-    body: "Masukkan email, kami kirim kode enam digit. Akunnya langsung jadi kalau belum ada.",
+    num: "01",
+    title: "Catat",
+    body: "Catat tiap pemasukan dan pengeluaran dalam sekali ketik, cepat dan tanpa ribet.",
   },
   {
-    title: "Beri nama kantongmu",
-    body: "Kantong pertama sudah disiapkan otomatis. Ganti namanya sesuka kamu.",
+    num: "02",
+    title: "Anggarkan",
+    body: "Tentukan jatah tiap kategori dan biarkan sisanya kehitung otomatis tiap bulan.",
   },
   {
-    title: "Mulai catat",
-    body: "Setiap pengeluaran dan pemasukan langsung muncul di ringkasan bulan ini.",
+    num: "03",
+    title: "Tumbuh",
+    body: "Pantau tren, tabungan, dan kekayaan bersih yang saling terhubung sampai target tercapai.",
+  },
+];
+
+const FAQS = [
+  {
+    q: "Apakah Ronds Pocket gratis?",
+    a: "Gratis. Kamu bisa mencatat transaksi, mengatur anggaran bulanan, memantau tabungan dan kekayaan bersih, serta mengelola keuangan bareng pasangan, semuanya tanpa biaya.",
+  },
+  {
+    q: "Gimana cara catat pengeluarannya?",
+    a: "Buka kantongmu, ketik nominalnya, pilih kategori, selesai. Ada juga template tagihan rutin yang tercatat sendiri tiap periodenya.",
+  },
+  {
+    q: "Bisa dipakai bareng pasangan?",
+    a: "Bisa. Undang pasangan atau keluarga ke kantong yang sama lewat kode undangan, lalu catat dan pantau keuangan dari HP masing-masing.",
+  },
+  {
+    q: "Apa itu Net Worth di sini?",
+    a: "Gambaran utuh kekayaanmu: total dompet, tabungan, dan dana tujuan, dikurangi utang, ditambah piutang. Angkanya terhitung otomatis dari catatanmu.",
+  },
+  {
+    q: "Apakah data keuangan saya aman?",
+    a: "Akses kantong hanya diberikan kepada orang yang kamu undang, catatanmu tidak dibagikan ke siapa pun, dan akun bisa kamu hapus kapan saja.",
+  },
+  {
+    q: "Apa saya perlu jago soal keuangan?",
+    a: "Nggak sama sekali. Kamu cukup catat, dan aplikasinya yang merapikan jadi anggaran, rekap, dan laporan yang gampang dimengerti.",
   },
 ];
 
@@ -257,11 +333,14 @@ export default function Landing() {
                 <a href="#fitur" className="transition-colors hover:text-primary">
                   Fitur
                 </a>
+                <a href="#kenapa" className="transition-colors hover:text-primary">
+                  Kenapa kami
+                </a>
                 <a href="#cara" className="transition-colors hover:text-primary">
                   Cara pakai
                 </a>
-                <a href="#kantong" className="transition-colors hover:text-primary">
-                  Kantong
+                <a href="#tanya" className="transition-colors hover:text-primary">
+                  Tanya jawab
                 </a>
               </nav>
               <Button
@@ -279,7 +358,7 @@ export default function Landing() {
           </header>
 
           <main className="mx-auto w-full max-w-5xl px-4 sm:px-6">
-            {/* Hero */}
+            {/* Hero: badge + judul + CTA + mock aplikasi, seperti acuan kynan.id */}
             <section className="grid items-center gap-12 py-10 sm:py-14 lg:min-h-[calc(100dvh-7rem)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
               <motion.div
                 variants={fadeUp}
@@ -287,13 +366,17 @@ export default function Landing() {
                 animate="show"
                 transition={{ duration: 0.8, ease: EASE }}
               >
-                <h1 className="font-display text-4xl font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-6xl">
-                  Uangmu, rapi
-                  <span className="text-primary"> di satu kantong.</span>
+                <span className="clay-sm inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-income">
+                  <Check className="size-3.5" />
+                  Gratis untuk mulai
+                </span>
+                <h1 className="mt-4 font-display text-4xl font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-6xl">
+                  Atur uang keluarga,{" "}
+                  <span className="text-primary">jadi tenang.</span>
                 </h1>
                 <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Uang jajan, gaji, sampai pengeluaran kecil yang sering lupa.
-                  Kamu tulis, sisanya kami hitung.
+                  Catat transaksi, jaga anggaran, hubungkan semua dompet, dan
+                  rencanakan masa depan bareng orang tersayang. Semudah itu.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                   {primaryAction}
@@ -301,10 +384,254 @@ export default function Landing() {
                     <a href="#fitur">Lihat fitur</a>
                   </Button>
                 </div>
+                <p className="mt-4 text-xs font-semibold text-muted-foreground">
+                  Mulai dalam 2 menit · Tanpa syarat aneh-aneh
+                </p>
               </motion.div>
 
               <div className="flex justify-center lg:justify-end">
                 <MockPreview />
+              </div>
+            </section>
+
+            {/* Tiga blurb log-in cepat, seperti acuan */}
+            <section className="grid grid-cols-1 divide-y divide-border/70 border-y border-border/70 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+              {[
+                { title: "Log in seconds", body: "Tambah transaksi dalam sekali ketik." },
+                { title: "Budgets that stick", body: "Jatah per kategori yang kejaga." },
+                { title: "Better, together", body: "Kelola bareng pasangan atau keluarga." },
+              ].map((item) => (
+                <p
+                  key={item.title}
+                  className="flex flex-col items-center gap-1 py-5 text-center"
+                >
+                  <span className="font-display text-sm font-extrabold">
+                    {item.title}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {item.body}
+                  </span>
+                </p>
+              ))}
+            </section>
+
+            {/* Everything in one place: 6 kartu fitur */}
+            <section id="fitur" className="scroll-mt-28 py-20 sm:py-28">
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.7, ease: EASE }}
+                className="max-w-xl"
+              >
+                <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+                  Semuanya di satu tempat
+                </h2>
+                <p className="mt-3 text-muted-foreground">
+                  Dari transaksi harian sampai aset dan rencana keuangan
+                  keluarga, semuanya saling terhubung dalam satu aplikasi yang
+                  enak dipakai.
+                </p>
+              </motion.div>
+
+              <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {PILLARS.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <motion.article
+                      key={feature.title}
+                      variants={fadeUp}
+                      initial="hidden"
+                      whileInView="show"
+                      viewport={{ once: true, amount: 0.4 }}
+                      transition={{
+                        duration: 0.7,
+                        ease: EASE,
+                        delay: index * 0.06,
+                      }}
+                      whileHover={{ y: -6 }}
+                      className="clay p-6"
+                    >
+                      <span className="grid size-11 place-items-center rounded-2xl bg-primary/12 text-primary">
+                        <Icon className="size-5" />
+                      </span>
+                      <h3 className="mt-5 font-display text-lg font-extrabold">
+                        {feature.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                        {feature.body}
+                      </p>
+                    </motion.article>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* What you'll accomplish: tujuan, digeser seperti carousel acuan */}
+            <section className="pb-4 sm:pb-8">
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.7, ease: EASE }}
+              >
+                <h2 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+                  Apa yang bakal kamu capai
+                </h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Geser untuk lihat lebih banyak →
+                </p>
+              </motion.div>
+              <div className="-mx-4 mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6">
+                {ACCOMPLISHMENTS.map((item, index) => (
+                  <motion.article
+                    key={item.title}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{
+                      duration: 0.6,
+                      ease: EASE,
+                      delay: index * 0.05,
+                    }}
+                    className="clay min-w-[16rem] max-w-[16rem] snap-start p-5 sm:min-w-[18rem]"
+                  >
+                    <span className="text-2xl">{item.emoji}</span>
+                    <h3 className="mt-3 font-display text-base font-extrabold">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                      {item.body}
+                    </p>
+                  </motion.article>
+                ))}
+              </div>
+            </section>
+
+            {/* Why Kynan → Why Ronds Pocket */}
+            <section id="kenapa" className="scroll-mt-28 py-16 sm:py-24">
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.7, ease: EASE }}
+                className="max-w-xl"
+              >
+                <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+                  Kenapa Ronds Pocket
+                </h2>
+              </motion.div>
+              <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {WHY.map((item, index) => (
+                  <motion.article
+                    key={item.title}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{
+                      duration: 0.6,
+                      ease: EASE,
+                      delay: index * 0.06,
+                    }}
+                    className="clay-sm p-5"
+                  >
+                    <h3 className="font-display text-base font-extrabold">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {item.body}
+                    </p>
+                  </motion.article>
+                ))}
+              </div>
+            </section>
+
+            {/* Grafik pertumbuhan kekayaan bersih, seperti acuan */}
+            <section className="pb-16 sm:pb-24">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.7, ease: EASE }}
+                className="clay p-6 sm:p-8"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="font-display text-lg font-extrabold">
+                      Pertumbuhan Kekayaan Bersih
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      6 bulan terakhir
+                    </p>
+                  </div>
+                  <span className="clay-chip text-income">
+                    On track ✓
+                  </span>
+                </div>
+                {/* Batang naik sederhana: angka contoh, bukan data pengguna. */}
+                <div className="mt-6 flex h-36 items-end gap-2 sm:gap-3">
+                  {[38, 44, 41, 55, 62, 74].map((height, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ height: 0 }}
+                      whileInView={{ height: `${height}%` }}
+                      viewport={{ once: true, amount: 0.6 }}
+                      transition={{
+                        duration: 0.7,
+                        ease: EASE,
+                        delay: index * 0.08,
+                      }}
+                      className="flex-1 rounded-t-xl bg-primary/70"
+                    />
+                  ))}
+                </div>
+                <p className="mt-3 text-[11px] text-muted-foreground">
+                  Contoh gambar. Net worth sungguhan dihitung di aplikasi: total
+                  dompet + tabungan + tujuan − utang + piutang.
+                </p>
+              </motion.div>
+            </section>
+
+            {/* How it works: Track / Budget / Grow dengan nomor besar */}
+            <section id="cara" className="scroll-mt-28 pb-16 sm:pb-24">
+              <motion.h2
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.7, ease: EASE }}
+                className="max-w-xl font-display text-3xl font-extrabold tracking-tight sm:text-4xl"
+              >
+                Mulai pegang kendali hari ini
+              </motion.h2>
+              <div className="mt-10 grid gap-5 sm:grid-cols-3">
+                {STEPS.map((step, index) => (
+                  <motion.article
+                    key={step.num}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{
+                      duration: 0.6,
+                      ease: EASE,
+                      delay: index * 0.08,
+                    }}
+                    className="clay p-6"
+                  >
+                    <span className="font-display text-3xl font-extrabold text-primary">
+                      {step.num}
+                    </span>
+                    <h3 className="mt-3 font-display text-lg font-extrabold">
+                      {step.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {step.body}
+                    </p>
+                  </motion.article>
+                ))}
               </div>
             </section>
 
@@ -321,164 +648,30 @@ export default function Landing() {
               ))}
             </section>
 
-            {/* Fitur */}
-            <section id="fitur" className="scroll-mt-28 py-20 sm:py-28">
-              <motion.div
+            {/* FAQ accordion, seperti acuan */}
+            <section id="tanya" className="scroll-mt-28 py-16 sm:py-24">
+              <motion.h2
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true, amount: 0.5 }}
+                viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.7, ease: EASE }}
-                className="max-w-xl"
+                className="max-w-xl font-display text-3xl font-extrabold tracking-tight sm:text-4xl"
               >
-                <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-                  Simpel, tapi nggak nyisa
-                </h2>
-                <p className="mt-3 text-muted-foreground">
-                  Semua yang kamu butuhkan untuk rajin mencatat, tanpa fitur yang
-                  bikin bingung.
-                </p>
-              </motion.div>
-
-              <div className="mt-10 grid gap-5 sm:grid-cols-2">
-                {FEATURES.map((feature, index) => {
-                  const Icon = feature.icon;
-                  const featured = index === 0;
-                  return (
-                    <motion.article
-                      key={feature.title}
-                      variants={fadeUp}
-                      initial="hidden"
-                      whileInView="show"
-                      viewport={{ once: true, amount: 0.4 }}
-                      transition={{
-                        duration: 0.7,
-                        ease: EASE,
-                        delay: index * 0.07,
-                      }}
-                      whileHover={{ y: -6 }}
-                      className={
-                        featured
-                          ? "clay-primary p-6 sm:p-7"
-                          : "clay p-6 sm:p-7"
-                      }
-                    >
-                      <span
-                        className={`grid size-11 place-items-center rounded-2xl ${
-                          featured ? "bg-white/25" : feature.tone
-                        }`}
-                      >
-                        <Icon className="size-5" />
-                      </span>
-                      <h3 className="mt-5 font-display text-lg font-extrabold">
-                        {feature.title}
-                      </h3>
-                      <p
-                        className={`mt-2 text-sm leading-relaxed ${
-                          featured ? "text-white/85" : "text-muted-foreground"
-                        }`}
-                      >
-                        {feature.body}
-                      </p>
-                    </motion.article>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Cara pakai */}
-            <section id="cara" className="scroll-mt-28 py-20 sm:py-28">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.7, ease: EASE }}
-                className="clay grid gap-10 p-6 sm:p-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
-              >
-                <div>
-                  <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-                    Mulai dalam tiga langkah
-                  </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                    Nggak ada setup panjang. Kantong pertamamu sudah menunggu
-                    begitu kamu masuk.
-                  </p>
-                </div>
-                <ol className="flex flex-col gap-3">
-                  {STEPS.map((step, index) => (
-                    <motion.li
-                      key={step.title}
-                      variants={fadeUp}
-                      initial="hidden"
-                      whileInView="show"
-                      viewport={{ once: true, amount: 0.6 }}
-                      transition={{
-                        duration: 0.6,
-                        ease: EASE,
-                        delay: index * 0.09,
-                      }}
-                      className="clay-sunken flex items-start gap-4 px-4 py-4 sm:px-5"
-                    >
-                      <span className="clay-primary grid size-9 shrink-0 place-items-center font-display text-base font-extrabold">
-                        {index + 1}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block font-display text-base font-extrabold">
-                          {step.title}
-                        </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
-                          {step.body}
-                        </span>
-                      </span>
-                    </motion.li>
-                  ))}
-                </ol>
-              </motion.div>
-            </section>
-
-            {/* Kantong + privasi */}
-            <section id="kantong" className="scroll-mt-28 py-20 sm:py-28">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.8, ease: EASE }}
-                className="clay grid gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:items-center"
-              >
-                <div>
-                  <span className="clay-sm inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-income">
-                    <PiggyBank className="size-3.5" />
-                    Kantongmu, aturanmu
-                  </span>
-                  <h2 className="mt-4 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-                    Satu aplikasi, banyak kantong
-                  </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                    Pisahkan uang harian dari tabungan, atau bikin kantong khusus
-                    buat dana liburan. Tiap kantong punya catatan dan rekapnya
-                    sendiri, jadi kelihatan mana yang masih aman dan mana yang
-                    perlu ditahan.
-                  </p>
-                </div>
-                <ul className="flex flex-col gap-3">
-                  {[
-                    "Tambah kantong baru kapan pun kamu mau",
-                    "Pindah kantong cukup dari satu dropdown",
-                    "Sisa uang dan rekap dihitung otomatis",
-                    "Ada kode undangan kalau nanti mau catat bareng orang lain",
-                  ].map((item) => (
-                    <li
-                      key={item}
-                      className="clay-sm flex items-center gap-3 px-4 py-3 text-sm font-semibold"
-                    >
-                      <Check className="size-4 shrink-0 text-income" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
+                Masih ada yang mengganjal?
+              </motion.h2>
+              <Accordion type="single" collapsible className="mt-8">
+                {FAQS.map((faq) => (
+                  <AccordionItem key={faq.q} value={faq.q} className="clay mb-3 rounded-3xl px-4 sm:px-5">
+                    <AccordionTrigger className="text-left text-sm font-bold hover:no-underline">
+                      {faq.q}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                      {faq.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </section>
 
             {/* CTA penutup: shell clay menahan core violet di dalamnya. */}
@@ -497,11 +690,11 @@ export default function Landing() {
                     className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-white/20 blur-2xl"
                   />
                   <h2 className="relative font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-                    Bikin kantong pertamamu
+                    Mulai atur keuangan keluargamu dalam 2 menit
                   </h2>
                   <p className="relative mx-auto mt-3 max-w-md text-sm text-white/85 sm:text-base">
                     Daftar dengan email, dan mulai catat pengeluaran hari ini.
-                    Gratis, tanpa syarat aneh-aneh.
+                    Gratis.
                   </p>
                   <div className="relative mt-8 flex justify-center">
                     <Button

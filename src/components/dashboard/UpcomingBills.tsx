@@ -1,36 +1,33 @@
 import { EASE } from "@/lib/motion";
 import { formatRupiah, formatShortDate, formatDay } from "@/lib/format";
-import { CalendarClock, HandCoins } from "@/components/icons";
+import { HandCoins } from "@/components/icons";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 
-/**
- * Tagihan berikutnya di dashboard. Gaya:
- *   1. header kategori kartu informasi (primary, dengan kicker "KUIS"),
- *   2. card teks utama jam jatuh tempo & akun,
- *   3. kelompok daftar kategori detail, setiap kategori muncul sekali.
- */
+/** Tagihan berikutnya di dashboard. */
+export interface RecurringRow {
+  _id: Id<"recurring_transactions">;
+  type: "income" | "expense";
+  amount: number;
+  category: string;
+  note: string;
+  frequency: "daily" | "weekly" | "monthly" | "yearly";
+  next_due: number;
+  enabled: boolean;
+  wallet_id: Id<"wallets"> | undefined | null;
+  walletName: string | null;
+  walletIcon: string | null;
+}
+
 export function UpcomingBills({ bookId }: { bookId: Id<"books"> }) {
   const recurring = useQuery(api.recurring.list, { bookId });
 
-  // Convex query return type; cast sekali ke bentuk yang dipakai komponen.
-  const rows = recurring as {
-    _id: string;
-    type: "income" | "expense";
-    amount: number;
-    category: string;
-    note: string;
-    frequency: "daily" | "weekly" | "monthly" | "yearly";
-    next_due: number;
-    enabled: boolean;
-    wallet_id: Id<"wallets"> | undefined | null;
-    walletName: string | null;
-    walletIcon: string | null;
-  }[] | undefined;
+  // Convex query result yang dikonsumsi komponen ini.
+  const rows = (recurring as unknown as RecurringRow[]) ?? [];
 
-  if (rows === undefined) return null;
+  if (rows.length === 0) return null;
 
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
@@ -42,8 +39,7 @@ export function UpcomingBills({ bookId }: { bookId: Id<"books"> }) {
 
   const groups = new Map<string, RecurringRow[]>();
   for (const row of rows) {
-    if (!row.enabled || row.type !== "expense") continue;
-    if (row.next_due < start) continue;
+    if (!row.enabled || row.type !== "expense" || row.next_due < start) continue;
     const key = row.category || "Tanpa label";
     const bucket = groups.get(key) ?? [];
     bucket.push(row);
@@ -51,15 +47,14 @@ export function UpcomingBills({ bookId }: { bookId: Id<"books"> }) {
   }
 
   const entries: { category: string; items: RecurringRow[] }[] = [];
-  for (const [category, rows] of groups) {
-    entries.push({ category, items: rows });
+  for (const [category, items] of groups) {
+    entries.push({ category, items });
   }
 
   if (header === undefined && entries.length === 0) return null;
 
   return (
     <div className="clay scroll-mt-28 space-y-4 rounded-3xl border border-border/50 bg-card/60 p-4 shadow-sm">
-      {/* 1. Header kategori utama card informasi. */}
       {header && (
         <div className="clay-sunken rounded-2xl p-4">
           <div className="flex items-start justify-between gap-3">
@@ -72,7 +67,7 @@ export function UpcomingBills({ bookId }: { bookId: Id<"books"> }) {
                   {header.category || "Tanpa label"}
                 </h2>
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {header.walletIcon && <>{header.walletIcon}{" "}</>}
+                  {header.walletIcon && (header.walletIcon + " ")}
                   {header.walletName
                     ? `dari ${header.walletName}`
                     : "tagihan berikutnya"}
@@ -95,14 +90,13 @@ export function UpcomingBills({ bookId }: { bookId: Id<"books"> }) {
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {formatDay(header.next_due)}
-                  {" · "}
-                  <time dateTime={String(header.next_due)}>
-                    {new Date(header.next_due).toLocaleTimeString("id-ID", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: false,
-                    })}
-                  </time>
+                  · <time dateTime={String(header.next_due)}>
+                      {new Date(header.next_due).toLocaleTimeString("id-ID", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      })}
+                    </time>
                 </p>
               </div>
               <div className="text-right">
@@ -118,7 +112,6 @@ export function UpcomingBills({ bookId }: { bookId: Id<"books"> }) {
         </div>
       )}
 
-      {/* 2. Card teks utama: jam jatuh tempo & akun. */}
       {header && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -130,23 +123,15 @@ export function UpcomingBills({ bookId }: { bookId: Id<"books"> }) {
             Ringkasan tambahan
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Kerugian kategori <b>{header.category || "tanpa label"}</b>
-            {" · "}
-            terjadinya ulang setiap {header.frequency}
-            {" · "}
-            <time dateTime={String(header.next_due)}>
-              {formatDay(header.next_due)}
-            </time>
-            {" · "}
-            terjadinya ulang setiap{" "}
-            {header.frequency === "daily" ? "1 hari" : header.frequency}
-            {" · "}
+            Kerugian kategori <b>{header.category || "tanpa label"}</b> · terjadinya
+            ulang setiap {header.frequency} ·{" "}
+            <time dateTime={String(header.next_due)}>{formatDay(header.next_due)}</time>
+            · terjadinya ulang setiap {header.frequency === "daily" ? "1 hari" : header.frequency} ·{" "}
             lokal waktu {new Date().toLocaleString("id-ID")}
           </p>
         </motion.div>
       )}
 
-      {/* 3. Daftar detail kategori. */}
       {entries.map((entry) => (
         <motion.div
           key={entry.category}

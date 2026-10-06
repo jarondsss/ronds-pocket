@@ -256,6 +256,21 @@ const schema = defineSchema(
       .index("by_transaction", ["transaction_id"])
       .index("by_book", ["book_id"]),
 
+    // Utang & piutang: saldo minus berarti utang, plus berarti piutang.
+    // Net worth = total dompet + tabungan - utang + piutang (Wealth Hub).
+    liabilities: defineTable({
+      book_id: v.id("books"),
+      name: v.string(),
+      kind: v.union(v.literal("utang"), v.literal("piutang")),
+      counterparty: v.string(), // ke siapa (utang) / dari siapa (piutang)
+      balance: v.number(), // selalu positif; arahnya ditentukan kind
+      due_date: v.optional(v.number()),
+      note: v.string(),
+      settled_at: v.optional(v.number()), // terisi kalau sudah lunas
+      created_by: v.id("users"),
+      created_at: v.number(),
+    }).index("by_book", ["book_id"]),
+
     // Pengingat tagihan yang akan datang, dengan notifikasi otomatis.
     bill_reminders: defineTable({
       book_id: v.id("books"),

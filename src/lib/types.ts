@@ -57,3 +57,24 @@ export interface TransferRow {
   from: { name: string; icon: string } | null;
   to: { name: string; icon: string } | null;
 }
+
+export interface LiabilityRow {
+  _id: Id<"liabilities">;
+  name: string;
+  kind: "utang" | "piutang";
+  counterparty: string;
+  balance: number;
+  due_date: number | undefined;
+  note: string;
+  settled_at: number | undefined;
+  created_at: number;
+}
+
+export interface NetWorthSummary {
+  wallets: number;
+  savings: number;
+  goals: number;
+  utang: number;
+  piutang: number;
+  netWorth: number;
+}

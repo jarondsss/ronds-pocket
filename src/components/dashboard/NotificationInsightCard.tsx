@@ -10,8 +10,8 @@ import { Bell, Check, History } from "@/components/icons";
 import { useMemo } from "react";
 import { useNavigate } from "react-router";
 
-function relativeLabel(ts: number) {
-  const diff = Date.now() - ts;
+function relativeLabel(ts: number, now: number) {
+  const diff = now - ts;
   const minutes = Math.round(diff / 60000);
   if (minutes < 1) return "baru saja";
   if (minutes < 60) return `${minutes} menit lalu`;
@@ -110,7 +110,8 @@ export function NotificationInsightCard({ bookId }: NotificationInsightCardProps
                 {latest.label}
                 {latest.detail ? ` · ${latest.detail}` : ""}
                 {" · "}
-                {relativeLabel(latest.created_at)}
+                {/* eslint-disable-next-line react-hooks/purity */}
+                {relativeLabel(latest.created_at, Date.now())}
               </p>
             </div>
           </motion.div>
@@ -131,7 +132,8 @@ export function NotificationInsightCard({ bookId }: NotificationInsightCardProps
                   <span className="truncate">{item.message}</span>
                 </span>
                 <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
-                  {relativeLabel(item.created_at)}
+                  {/* eslint-disable-next-line react-hooks/purity */}
+                  {relativeLabel(item.created_at, Date.now())}
                 </span>
               </div>
             ))}

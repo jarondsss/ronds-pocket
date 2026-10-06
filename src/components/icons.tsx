@@ -65,6 +65,7 @@ import {
   RotateCcw as LucideRotateCcw,
   Scale as LucideScale,
   Search as LucideSearch,
+  Send as LucideSend,
   Share2 as LucideShare2,
   ShieldAlert as LucideShieldAlert,
   ShieldCheck as LucideShieldCheck,
@@ -178,6 +179,7 @@ export const PencilLine = icon("PencilLine", LucidePencil);
 export const Trash2 = icon("Trash2", LucideTrash2);
 export const Copy = icon("Copy", LucideCopy);
 export const SearchIcon = icon("SearchIcon", LucideSearch);
+export const Send = icon("Send", LucideSend);
 export const RotateCcw = icon("RotateCcw", LucideRotateCcw);
 export const Landmark = icon("Landmark", LucideLandmark);
 export const Scale = icon("Scale", LucideScale);

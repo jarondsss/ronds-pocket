@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -152,9 +153,12 @@ export default function Partner() {
   return (
     <div className="flex flex-col gap-5">
       <header>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Bagikan kantongmu
-        </h1>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+            Bagikan kantongmu
+          </h1>
+        </div>
         <p className="text-sm text-muted-foreground">
           Opsional banget. Kalau nanti mau mencatat bareng orang lain, undang
           mereka ke kantong ini. Teman boleh menambah catatan sendiri, tapi yang

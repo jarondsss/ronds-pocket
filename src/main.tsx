@@ -21,6 +21,7 @@ const Landing = lazy(() => import("./pages/Landing.tsx"));
 const AuthPage = lazy(() => import("./pages/Auth.tsx"));
 const Dashboard = lazy(() => import("./pages/Dashboard.tsx"));
 const Ledger = lazy(() => import("./pages/dashboard/Ledger.tsx"));
+const Transactions = lazy(() => import("./pages/dashboard/Transactions.tsx"));
 const Reports = lazy(() => import("./pages/dashboard/Reports.tsx"));
 const Partner = lazy(() => import("./pages/dashboard/Partner.tsx"));
 const Activity = lazy(() => import("./pages/dashboard/Activity.tsx"));
@@ -164,7 +165,8 @@ createRoot(document.getElementById("root")!).render(
                   <Route path="tabungan" element={<Savings />} />
                   <Route path="net-worth" element={<NetWorth />} />
                   <Route path="rekap" element={<Reports />} />
-                  <Route path="riwayat" element={<Activity />} />
+                  <Route path="riwayat" element={<Transactions />} />
+                  <Route path="riwayat/aktivitas" element={<Activity />} />
                   <Route path="partner" element={<Partner />} />
                   <Route path="profil" element={<Profile />} />
                 </Route>

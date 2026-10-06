@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import { GoalDialog, type GoalSession } from "@/components/dashboard/GoalDialog";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
@@ -240,13 +241,16 @@ export default function Goals() {
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Goals
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Tulis targetnya, lalu lihat seberapa dekat kamu ke sana.
-          </p>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <div>
+            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Goals
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Tulis targetnya, lalu lihat seberapa dekat kamu ke sana.
+            </p>
+          </div>
         </div>
         <Button type="button" onClick={() => startForm(null)}>
           <Plus className="size-4" />

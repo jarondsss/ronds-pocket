@@ -7,7 +7,7 @@ import { toDateInput } from "@/lib/format";
 import { formatRupiah } from "@/lib/format";
 import { useAction } from "convex/react";
 import { motion } from "framer-motion";
-import { Loader2, Send, Sparkles } from "@/components/icons";
+import { Loader2, Send, Sparkles, X } from "@/components/icons";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -92,9 +92,12 @@ function BotDraftBubble({
 export function AiComposer({
   bookId,
   onDraft,
+  onClose,
 }: {
   bookId: Id<"books">;
   onDraft: (draft: AiDraft) => void;
+  /** Kalau diisi, tampil tombol tutup di header (mode panel melayang). */
+  onClose?: () => void;
 }) {
   const [bubbles, setBubbles] = useState<ChatBubble[]>([
     {
@@ -178,6 +181,16 @@ export function AiComposer({
             {thinking ? "Asisten sedang mengetik..." : "Online · siap mencatat"}
           </p>
         </div>
+        {onClose && (
+          <button
+            type="button"
+            aria-label="Tutup chat"
+            onClick={onClose}
+            className="clay-sm clay-press grid size-8 shrink-0 place-items-center text-muted-foreground"
+          >
+            <X className="size-4" />
+          </button>
+        )}
       </div>
 
       {/* Daftar pesan, gelembung kiri bot kanan pengguna. */}

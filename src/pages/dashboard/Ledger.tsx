@@ -3,7 +3,6 @@ import { AiComposer } from "@/components/dashboard/AiComposer";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import {
   RecurringDialog,
-  type EditableRecurring,
   type RecurringEditorSession,
 } from "@/components/dashboard/RecurringDialog";
 import {
@@ -29,8 +28,8 @@ import { monthRange, toDateInput, toMonthKey } from "@/lib/format";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
-import { motion } from "framer-motion";
-import { ChevronDown, Plus, Repeat, SearchIcon, X } from "@/components/icons";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Plus, Repeat, SearchIcon, Sparkles, X } from "@/components/icons";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -49,6 +48,7 @@ export default function Ledger() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [session, setSession] = useState<EditorSession | null>(null);
   const [search, setSearch] = useState("");
+  const [chatOpen, setChatOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const sessionKey = useRef(0);
 
@@ -200,8 +200,6 @@ export default function Ledger() {
         </Button>
       </header>
 
-      <AiComposer bookId={bookId} onDraft={openDraft} />
-
       <MonthNavigator monthKey={monthKey} onChange={setMonthKey} />
 
       {summary === undefined ? (
@@ -327,6 +325,38 @@ export default function Ledger() {
           onEmptyAction={!search && filter === "all" ? openNew : undefined}
         />
       )}
+
+      {/* Panel chat AI melayang, di atas FAB tambah transaksi. */}
+      <AnimatePresence>
+        {chatOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 320, damping: 26 }}
+            className="fixed bottom-[13.75rem] right-4 z-40 w-[min(92vw,24rem)]"
+          >
+            <AiComposer
+              bookId={bookId}
+              onDraft={openDraft}
+              onClose={() => setChatOpen(false)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.button
+        type="button"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 320, damping: 22 }}
+        onClick={() => setChatOpen((open) => !open)}
+        aria-label="Catat dari chat"
+        aria-expanded={chatOpen}
+        className="clay fixed bottom-[10.75rem] right-5 z-40 grid size-12 place-items-center rounded-full text-primary lg:hidden"
+      >
+        {chatOpen ? <X className="size-5" /> : <Sparkles className="size-5" />}
+      </motion.button>
 
       <motion.button
         type="button"

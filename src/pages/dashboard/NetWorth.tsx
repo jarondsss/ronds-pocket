@@ -2,7 +2,6 @@ import { LiabilityDialog, type LiabilitySession } from "@/components/dashboard/L
 import { ClayLoader } from "@/components/ClayLoader";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
-import type { Id } from "@/convex/_generated/dataModel";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { useBooks } from "@/lib/book-context";
 import {

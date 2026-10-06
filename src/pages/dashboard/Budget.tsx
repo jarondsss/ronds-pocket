@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import {
   CategoryDialog,
   type CategorySession,
@@ -324,9 +325,12 @@ export default function Budget() {
   return (
     <div className="flex flex-col gap-5">
       <header>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Anggaran
-        </h1>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+            Anggaran
+          </h1>
+        </div>
         <p className="text-sm text-muted-foreground">
           Pasang batas per kategori, biar uangnya tidak bocor diam-diam.
         </p>

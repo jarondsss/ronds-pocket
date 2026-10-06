@@ -1,10 +1,12 @@
-import { getAuthUserId } from "@convex-dev/auth/server";
+import { createAccount, getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
-import { mutation } from "./_generated/server";
+import { action, mutation, query } from "./_generated/server";
+import { api } from "./_generated/api";
 
 const MAX_NAME_LENGTH = 24;
+const MIN_PASSWORD_LENGTH = 8;
 
 /**
  * Profil user: nama tampilan dan maskot avatar.
@@ -46,6 +48,62 @@ export const update = mutation({
 
     await ctx.db.patch(userId, patch);
     return { displayName: name, avatar: patch.avatar ?? null };
+  },
+});
+
+/**
+ * Buat kata sandi untuk akun email yang sudah masuk lewat kode (email-OTP).
+ *
+ * createAccount membuat baris authAccounts (provider "password") dan
+ * menautkannya ke user saat ini lewat email yang sudah terverifikasi, jadi
+ * tidak membuat user baru. modifyAccountCredentials tidak dipakai karena hanya
+ * bisa mengubah secret dari baris yang sudah ada.
+ */
+export const setPassword = action({
+  args: { password: v.string() },
+  handler: async (ctx, { password }) => {
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      throw new Error(
+        `Kata sandi minimal ${MIN_PASSWORD_LENGTH} karakter ya.`,
+      );
+    }
+
+    // createAccount butuh ActionCtx, jadi email diambil lewat query di atas.
+    const email = await ctx.runQuery(api.profile.myEmail);
+    if (!email) {
+      throw new Error("Akun ini tidak memakai email.");
+    }
+
+    try {
+      await createAccount(ctx, {
+        provider: "password",
+        account: { id: email, secret: password },
+        profile: { email },
+        shouldLinkViaEmail: true,
+      });
+    } catch (caught) {
+      throw new Error(
+        String(caught).includes("already exists")
+          ? "Kamu sudah punya kata sandi untuk email ini."
+          : "Gagal menyimpan kata sandi. Coba lagi ya.",
+      );
+    }
+  },
+});
+
+/** Ambil email untuk user ini, dipakai oleh action setPassword. */
+export const myEmail = query({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) return null;
+    const email = (await ctx.db.get(userId))?.email;
+    if (email) return email;
+    const accounts = await ctx.db
+      .query("authAccounts")
+      .withIndex("userIdAndProvider", (q) => q.eq("userId", userId))
+      .collect();
+    return accounts.find((a) => a.provider === "email-otp")?.providerAccountId ?? null;
   },
 });
 

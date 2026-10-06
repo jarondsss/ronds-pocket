@@ -1,21 +1,16 @@
 import { Brand } from "@/components/Brand";
 import { ClayLoader } from "@/components/ClayLoader";
-import { BookSwitcher } from "@/components/dashboard/BookSwitcher";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SaveBadge } from "@/components/SaveBadge";
 import { NotificationBell } from "@/components/dashboard/NotificationBell";
 import { UserMenu, UserMenuSkeleton } from "@/components/dashboard/UserMenu";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  TransactionDialog,
+  type EditorSession,
+} from "@/components/dashboard/TransactionDialog";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
 import { BooksProvider, useBooks } from "@/lib/book-context";
-import { formatRupiah } from "@/lib/format";
 import { SaveStatusProvider } from "@/lib/save-status";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
@@ -25,83 +20,102 @@ import {
   ChartPie,
   HandCoins,
   History,
+  Home,
   Landmark,
   Moon,
-  MoreHorizontal,
   PiggyBank,
-  Receipt,
+  Plus,
   Sun,
   Target,
   UserRound,
   Users,
   Wallet,
 } from "@/components/icons";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useOutlet } from "react-router";
 import { useTheme } from "next-themes";
+import { toDateInput } from "@/lib/format";
 
-const PRIMARY_TABS = [
-  { to: "/dashboard", label: "Transaksi", icon: Receipt, end: true },
+const BOTTOM_TABS = [
+  { to: "/dashboard", label: "Beranda", icon: Home, end: true },
   { to: "/dashboard/dompet", label: "Dompet", icon: Wallet, end: false },
-  { to: "/dashboard/anggaran", label: "Anggaran", icon: HandCoins, end: false },
-  { to: "/dashboard/goals", label: "Goals", icon: Target, end: false },
-  { to: "/dashboard/tabungan", label: "Tabungan", icon: PiggyBank, end: false },
+  { to: "/dashboard/riwayat", label: "Riwayat", icon: History, end: false },
+  { to: "/dashboard/profil", label: "Profil", icon: UserRound, end: false },
 ];
 
-const SECONDARY_TABS = [
+const OTHER_TABS = [
+  { to: "/dashboard/anggaran", label: "Anggaran", icon: HandCoins },
+  { to: "/dashboard/goals", label: "Goals", icon: Target },
+  { to: "/dashboard/tabungan", label: "Tabungan", icon: PiggyBank },
   { to: "/dashboard/net-worth", label: "Net Worth", icon: Landmark },
   { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie },
-  { to: "/dashboard/riwayat", label: "Riwayat", icon: History },
   { to: "/dashboard/partner", label: "Sharing", icon: Users },
-  { to: "/dashboard/profil", label: "Profil", icon: UserRound },
 ];
 
-function BottomNav() {
+function BottomNav({ onAdd }: { onAdd: () => void }) {
+  // Tombol "+" di tengah: 2 tab kiri (Beranda, Dompet), 2 kanan (Riwayat, Profil).
+  const half = BOTTOM_TABS.length / 2;
+  const left = BOTTOM_TABS.slice(0, half);
+  const right = BOTTOM_TABS.slice(half);
+
+  const renderTab = (tab: (typeof BOTTOM_TABS)[number]) => {
+    const Icon = tab.icon;
+    return (
+      <NavLink
+        key={tab.to}
+        to={tab.to}
+        end={tab.end}
+        className={({ isActive }) =>
+          cn(
+            "flex flex-1 flex-col items-center gap-1 rounded-full px-1 py-1.5 text-[10px] font-bold transition-colors",
+            isActive
+              ? "text-primary"
+              : "text-muted-foreground hover:text-primary",
+          )
+        }
+      >
+        {({ isActive }) => (
+          <>
+            {/* Tab aktif naik 1px: umpan instan buat jempol di nav yang
+                dipakai tiap detik (R-19). */}
+            <motion.span
+              animate={{ y: isActive ? -1 : 0 }}
+              transition={{ type: "spring", stiffness: 420, damping: 18 }}
+              className={cn(
+                "grid size-9 place-items-center rounded-full transition-all",
+                isActive && "clay-nav-active",
+              )}
+            >
+              <Icon className="size-5" />
+            </motion.span>
+            {tab.label}
+          </>
+        )}
+      </NavLink>
+    );
+  };
+
   return (
     <nav className="clay-nav fixed bottom-4 left-1/2 z-40 flex w-[min(94vw,28rem)] -translate-x-1/2 items-center gap-0.5 p-1.5 lg:hidden">
-      {PRIMARY_TABS.map((tab) => {
-        const Icon = tab.icon;
-        return (
-          <NavLink
-            key={tab.to}
-            to={tab.to}
-            end={tab.end}
-            className={({ isActive }) =>
-              cn(
-                "flex flex-1 flex-col items-center gap-1 rounded-full px-1 py-1.5 text-[10px] font-bold transition-colors",
-                isActive
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-primary",
-              )
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <motion.span
-                  animate={{ y: isActive ? -1 : 0 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 18 }}
-                  className={cn(
-                    "grid size-9 place-items-center rounded-full transition-all",
-                    isActive && "clay-nav-active",
-                  )}
-                >
-                  <Icon className="size-5" />
-                </motion.span>
-                {tab.label}
-              </>
-            )}
-          </NavLink>
-        );
-      })}
+      {left.map(renderTab)}
+      <button
+        type="button"
+        onClick={onAdd}
+        aria-label="Catat uang"
+        className="clay-primary clay-press relative -my-2 grid size-14 shrink-0 place-items-center rounded-full shadow-[0_0.6rem_1.2rem_-0.35rem_var(--clay-dark)]"
+      >
+        <Plus className="size-7" />
+      </button>
+      {right.map(renderTab)}
     </nav>
   );
 }
 
 function SidebarNav() {
   return (
-    <>
-      <nav className="flex flex-col gap-2">
-        {PRIMARY_TABS.map((tab) => {
+    <nav className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        {BOTTOM_TABS.map((tab) => {
           const Icon = tab.icon;
           return (
             <NavLink
@@ -122,9 +136,12 @@ function SidebarNav() {
             </NavLink>
           );
         })}
-      </nav>
-      <nav className="flex flex-col gap-1.5 border-t border-border/70 pt-3">
-        {SECONDARY_TABS.map((tab) => {
+      </div>
+      <div className="flex flex-col gap-2">
+        <p className="px-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+          Lainnya
+        </p>
+        {OTHER_TABS.map((tab) => {
           const Icon = tab.icon;
           return (
             <NavLink
@@ -132,7 +149,7 @@ function SidebarNav() {
               to={tab.to}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-semibold transition-colors",
+                  "flex items-center gap-3 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
                   isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground",
@@ -144,8 +161,8 @@ function SidebarNav() {
             </NavLink>
           );
         })}
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 }
 
@@ -167,29 +184,6 @@ function ThemeToggle() {
   );
 }
 
-function TotalBalance({ total, wide }: { total: number; wide?: boolean }) {
-  return (
-    <div
-      className={cn(
-        "clay-sm flex items-center gap-3 p-3",
-        wide && "py-3.5",
-      )}
-    >
-      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-income/15 text-base">
-        👛
-      </span>
-      <span className="min-w-0">
-        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-          Total saldo
-        </span>
-        <span className="block font-display text-sm font-extrabold">
-          {formatRupiah(total)}
-        </span>
-      </span>
-    </div>
-  );
-}
-
 function Shell() {
   const { activeBook, isLoading } = useBooks();
   const { isLoading: authLoading } = useAuth();
@@ -200,6 +194,10 @@ function Shell() {
 
   const walletData = useQuery(
     api.wallets.list,
+    bookId ? { bookId } : "skip",
+  );
+  const categories = useQuery(
+    api.categories.list,
     bookId ? { bookId } : "skip",
   );
   const ensureDefaults = useMutation(api.setup.ensurePocketDefaults);
@@ -216,7 +214,22 @@ function Shell() {
     });
   }, [bookId, walletData, ensureDefaults]);
 
-  const total = walletData?.total ?? 0;
+  // Sesi global "Catat uang" dari nav. Dibuat di event handler supaya tanggal
+  // hari ini dihitung tanpa fungsi impure saat render.
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [session, setSession] = useState<EditorSession | null>(null);
+  const sessionKey = useRef(0);
+  const openAdd = () => {
+    sessionKey.current += 1;
+    setSession({
+      key: sessionKey.current,
+      mode: "new",
+      today: toDateInput(Date.now()),
+      transaction: null,
+      draft: null,
+    });
+    setDialogOpen(true);
+  };
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
@@ -229,8 +242,6 @@ function Shell() {
         <aside className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-6 flex flex-col gap-4">
             <Brand />
-            <TotalBalance total={total} wide />
-            <BookSwitcher />
             <SidebarNav />
             {authReady ? <UserMenu /> : <UserMenuSkeleton />}
           </div>
@@ -245,44 +256,9 @@ function Shell() {
                 <NotificationBell />
                 <ThemeToggle />
                 {authReady && <UserMenu variant="compact" />}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      type="button"
-                      aria-label="Menu lainnya"
-                      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground"
-                    >
-                      <MoreHorizontal className="size-4" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuLabel>Lainnya</DropdownMenuLabel>
-                    {SECONDARY_TABS.map((tab) => {
-                      const Icon = tab.icon;
-                      return (
-                        <DropdownMenuItem
-                          key={tab.to}
-                          asChild
-                          className="gap-2 font-semibold"
-                        >
-                          <NavLink to={tab.to}>
-                            <Icon className="size-4" />
-                            {tab.label}
-                          </NavLink>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </div>
             </div>
-            <div className="flex items-stretch gap-2">
-              <div className="min-w-0 flex-1">
-                <BookSwitcher />
-              </div>
-              <TotalBalance total={total} />
-            </div>
-          </header>
+            </header>
 
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
@@ -306,6 +282,8 @@ function Shell() {
               </p>
             </div>
           ) : (
+            // Transisi antar-halaman 0.2s ease: orientasi arah konten
+            // berganti; sengaja beda dari spring elemen melayang (R-19).
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={location.pathname}
@@ -321,7 +299,18 @@ function Shell() {
         </main>
       </div>
 
-      <BottomNav />
+      <BottomNav onAdd={openAdd} />
+
+      {bookId && (
+        <TransactionDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          bookId={bookId}
+          wallets={walletData?.wallets ?? []}
+          categories={categories ?? []}
+          session={session}
+        />
+      )}
     </div>
   );
 }

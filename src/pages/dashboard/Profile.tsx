@@ -9,9 +9,9 @@ import { useProfile } from "@/hooks/use-profile";
 import { ANIMAL_AVATARS } from "@/lib/avatars";
 import { toastError } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
-import { useMutation } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { ShieldCheck, Loader2, LogOut, Moon, Sun, Trash2 } from "@/components/icons";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
@@ -22,6 +22,7 @@ export default function Profile() {
   const profile = useProfile();
   const { signOut } = useAuth();
   const saveProfile = useMutation(api.profile.update);
+  const setPasswordAction = useAction(api.profile.setPassword);
   const deleteAccountMutation = useMutation(api.profile.deleteAccount);
   const navigate = useNavigate();
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -34,6 +35,7 @@ export default function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSettingPassword, setIsSettingPassword] = useState(false);
 
   const name = nameDraft ?? profile.name;
   const avatar = avatarDraft ?? profile.avatar;
@@ -54,6 +56,25 @@ export default function Profile() {
       toastError(caught, "Profilnya belum tersimpan. Coba lagi ya.");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const hasEmail = !profile.isAnonymous && Boolean(profile.email);
+  const [pw, setPw] = useState("");
+  const [pwConfirm, setPwConfirm] = useState("");
+
+  const handleSetPassword = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSettingPassword(true);
+    try {
+      await setPasswordAction({ password: pw.trim() });
+      setPw("");
+      setPwConfirm("");
+      toast.success("Kata sandi tersimpan. Mulai sekarang bisa masuk pakai email dan kata sandi.");
+    } catch (caught) {
+      toastError(caught, "Kata sandinya belum tersimpan. Coba lagi ya.");
+    } finally {
+      setIsSettingPassword(false);
     }
   };
 
@@ -270,6 +291,64 @@ export default function Profile() {
             )}
           </Button>
         </div>
+
+        {hasEmail && (
+          <form onSubmit={handleSetPassword} className="clay-mt-5 mt-5 border-t border-border pt-5">
+            <h3 className="text-sm font-bold">Kata sandi</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Kalau mau, buat kata sandi supaya bisa masuk cukup pakai email
+              dan kata sandi — tanpa kode.
+            </p>
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+              <div className="flex-1">
+                <Label htmlFor="pw" className="text-xs font-bold">
+                  Kata sandi baru
+                </Label>
+                <Input
+                  id="pw"
+                  type="password"
+                  autoComplete="new-password"
+                  value={pw}
+                  minLength={8}
+                  required
+                  onChange={(event) => setPw(event.target.value)}
+                  className="mt-2"
+                />
+              </div>
+              <div className="flex-1">
+                <Label htmlFor="pw-confirm" className="text-xs font-bold">
+                  Ulangi kata sandi
+                </Label>
+                <Input
+                  id="pw-confirm"
+                  type="password"
+                  autoComplete="new-password"
+                  value={pwConfirm}
+                  minLength={8}
+                  required
+                  onChange={(event) => setPwConfirm(event.target.value)}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            {pwConfirm && pw !== pwConfirm && (
+              <p className="mt-2 text-xs font-medium text-destructive">
+                Kata sandinya belum sama.
+              </p>
+            )}
+            <Button
+              type="submit"
+              className="mt-4"
+              disabled={isSettingPassword || pw.length < 8 || pw !== pwConfirm}
+            >
+              {isSettingPassword ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "Buat kata sandi"
+              )}
+            </Button>
+          </form>
+        )}
       </section>
 
       {/* Zona bahaya */}

@@ -15,27 +15,6 @@ interface BudgetSnapshotCardProps {
   range: { from: number; to: number };
 }
 
-function BudgetBarStub({
-  spent,
-  budget,
-}: {
-  spent: number;
-  budget: number;
-}) {
-  const pct = budget > 0 ? Math.min(100, Math.round((spent / budget) * 100)) : 0;
-  return (
-    <div className="w-full overflow-hidden rounded-full bg-muted/40" style={{ height: 8 }}>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: pct / 100 }}
-        transition={{ duration: 0.5, ease: EASE }}
-        className="h-full bg-primary"
-        style={{ transformOrigin: "left" }}
-      />
-    </div>
-  );
-}
-
 const STATUS_LABEL: Record<string, { label: string; className: string }> = {
   safe: { label: "Aman", className: "text-[#4ade80]" },
   near: { label: "Hampir", className: "text-amber-500" },
@@ -89,13 +68,6 @@ export function BudgetSnapshotCard({ bookId, range }: BudgetSnapshotCardProps) {
     summary;
 
   const totalRemaining = totalBudget - totalSpent;
-
-  const totalStatus =
-    totalSpent > totalBudget
-      ? "over"
-      : totalSpent >= totalBudget * 0.8
-        ? "near"
-        : "safe";
 
   return (
     <Card className="border-border/50 bg-card/60">

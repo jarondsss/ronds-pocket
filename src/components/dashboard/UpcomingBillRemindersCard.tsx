@@ -7,7 +7,8 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { CalendarClock, Plus } from "@/components/icons";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { CalendarClock, Plus, PencilLine } from "@/components/icons";
 import { useMemo } from "react";
 
 function daysLabel(dueDate: number) {
@@ -123,38 +124,49 @@ export function UpcomingBillRemindersCard({
 
       <CardContent className="space-y-2">
         {items.map((item, idx) => (
-          <motion.div
-            key={item._id}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25, ease: EASE, delay: idx * 0.04 }}
-            className="flex items-center justify-between rounded-xl border border-border/50 bg-card/80 p-3 cursor-pointer hover:bg-primary/[2%]"
-            onClick={() => onEdit(item)}
-          >
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold">{item.title}</p>
-              <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="font-medium">{formatShortDate(item.due_date)}</span>
-                {item.category && <span>· {item.category}</span>}
-              </div>
-            </div>
-            <div className="shrink-0 ml-3 text-right">
-              <p className="text-sm font-extrabold text-expense">
-                {formatRupiah(item.amount)}
-              </p>
-              <p
-                className={`text-xs font-bold ${
-                  daysSeverity(item.due_date) === "destructive"
-                    ? "text-destructive"
-                    : daysSeverity(item.due_date) === "warning"
-                      ? "text-amber-500"
-                      : "text-muted-foreground"
-                }`}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.div
+                key={item._id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.25, ease: EASE, delay: idx * 0.04 }}
+                className="flex items-center justify-between rounded-xl border border-border/50 bg-card/80 p-3 cursor-pointer hover:bg-primary/[2%]"
+                onClick={() => onEdit(item)}
               >
-                {daysLabel(item.due_date)}
-              </p>
-            </div>
-          </motion.div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold">{item.title}</p>
+                  <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="font-medium">{formatShortDate(item.due_date)}</span>
+                    {item.category && <span>· {item.category}</span>}
+                  </div>
+                </div>
+                <div className="shrink-0 ml-3 text-right">
+                  <p className="text-sm font-extrabold text-expense">
+                    {formatRupiah(item.amount)}
+                  </p>
+                  <p
+                    className={`text-xs font-bold ${
+                      daysSeverity(item.due_date) === "destructive"
+                        ? "text-destructive"
+                        : daysSeverity(item.due_date) === "warning"
+                          ? "text-amber-500"
+                          : "text-muted-foreground"
+                    }`}
+                  >
+                    {daysLabel(item.due_date)}
+                  </p>
+                  <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-medium text-muted-foreground/60">
+                    <PencilLine className="size-3" />
+                    edit
+                  </span>
+                </div>
+              </motion.div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Klik untuk mengedit</p>
+            </TooltipContent>
+          </Tooltip>
         ))}
 
         {items.length === 0 && overdueCount > 0 && (

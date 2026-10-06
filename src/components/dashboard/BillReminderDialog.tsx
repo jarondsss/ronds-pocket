@@ -180,18 +180,17 @@ function BillReminderForm({
           )}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="br-category">Kategori (opsional)</Label>
-          <CategoryCombobox
-            id="br-category"
-            label="Kategori"
-            value={category}
-            onChange={setCategory}
-            options={categories
-              .filter((item) => item.type === "expense")
-              .map((item) => item.name)}
-          />
-        </div>
+        {/* CategoryCombobox & DatePicker sudah merender labelnya sendiri, jadi
+            jangan bungkus lagi dengan <Label> — dulu jadi teks ganda. */}
+        <CategoryCombobox
+          id="br-category"
+          label="Kategori (opsional)"
+          value={category}
+          onChange={setCategory}
+          options={categories
+            .filter((item) => item.type === "expense")
+            .map((item) => item.name)}
+        />
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="br-wallet">Dompet (opsional)</Label>
@@ -211,10 +210,12 @@ function BillReminderForm({
           </select>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="br-due">Tanggal jatuh tempo</Label>
-          <DatePicker id="br-due" label="Tanggal jatuh tempo" value={dueDate} onChange={setDueDate} />
-        </div>
+        <DatePicker
+          id="br-due"
+          label="Tanggal jatuh tempo"
+          value={dueDate}
+          onChange={setDueDate}
+        />
 
         <div className="flex flex-col gap-2">
           <Label>Ingatkan berapa hari sebelum jatuh tempo?</Label>

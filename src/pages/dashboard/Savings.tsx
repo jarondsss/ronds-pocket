@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import { SavingsDialog, type SavingsSession } from "@/components/dashboard/SavingsDialog";
 import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
 import { DatePicker } from "@/components/dashboard/DatePicker";
@@ -279,13 +280,16 @@ export default function Savings() {
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Tabungan
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Deposito, reksa dana, emas: catat semuanya beserta bunganya.
-          </p>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <div>
+            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Tabungan
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Deposito, reksa dana, emas: catat semuanya beserta bunganya.
+            </p>
+          </div>
         </div>
         <Button type="button" onClick={() => startForm(null)}>
           <Plus className="size-4" />

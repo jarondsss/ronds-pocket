@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import { ClayLoader } from "@/components/ClayLoader";
 import { CategoryChart } from "@/components/dashboard/CategoryChart";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
@@ -143,13 +144,16 @@ export default function Reports() {
   return (
     <div className="flex flex-col gap-5">
       <header className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Rekap uangmu
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Lihat ke mana uangmu pergi bulan ini.
-          </p>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <div>
+            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Rekap uangmu
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Lihat ke mana uangmu pergi bulan ini.
+            </p>
+          </div>
         </div>
         <Button
           type="button"

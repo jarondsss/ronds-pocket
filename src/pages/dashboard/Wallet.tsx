@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import {
   WalletFormDialog,
   type WalletFormSession,
@@ -71,13 +72,16 @@ export default function Wallet() {
   return (
     <div className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Dompet
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Semua tempat uangmu disimpan, dalam satu pandangan.
-          </p>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <div>
+            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Dompet
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Semua tempat uangmu disimpan, dalam satu pandangan.
+            </p>
+          </div>
         </div>
         <div className="flex gap-2">
           <Button

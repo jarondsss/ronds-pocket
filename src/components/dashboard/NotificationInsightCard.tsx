@@ -59,7 +59,7 @@ export function NotificationInsightCard({ bookId }: NotificationInsightCardProps
             variant="outline"
             size="sm"
             className="w-full gap-2"
-            onClick={() => navigate("/dashboard/riwayat")}
+            onClick={() => navigate("/dashboard/riwayat/aktivitas")}
           >
             <History className="size-4" />
             Lihat riwayat
@@ -160,7 +160,7 @@ export function NotificationInsightCard({ bookId }: NotificationInsightCardProps
           variant="outline"
           size="sm"
           className="w-full gap-2"
-          onClick={() => navigate("/dashboard/riwayat")}
+          onClick={() => navigate("/dashboard/riwayat/aktivitas")}
         >
           <History className="size-4" />
           Lihat semua di Riwayat

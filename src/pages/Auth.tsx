@@ -1,6 +1,7 @@
 import { Brand } from "@/components/Brand";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   InputOTP,
   InputOTPGroup,
@@ -8,7 +9,7 @@ import {
 } from "@/components/ui/input-otp";
 import { useAuth } from "@/hooks/use-auth";
 import { friendlyError } from "@/lib/error-message";
-import { ArrowRight, Check, Mail, ShieldCheck, UserX } from "@/components/icons";
+import { ArrowRight, Check, Lock, Mail, ShieldCheck, UserX } from "@/components/icons";
 import { motion } from "framer-motion";
 
 /** Satu kurva gerak untuk seluruh halaman: turun cepat, mendarat pelan. */
@@ -44,7 +45,9 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
     searchParams.get("returnTo"),
     redirectAfterAuth,
   );
-  const [step, setStep] = useState<"signIn" | { email: string }>("signIn");
+  const [step, setStep] = useState<
+    "signIn" | { email: string } | "password"
+  >("signIn");
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +86,23 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
       console.error("OTP verification error:", caught);
       setError(friendlyError(caught, "Kodenya belum cocok. Coba periksa lagi ya."));
       setOtp("");
+      setIsLoading(false);
+    }
+  };
+
+  const handlePasswordSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    try {
+      const formData = new FormData(event.currentTarget);
+      await signIn("password", formData);
+      navigate(redirect);
+    } catch (caught) {
+      console.error("Password sign-in error:", caught);
+      setError(friendlyError(caught, "Email atau kata sandi belum cocok. Coba lagi ya."));
       setIsLoading(false);
     }
   };
@@ -204,6 +224,86 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
                 >
                   <UserX className="size-4" />
                   Coba dulu sebagai tamu
+                </Button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep("password");
+                    setError(null);
+                  }}
+                  disabled={isLoading}
+                  className="mt-4 w-full text-center text-xs font-semibold text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                >
+                  Sudah punya kata sandi? Masuk pakai email dan kata sandi
+                </button>
+              </form>
+            </>
+          ) : step === "password" ? (
+            <>
+              <h2 className="mt-6 font-display text-2xl font-extrabold tracking-tight lg:mt-0">
+                Masuk pakai kata sandi
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Isi email dan kata sandi yang sudah kamu buat di halaman
+                profil.
+              </p>
+
+              <form onSubmit={handlePasswordSubmit} className="mt-6">
+                <input type="hidden" name="flow" value="signIn" />
+                <Label htmlFor="pw-email" className="text-xs font-bold">
+                  Email
+                </Label>
+                <div className="relative mt-2">
+                  <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="pw-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="nama@email.com"
+                    className="pl-9"
+                    disabled={isLoading}
+                    required
+                  />
+                </div>
+                <Label htmlFor="pw-password" className="mt-4 block text-xs font-bold">
+                  Kata sandi
+                </Label>
+                <div className="relative mt-2">
+                  <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="pw-password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="Kata sandi kamu"
+                    className="pl-9"
+                    disabled={isLoading}
+                    required
+                  />
+                </div>
+
+                {error && (
+                  <p className="mt-3 text-sm font-medium text-destructive">
+                    {error}
+                  </p>
+                )}
+
+                <Button type="submit" className="mt-6 w-full" disabled={isLoading}>
+                  Masuk ke kantongku
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="mt-2 w-full"
+                  onClick={() => {
+                    setStep("signIn");
+                    setError(null);
+                  }}
+                  disabled={isLoading}
+                >
+                  Kembali ke masuk dengan kode
                 </Button>
               </form>
             </>

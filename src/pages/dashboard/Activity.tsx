@@ -1,3 +1,4 @@
+import { BackToHome } from "@/components/BackToHome";
 import { api } from "@/convex/_generated/api";
 import { useBooks } from "@/lib/book-context";
 import type { ActivityAction } from "@/convex/schema";
@@ -82,9 +83,12 @@ export default function Activity() {
   return (
     <div className="flex flex-col gap-5">
       <header>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Riwayat perubahan
-        </h1>
+        <div className="flex items-center gap-3">
+          <BackToHome />
+          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
+            Riwayat perubahan
+          </h1>
+        </div>
         <p className="text-sm text-muted-foreground">
           Jejak siapa ngapain di-pocket ini. Termasuk yang sudah dihapus, jadi
           kalau ada yang bingung angka berubah, cek di sini dulu.

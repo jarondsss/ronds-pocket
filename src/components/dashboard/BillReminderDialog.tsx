@@ -34,7 +34,7 @@ interface BillReminder {
   wallet_id?: Id<"wallets">;
 }
 
-interface BillReminderSession {
+export interface BillReminderSession {
   key: number;
   mode: "new" | "edit";
   today: string;

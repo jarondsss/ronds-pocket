@@ -2,6 +2,10 @@ import { ClayLoader } from "@/components/ClayLoader";
 import { AiComposer } from "@/components/dashboard/AiComposer";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import {
+  BillReminderDialog,
+  type BillReminderSession,
+} from "@/components/dashboard/BillReminderDialog";
+import {
   RecurringDialog,
   type RecurringEditorSession,
 } from "@/components/dashboard/RecurringDialog";
@@ -61,6 +65,21 @@ export default function Ledger() {
   const recSessionKey = useRef(0);
   const [recExpanded, setRecExpanded] = useState(false);
   const toggleRecurring = useMutation(api.recurring.toggle);
+
+  const [brDialogOpen, setBrDialogOpen] = useState(false);
+  const [brSession, setBrSession] = useState<BillReminderSession | null>(null);
+  const brSessionKey = useRef(0);
+  const openBillReminder = (reminder: NonNullable<BillReminderSession["reminder"]> | null) => {
+    brSessionKey.current += 1;
+    setBrSession({
+      key: brSessionKey.current,
+      mode: reminder ? "edit" : "new",
+      today: toDateInput(Date.now()),
+      reminder,
+    });
+    setBrDialogOpen(true);
+  };
+  const openNewBillReminder = () => openBillReminder(null);
 
   const range = useMemo(() => monthRange(monthKey), [monthKey]);
   const bookId = activeBook?._id;
@@ -217,10 +236,7 @@ export default function Ledger() {
       {bookId && (
         <UpcomingBillRemindersCard
           bookId={bookId}
-          onAdd={() => {
-            // TODO: buka dialog tambah pengingat tagihan
-            toast.info("Fitur tambah pengingat tagihan akan segera tersedia.");
-          }}
+          onAdd={openNewBillReminder}
         />
       )}
       {bookId && <NotificationInsightCard bookId={bookId} />}
@@ -401,6 +417,15 @@ export default function Ledger() {
         wallets={walletData?.wallets ?? []}
         categories={categories ?? []}
         session={recSession}
+      />
+
+      <BillReminderDialog
+        open={brDialogOpen}
+        onOpenChange={setBrDialogOpen}
+        bookId={bookId}
+        wallets={walletData?.wallets ?? []}
+        categories={categories ?? []}
+        session={brSession}
       />
     </div>
   );

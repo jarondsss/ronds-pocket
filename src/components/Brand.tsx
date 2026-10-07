@@ -1,4 +1,4 @@
-import logo from "@/assets/logo.svg";
+const logo = "/Logo.png";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router";
 

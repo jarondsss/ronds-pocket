@@ -266,6 +266,7 @@ function Shell() {
           <header className="mb-4 flex items-center justify-between gap-2 lg:hidden">
             <Brand compact />
             <div className="flex items-center gap-1.5">
+              <SupportActions />
               <NotificationBell />
               <ThemeToggle />
             </div>

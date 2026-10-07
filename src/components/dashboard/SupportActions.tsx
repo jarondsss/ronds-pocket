@@ -1,12 +1,13 @@
 import { DonateDialog } from "@/components/dashboard/DonateDialog";
 import { FeedbackDialog } from "@/components/dashboard/FeedbackDialog";
-import { Heart, MessageCircle } from "@/components/icons";
+import { MessageCircle } from "@/components/icons";
+import { Link } from "react-router";
 import { useState } from "react";
 
 /**
- * Dua tombol pendamping notifikasi di top bar: masukan (biar kami tahu apa yang
- * perlu diperbaiki) dan donasi (biaya server bulanan). Sengaja dipisah dari
- * Dashboard supaya state dialog tidak menumpuk di shell.
+ * Tombol pendamping notifikasi di top bar (feedback) + tombol Donate yang
+ * ditaruh di samping logo Ronds Pocket di header. Donate pakai teks, bukan icon,
+ * biar tujuan donasi langsung jelas tanpa perlu tooltip.
  */
 export function SupportActions() {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -14,6 +15,14 @@ export function SupportActions() {
 
   return (
     <>
+      <Link
+        to="/dashboard/profil"
+        aria-label="Dukung Ronds Pocket"
+        className="clay-sm clay-press rounded-full px-3.5 py-1.5 text-xs font-bold text-foreground hover:bg-secondary/80"
+      >
+        Donate
+      </Link>
+
       <button
         type="button"
         aria-label="Kirim masukan"
@@ -21,14 +30,6 @@ export function SupportActions() {
         className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
       >
         <MessageCircle className="size-4" />
-      </button>
-      <button
-        type="button"
-        aria-label="Dukung Ronds Pocket"
-        onClick={() => setDonateOpen(true)}
-        className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
-      >
-        <Heart className="size-4" />
       </button>
 
       <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />

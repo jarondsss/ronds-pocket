@@ -296,6 +296,14 @@ const schema = defineSchema(
       page: v.optional(v.string()), // halaman yang sedang dibuka saat menulis
       created_at: v.number(),
     }).index("by_created", ["created_at"]),
+
+    // Hitungan dukungan: user bilang "udah donasi" lewat modal.
+    // Ini metrik semangat (social proof), BUKAN pencatatan pembayaran.
+    // Hanya disimpan unik per user biar nggak gampang di-spam.
+    donations: defineTable({
+      user_id: v.id("users"),
+      created_at: v.number(),
+    }).index("by_user", ["user_id"]),
   },
   {
     schemaValidation: true,

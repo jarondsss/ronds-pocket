@@ -252,13 +252,31 @@ function Shell() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none fixed -left-24 -top-24 size-72 rounded-full bg-primary/15 blur-3xl"
-      />
+      </div>
 
-      <div className="relative mx-auto flex w-full max-w-6xl gap-6 px-4 pb-28 pt-4 sm:px-6 lg:pb-10">
-        <aside className="hidden w-64 shrink-0 lg:block">
+      <BottomNav onAdd={openAdd} />
+
+      {bookId && (
+        <TransactionDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          bookId={bookId}
+          wallets={walletData?.wallets ?? []}
+          categories={categories ?? []}
+          session={session}
+        />
+      )}
+    </div>
+  );
+}
+      <div className="relative mx-auto flex w-full max-w-6xl gap-6 px-4 pb-28 pt-4 sm:px-6 lg:pb-10">          <aside className="hidden w-64 shrink-0 lg:block">
+            <div className="sticky top-6 flex flex-col gap-4">
+              <Brand />
+              <SidebarNav />
+              {authReady ? <UserMenu /> : <UserMenuSkeleton />}
+            </div>
+          </aside>
+
           <div className="sticky top-6 flex flex-col gap-4">
             <Brand />
             <SidebarNav />

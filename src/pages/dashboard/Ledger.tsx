@@ -409,17 +409,12 @@ export default function Ledger() {
         </section>
       )}
 
-      {/* Pintu ke semua fitur kantong */}
-      <section className="flex flex-col gap-3">
-        <div>
-          <h2 className="font-display text-base font-extrabold sm:text-lg">
-            Kelola kantong
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            Anggaran, goals, dan laporan ada di sini.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {/* Pintu ke semua fitur kantong. Tanpa judul: tiap kartu sudah punya
+          nama dan keterangan sendiri, jadi teksnya tidak diulang di atas. */}
+      <section
+        aria-label="Pintasan fitur kantong"
+        className="grid grid-cols-2 gap-2 sm:grid-cols-3"
+      >
           {HOME_GRID.map((item) => (
             <NavLink
               key={item.to}
@@ -434,8 +429,7 @@ export default function Ledger() {
                 {item.desc}
               </span>
             </NavLink>
-          ))}
-        </div>
+        ))}
       </section>
 
       {bookId && <BudgetSnapshotCard bookId={bookId} range={range} />}
@@ -448,6 +442,7 @@ export default function Ledger() {
           }}
         />
       )}
+      {bookId && <NotificationInsightCard bookId={bookId} />}
 
       {/* Panel chat AI melayang, di atas tombol chat. */}
       <AnimatePresence>

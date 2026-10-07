@@ -8,7 +8,7 @@ import { useQuery, useMutation } from "convex/react";
 import { motion } from "framer-motion";
 import { Bell, Check, History } from "@/components/icons";
 import { useMemo } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 function relativeLabel(ts: number, now: number) {
   const diff = now - ts;
@@ -155,16 +155,15 @@ export function NotificationInsightCard({ bookId }: NotificationInsightCardProps
           </Button>
         )}
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="w-full gap-2"
-          onClick={() => navigate("/dashboard/riwayat/aktivitas")}
+        {/* Tautan hiperteks ke riwayat perubahan: jejak siapa ngapain ada di
+            situ, jadi angka yang berubah bisa dicek sendiri. */}
+        <Link
+          to="/dashboard/riwayat/aktivitas"
+          className="flex items-center justify-center gap-1.5 pt-1 text-xs font-bold text-primary underline underline-offset-4 hover:text-primary/80"
         >
-          <History className="size-4" />
-          Lihat semua di Riwayat
-        </Button>
+          <History className="size-3.5" />
+          Lihat riwayat lengkap
+        </Link>
       </CardContent>
     </Card>
   );

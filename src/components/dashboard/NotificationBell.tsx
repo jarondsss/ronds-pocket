@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,8 +10,8 @@ import { useBooks } from "@/lib/book-context";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { Bell, Check, History } from "@/components/icons";
-import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router";
 import { toast } from "sonner";
 
 function waktuLalu(timestamp: number) {
@@ -36,8 +35,8 @@ function waktuLalu(timestamp: number) {
  */
 export function NotificationBell() {
   const { activeBook } = useBooks();
-  const navigate = useNavigate();
   const bookId = activeBook?._id;
+  const [open, setOpen] = useState(false);
   const rows = useQuery(api.books.notifications, bookId ? { bookId } : "skip");
   const markRead = useMutation(api.books.markNotificationsRead);
   const seen = useRef<Set<string> | null>(null);
@@ -65,8 +64,10 @@ export function NotificationBell() {
 
   return (
     <DropdownMenu
-      onOpenChange={(open) => {
-        if (!open || unread === 0 || !bookId) return;
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (!next || unread === 0 || !bookId) return;
         void markRead({ bookId }).catch(() => {});
       }}
     >
@@ -107,13 +108,17 @@ export function NotificationBell() {
         ) : (
           <ul className="max-h-80 overflow-y-auto">
             {items.map((row) => (
-              <li
-                key={row._id}
-                className={cn(
-                  "flex items-start gap-3 px-3 py-2.5",
-                  row.read_at === undefined && "bg-primary/10",
-                )}
-              >
+              // Tiap kabar bisa diklik langsung ke halaman Riwayat perubahan,
+              // jadi "kok angkanya berubah?" bisa dicek dari sini.
+              <li key={row._id}>
+                <Link
+                  to="/dashboard/riwayat/aktivitas"
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "flex items-start gap-3 px-3 py-2.5 transition-colors hover:bg-secondary/60",
+                    row.read_at === undefined && "bg-primary/10",
+                  )}
+                >
                 <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/12 text-xs font-black text-primary">
                   {row.actor_name.charAt(0).toUpperCase()}
                 </span>
@@ -130,23 +135,21 @@ export function NotificationBell() {
                     {waktuLalu(row.created_at)}
                   </span>
                 </span>
+                </Link>
               </li>
             ))}
           </ul>
         )}
 
         <DropdownMenuSeparator className="my-0" />
-        <div className="px-3 py-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full gap-2 text-xs"
-            onClick={() => navigate("/dashboard/riwayat/aktivitas")}
-          >
-            <History className="size-3.5" />
-            Buka Riwayat buat lihat semua
-          </Button>
-        </div>
+        <Link
+          to="/dashboard/riwayat/aktivitas"
+          onClick={() => setOpen(false)}
+          className="flex items-center justify-center gap-1.5 px-3 py-3 text-xs font-bold text-primary underline underline-offset-4 hover:text-primary/80"
+        >
+          <History className="size-3.5" />
+          Lihat riwayat lengkap
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   );

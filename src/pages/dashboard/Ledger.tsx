@@ -284,13 +284,6 @@ export default function Ledger() {
           <h2 className="font-display text-base font-extrabold sm:text-lg">
             Transaksi
           </h2>
-          <button
-            type="button"
-            onClick={openNew}
-            className="text-xs font-bold text-primary sm:hidden"
-          >
-            + Catat
-          </button>
         </div>
         <div className="clay-sunken flex items-center gap-1.5 p-1.5">
           {FILTERS.map((item) => (

@@ -41,6 +41,7 @@ import {
   ExternalLink as LucideExternalLink,
   GripVertical as LucideGripVertical,
   HandCoins as LucideHandCoins,
+  Heart as LucideHeart,
   History as LucideHistory,
   Home as LucideHome,
   Info as LucideInfo,
@@ -187,6 +188,7 @@ export const MoreHorizontal = icon("MoreHorizontal", LucideEllipsis);
 export const MoreHorizontalIcon = MoreHorizontal;
 export const ExternalLink = icon("ExternalLink", LucideExternalLink);
 export const Bell = icon("Bell", LucideBell);
+export const Heart = icon("Heart", LucideHeart);
 export const Mail = icon("Mail", LucideMail);
 export const MessageCircle = icon("MessageCircle", LucideMessageCircle);
 export const Lock = icon("Lock", LucideLock);

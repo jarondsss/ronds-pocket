@@ -3,6 +3,7 @@ import { ClayLoader } from "@/components/ClayLoader";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SaveBadge } from "@/components/SaveBadge";
 import { NotificationBell } from "@/components/dashboard/NotificationBell";
+import { SupportActions } from "@/components/dashboard/SupportActions";
 import { UserMenu, UserMenuSkeleton } from "@/components/dashboard/UserMenu";
 import {
   TransactionDialog,
@@ -10,6 +11,7 @@ import {
 } from "@/components/dashboard/TransactionDialog";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 import { BooksProvider, useBooks } from "@/lib/book-context";
 import { SaveStatusProvider } from "@/lib/save-status";
 import { cn } from "@/lib/utils";
@@ -50,6 +52,9 @@ const OTHER_TABS = [
   { to: "/dashboard/net-worth", label: "Net Worth", icon: Landmark },
   { to: "/dashboard/rekap", label: "Rekap", icon: ChartPie },
   { to: "/dashboard/partner", label: "Sharing", icon: Users },
+  // Jejak perubahan tidak lagi punya tab sendiri di nav bawah; di desktop
+  // tetap bisa dibuka dari sini (di HP lewat tautan di notifikasi).
+  { to: "/dashboard/riwayat/aktivitas", label: "Riwayat perubahan", icon: History },
 ];
 
 function BottomNav({ onAdd }: { onAdd: () => void }) {
@@ -57,9 +62,13 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
   const half = BOTTOM_TABS.length / 2;
   const left = BOTTOM_TABS.slice(0, half);
   const right = BOTTOM_TABS.slice(half);
+  // Tab Profil pakai wajah penggunanya sendiri, bukan ikon orang generik:
+  // satu tempat yang jelas buat "ini akunku".
+  const profile = useProfile();
 
   const renderTab = (tab: (typeof BOTTOM_TABS)[number]) => {
     const Icon = tab.icon;
+    const isProfile = tab.to === "/dashboard/profil";
     return (
       <NavLink
         key={tab.to}
@@ -86,7 +95,17 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
                 isActive && "clay-nav-active",
               )}
             >
-              <Icon className="size-5" />
+              {isProfile ? (
+                <span className="grid size-6 place-items-center rounded-lg bg-accent text-[13px] leading-none text-accent-foreground">
+                  {profile.avatar ?? (
+                    <span className="text-[11px] font-black">
+                      {profile.initial}
+                    </span>
+                  )}
+                </span>
+              ) : (
+                <Icon className="size-5" />
+              )}
             </motion.span>
             {tab.label}
           </>
@@ -251,11 +270,11 @@ function Shell() {
           <header className="mb-4 flex flex-col gap-3 lg:hidden">
             <div className="flex items-center justify-between gap-2">
               <Brand compact />
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <SaveBadge />
                 <NotificationBell />
+                <SupportActions />
                 <ThemeToggle />
-                {authReady && <UserMenu variant="compact" />}
               </div>
             </div>
             </header>
@@ -263,8 +282,8 @@ function Shell() {
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
             <NotificationBell />
+            <SupportActions />
             <ThemeToggle />
-            {authReady && <UserMenu variant="compact" />}
           </div>
 
           {isLoading ? (

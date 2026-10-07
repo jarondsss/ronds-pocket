@@ -286,6 +286,15 @@ const schema = defineSchema(
     })
       .index("by_book", ["book_id"])
       .index("by_due_date", ["enabled", "due_date"]),
+
+    // Masukan pengguna dari tombol "Masukan" di top bar.
+    feedback: defineTable({
+      user_id: v.id("users"),
+      message: v.string(),
+      mood: v.string(),
+      contact: v.optional(v.string()),
+      created_at: v.number(),
+    }).index("by_created", ["created_at"]),
   },
   {
     schemaValidation: true,

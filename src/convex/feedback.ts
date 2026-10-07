@@ -20,9 +20,18 @@ const MOOD_LABEL: Record<string, string> = {
   masalah: "Ada masalah",
 };
 
-/** Kirim ke alamat pemilik aplikasi. Diatur lewat env, bukan di kode. */
+/**
+ * Kotak masuk pemilik aplikasi. Bisa ditimpa lewat env `FEEDBACK_INBOX`,
+ * tapi defaultnya sudah terisi supaya jalan tanpa pengaturan tambahan.
+ * (Alamat email bukan rahasia, jadi aman ditulis di kode.)
+ */
 function inboxAddress(): string {
-  return (process.env.FEEDBACK_INBOX ?? process.env.FEEDBACK_TO_EMAIL ?? "").trim();
+  const env = (
+    process.env.FEEDBACK_INBOX ??
+    process.env.FEEDBACK_TO_EMAIL ??
+    ""
+  ).trim();
+  return env || "jajangworj@gmail.com";
 }
 
 /** Pengirim default Resend bisa dipakai tanpa memverifikasi domain sendiri. */
@@ -125,7 +134,7 @@ export const submitAndEmail = action({
     const to = inboxAddress();
     if (!apiKey || !to) {
       console.error(
-        "Masukan tersimpan, tapi email belum diatur. Isi RESEND_API_KEY dan FEEDBACK_INBOX di tab Keys/API keys.",
+        "Masukan tersimpan, tapi emailnya belum terkirim. Isi RESEND_API_KEY di tab Keys/API keys dulu ya.",
       );
       return { emailed: false };
     }
@@ -152,7 +161,7 @@ export const submitAndEmail = action({
           ${escapeHtml(waktu)}${saved.page ? `<br />Halaman ${escapeHtml(saved.page)}` : ""}${saved.contact ? `<br />Kontak ${escapeHtml(saved.contact)}` : ""}
         </p>
         <blockquote style="margin:0;padding:12px 16px;border-left:3px solid #a78bfa;background:#f6f2ff;border-radius:8px;white-space:pre-wrap">${escapeHtml(saved.message)}</blockquote>
-        <p style="margin:16px 0 0;color:#8b86a3;font-size:13px">Dikirim otomatis dari formulir Masukan di dalam aplikasi Ronds Pocket.</p>
+        <p style="margin:16px 0 0;color:#8b86a3;font-size:13px">Dikirim otomatis dari formulir Masukan di dalam aplikasi Ronds Pocket. Balas email ini untuk membalas pengirimnya.</p>
       </div>
     `;
 
@@ -167,7 +176,7 @@ export const submitAndEmail = action({
         body: JSON.stringify({
           from: senderAddress(),
           to: [to],
-          subject: `Masukan baru (${moodLabel}) dari Ronds Pocket`,
+          subject: `Masukan Ronds Pocket (${moodLabel})`,
           reply_to: saved.email ?? undefined,
           text: `${baris.join("\n")}\n\nDikirim otomatis dari formulir Masukan di dalam aplikasi Ronds Pocket.`,
           html,

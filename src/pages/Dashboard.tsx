@@ -263,21 +263,18 @@ function Shell() {
         </aside>
 
         <main className="min-w-0 flex-1">
-          <header className="mb-4 flex flex-col gap-3 lg:hidden">
-            <div className="flex items-center justify-between gap-2">
-              <Brand compact />
-              <div className="flex items-center gap-1.5">
-                <SaveBadge />
-                <NotificationBell />
-                <ThemeToggle />
-              </div>
-            </div>
-            <div className="flex items-center justify-end gap-2 lg:hidden">
+          <header className="mb-4 flex items-center gap-3 lg:hidden">
+            <Brand compact />
+            <div className="flex items-center gap-1.5">
               <SupportActions />
+              <SaveBadge />
+              <NotificationBell />
+              <ThemeToggle />
             </div>
           </header>
 
-          <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
+          <div className="mb-3 hidden items-center gap-2 lg:flex">
+            <SupportActions />
             <SaveBadge />
             <NotificationBell />
             <ThemeToggle />

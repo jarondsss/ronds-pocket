@@ -1,7 +1,6 @@
-import { DonateDialog } from "@/components/dashboard/DonateDialog";
 import { FeedbackDialog } from "@/components/dashboard/FeedbackDialog";
 import { MessageCircle } from "@/components/icons";
-import { Link } from "react-router";
+import { DonateDialog } from "@/components/dashboard/DonateDialog";
 import { useState } from "react";
 
 /**
@@ -15,13 +14,14 @@ export function SupportActions() {
 
   return (
     <>
-      <Link
-        to="/dashboard/profil"
+      <button
+        type="button"
+        onClick={() => setDonateOpen(true)}
         aria-label="Dukung Ronds Pocket"
         className="clay-sm clay-press rounded-full px-3.5 py-1.5 text-xs font-bold text-foreground hover:bg-secondary/80"
       >
         Donate
-      </Link>
+      </button>
 
       <button
         type="button"

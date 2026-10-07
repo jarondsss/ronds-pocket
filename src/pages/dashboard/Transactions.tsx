@@ -96,7 +96,7 @@ function OptionButton({
 }
 
 /**
- * Filter bergaya pil: label tetap terbaca ("Jenis", "Layanan", "Metode"), dan
+ * Filter bergaya pil: label tetap terbaca ("Jenis", "Kategori", "Dompet"), dan
  * begitu dipilih, pil menampilkan nilai yang sedang aktif. Daftar pilihannya
  * pakai Popover clay yang sama dengan form transaksi.
  */
@@ -214,8 +214,10 @@ function downloadCsv(rows: LedgerTransaction[], monthKey: string) {
   const link = document.createElement("a");
   link.href = url;
   link.download = `ronds-pocket-${monthKey}.csv`;
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(url);
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
 
 export default function Transactions() {
@@ -402,14 +404,14 @@ export default function Transactions() {
           onSelect={(value) => setTypeFilter((value ?? "all") as TypeFilter)}
         />
         <FilterPill
-          label="Layanan"
+          label="Kategori"
           value={categoryFilter}
           allLabel="Semua kategori"
           options={categoryOptions}
           onSelect={setCategoryFilter}
         />
         <FilterPill
-          label="Metode"
+          label="Dompet"
           value={walletFilter}
           allLabel="Semua dompet"
           options={walletOptions}

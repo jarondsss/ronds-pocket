@@ -70,7 +70,7 @@ export function DonateDialog({
               src={src}
               alt="Kode QRIS Ronds Pocket, Digital & Kreatif untuk donasi"
               onError={() => setSrcIndex((index) => index + 1)}
-              className="w-full max-w-xs rounded-2xl bg-white"
+              className="max-h-64 w-auto max-w-full rounded-2xl bg-white object-contain"
             />
           )}
 

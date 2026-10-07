@@ -32,6 +32,7 @@ const Goals = lazy(() => import("./pages/dashboard/Goals.tsx"));
 const Savings = lazy(() => import("./pages/dashboard/Savings.tsx"));
 const NetWorth = lazy(() => import("./pages/dashboard/NetWorth.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+const AdminPage = lazy(() => import("./pages/admin.tsx"));
 
 // Simple loading fallback for route transitions
 function RouteLoading() {
@@ -170,6 +171,14 @@ createRoot(document.getElementById("root")!).render(
                   <Route path="partner" element={<Partner />} />
                   <Route path="profil" element={<Profile />} />
                 </Route>
+                <Route
+                  path="/admin"
+                  element={
+                    <Suspense fallback={<RouteLoading />}>
+                      <AdminPage />
+                    </Suspense>
+                  }
+                />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

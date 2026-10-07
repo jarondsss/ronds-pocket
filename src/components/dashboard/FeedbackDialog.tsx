@@ -15,7 +15,7 @@ import {
 } from "@/components/dashboard/ChoiceChips";
 import { api } from "@/convex/_generated/api";
 import { toastError } from "@/lib/error-message";
-import { useMutation } from "convex/react";
+import { useAction } from "convex/react";
 import { Loader2 } from "@/components/icons";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -30,7 +30,9 @@ const MOODS: readonly ChipOption<Mood>[] = [
 ];
 
 function FeedbackForm({ onSent }: { onSent: () => void }) {
-  const submit = useMutation(api.feedback.submit);
+  // Action, bukan mutation biasa: masukan disimpan sekaligus disalin ke email
+  // pemilik aplikasi, jadi tidak perlu rajin membuka dashboard.
+  const submit = useAction(api.feedback.submitAndEmail);
   const [mood, setMood] = useState<Mood>("senang");
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState("");
@@ -43,12 +45,19 @@ function FeedbackForm({ onSent }: { onSent: () => void }) {
     }
     setSaving(true);
     try {
-      await submit({
+      const result = await submit({
         message: message.trim(),
         mood,
         contact: contact.trim() || undefined,
+        page: window.location.pathname,
       });
-      toast.success("Masukanmu sudah masuk. Terima kasih banyak!");
+      if (result.emailed) {
+        toast.success("Masukanmu sudah terkirim. Terima kasih banyak!");
+      } else {
+        toast.success("Masukanmu sudah tersimpan. Terima kasih banyak!", {
+          description: "Catatan: salinan emailnya belum terkirim.",
+        });
+      }
       onSent();
     } catch (error) {
       toastError(error, "Gagal mengirim masukan.");

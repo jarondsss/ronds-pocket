@@ -293,6 +293,7 @@ const schema = defineSchema(
       message: v.string(),
       mood: v.string(),
       contact: v.optional(v.string()),
+      page: v.optional(v.string()), // halaman yang sedang dibuka saat menulis
       created_at: v.number(),
     }).index("by_created", ["created_at"]),
   },

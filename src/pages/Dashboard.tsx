@@ -275,7 +275,6 @@ function Shell() {
                 <NotificationBell />
                 <ThemeToggle />
               </div>
-              </div>
             </div>
             </header>
 

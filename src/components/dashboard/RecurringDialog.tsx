@@ -363,7 +363,7 @@ export function RecurringDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <SlideUpDialogContent>
+      <SlideUpDialogContent className="max-h-[88dvh] overflow-y-auto">
         <RecurringForm
           key={active.key}
           session={active}

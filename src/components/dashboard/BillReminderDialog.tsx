@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { CategoryCombobox } from "@/components/dashboard/CategoryCombobox";
@@ -194,20 +195,20 @@ function BillReminderForm({
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="br-wallet">Dompet (opsional)</Label>
-          <select
-            id="br-wallet"
-            value={walletId}
-            onChange={(e) => setWalletId(e.target.value)}
-            className="clay-sm h-11 flex-1 rounded-md border bg-transparent px-3 text-sm outline-none focus:border-ring focus:ring-ring/50"
-          >
-            <option value="none">Tanpa dompet</option>
-            {wallets.map((wallet) => (
-              <option key={wallet._id} value={wallet._id}>
-                {wallet.icon && <span className="mr-1.5">{wallet.icon}</span>}
-                {wallet.name}
-              </option>
-            ))}
-          </select>
+          <Select value={walletId} onValueChange={setWalletId}>
+            <SelectTrigger className="w-full data-[size=default]:h-11" id="br-wallet">
+              <SelectValue placeholder="Tanpa dompet" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Tanpa dompet</SelectItem>
+              {wallets.map((wallet) => (
+                <SelectItem key={wallet._id} value={wallet._id}>
+                  {wallet.icon && <span className="mr-1.5">{wallet.icon}</span>}
+                  {wallet.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <DatePicker

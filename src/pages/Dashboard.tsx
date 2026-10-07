@@ -272,6 +272,7 @@ function Shell() {
               <Brand compact />
               <div className="flex items-center gap-1.5">
                 <SaveBadge />
+                <SupportActions />
                 <NotificationBell />
                 <ThemeToggle />
               </div>
@@ -280,6 +281,7 @@ function Shell() {
 
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
+            <SupportActions />
             <NotificationBell />
             <ThemeToggle />
           </div>

@@ -265,19 +265,25 @@ function Shell() {
         <main className="min-w-0 flex-1">
           <header className="mb-4 flex items-center gap-3 lg:hidden">
             <Brand compact />
-            <div className="flex items-center gap-1.5">
-              <SupportActions />
+            <SupportActions />
+            <div className="ml-auto flex items-center gap-1.5">
               <SaveBadge />
               <NotificationBell />
               <ThemeToggle />
             </div>
           </header>
 
-          <div className="mb-3 hidden items-center gap-2 lg:flex">
+          <div className="mb-3 flex items-center gap-2 lg:hidden">
             <SupportActions />
+          </div>
+
+          <div className="mb-3 hidden items-center gap-2 lg:flex">
             <SaveBadge />
             <NotificationBell />
             <ThemeToggle />
+            <div className="ml-auto flex items-center gap-1.5">
+              <SupportActions />
+            </div>
           </div>
 
           {isLoading ? (

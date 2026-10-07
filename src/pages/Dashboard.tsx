@@ -252,11 +252,7 @@ function Shell() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none fixed -left-24 -top-24 size-72 rounded-full bg-primary/15 blur-3xl"
-      />
-
+      {/* Desktop layout */}
       <div className="relative mx-auto flex w-full max-w-6xl gap-6 px-4 pb-28 pt-4 sm:px-6 lg:pb-10">
         <aside className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-6 flex flex-col gap-4">
@@ -267,17 +263,15 @@ function Shell() {
         </aside>
 
         <main className="min-w-0 flex-1">
-          <header className="mb-4 flex flex-col gap-3 lg:hidden">
-            <div className="flex items-center justify-between gap-2">
-              <Brand compact />
-              <div className="flex items-center gap-1.5">
-                <SaveBadge />
-                <SupportActions />
-                <NotificationBell />
-                <ThemeToggle />
-              </div>
+<header className="mb-4 flex items-center justify-between gap-2 lg:hidden">
+            <Brand compact />
+            <div className="flex items-center gap-1.5">
+              <SaveBadge />
+              <SupportActions />
+              <NotificationBell />
+              <ThemeToggle />
             </div>
-            </header>
+          </header>
 
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
@@ -318,6 +312,8 @@ function Shell() {
         </main>
       </div>
 
+      {/* Mobile bottom navigation (di luar area konten utama agar selalu
+          tetap di bawah, bahkan saat halaman discroll). */}
       <BottomNav onAdd={openAdd} />
 
       {bookId && (
@@ -334,12 +330,12 @@ function Shell() {
   );
 }
 
-export default function Dashboard() {
+export function Dashboard() {
   return (
-    <BooksProvider>
-      <SaveStatusProvider>
+    <SaveStatusProvider>
+      <BooksProvider>
         <Shell />
-      </SaveStatusProvider>
-    </BooksProvider>
+      </BooksProvider>
+    </SaveStatusProvider>
   );
 }

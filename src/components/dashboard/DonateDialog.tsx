@@ -7,7 +7,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
-import { Download } from "@/components/icons";
+import { Download, Heart } from "@/components/icons";
+import { toast } from "sonner";
+import { useMutation, useQuery } from "convex/react";
+import { useAuth } from "@/hooks/use-auth";
+import { api } from "@/convex/_generated/api";
 import { useState } from "react";
 
 /**
@@ -37,8 +41,19 @@ export function DonateDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const [srcIndex, setSrcIndex] = useState(0);
+  const [done, setDone] = useState(false);
   const src = QRIS_CANDIDATES[srcIndex];
   const imageBroken = src === undefined;
+  const { isAuthenticated } = useAuth();
+  const donationCount = useQuery(api.donations.count);
+  const thank = useMutation(api.donations.thank);
+
+  function handleThank() {
+    if (done) return;
+    void thank()
+      .then(() => setDone(true))
+      .catch(() => toast.error("Gagal mencatat, coba lagi ya."));
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -92,6 +107,22 @@ export function DonateDialog({
               <Download className="size-4" />
               Simpan QRIS
             </a>
+          )}
+          {isAuthenticated && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={done}
+              onClick={handleThank}
+              className="gap-2"
+            >
+              <Heart className="size-4" />
+              {done
+                ? "Makasih ya!"
+                : donationCount === undefined
+                  ? "Udah Donasi"
+                  : `Udah Donasi • ${donationCount.toLocaleString("id-ID")} orang`}
+            </Button>
           )}
           <Button type="button" onClick={() => onOpenChange(false)}>
             Tutup

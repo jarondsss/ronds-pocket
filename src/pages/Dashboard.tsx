@@ -273,8 +273,8 @@ function Shell() {
               <div className="flex items-center gap-1.5">
                 <SaveBadge />
                 <NotificationBell />
-                <SupportActions />
                 <ThemeToggle />
+              </div>
               </div>
             </div>
             </header>
@@ -282,7 +282,6 @@ function Shell() {
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
             <NotificationBell />
-            <SupportActions />
             <ThemeToggle />
           </div>
 

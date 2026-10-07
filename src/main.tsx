@@ -19,7 +19,7 @@ import "./index.css";
 // Lazy load route components for better code splitting
 const Landing = lazy(() => import("./pages/Landing.tsx"));
 const AuthPage = lazy(() => import("./pages/Auth.tsx"));
-const Dashboard = lazy(() => import("./pages/Dashboard.tsx"));
+const Dashboard = lazy(() => import("./pages/Dashboard").then((m) => ({ default: (m as any).Dashboard ?? (m as any).default })));
 const Ledger = lazy(() => import("./pages/dashboard/Ledger.tsx"));
 const Transactions = lazy(() => import("./pages/dashboard/Transactions.tsx"));
 const Reports = lazy(() => import("./pages/dashboard/Reports.tsx"));

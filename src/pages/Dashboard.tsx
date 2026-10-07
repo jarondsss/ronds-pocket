@@ -252,31 +252,9 @@ function Shell() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      </div>
-
-      <BottomNav onAdd={openAdd} />
-
-      {bookId && (
-        <TransactionDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          bookId={bookId}
-          wallets={walletData?.wallets ?? []}
-          categories={categories ?? []}
-          session={session}
-        />
-      )}
-    </div>
-  );
-}
-      <div className="relative mx-auto flex w-full max-w-6xl gap-6 px-4 pb-28 pt-4 sm:px-6 lg:pb-10">          <aside className="hidden w-64 shrink-0 lg:block">
-            <div className="sticky top-6 flex flex-col gap-4">
-              <Brand />
-              <SidebarNav />
-              {authReady ? <UserMenu /> : <UserMenuSkeleton />}
-            </div>
-          </aside>
-
+      {/* Desktop layout */}
+      <div className="relative mx-auto flex w-full max-w-6xl gap-6 px-4 pb-28 pt-4 sm:px-6 lg:pb-10">
+        <aside className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-6 flex flex-col gap-4">
             <Brand />
             <SidebarNav />
@@ -294,7 +272,10 @@ function Shell() {
                 <ThemeToggle />
               </div>
             </div>
-            </header>
+            <div className="flex items-center justify-end gap-2 lg:hidden">
+              <SupportActions />
+            </div>
+          </header>
 
           <div className="mb-3 hidden items-center justify-end gap-2 lg:flex">
             <SaveBadge />
@@ -334,6 +315,8 @@ function Shell() {
         </main>
       </div>
 
+      {/* Mobile bottom navigation (di luar area konten utama agar selalu
+          tetap di bawah, bahkan saat halaman discroll). */}
       <BottomNav onAdd={openAdd} />
 
       {bookId && (
@@ -350,12 +333,12 @@ function Shell() {
   );
 }
 
-export default function Dashboard() {
+export function Dashboard() {
   return (
-    <BooksProvider>
-      <SaveStatusProvider>
+    <SaveStatusProvider>
+      <BooksProvider>
         <Shell />
-      </SaveStatusProvider>
-    </BooksProvider>
+      </BooksProvider>
+    </SaveStatusProvider>
   );
 }

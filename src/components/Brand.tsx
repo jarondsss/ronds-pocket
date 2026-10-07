@@ -14,7 +14,7 @@ export function Brand({ to = "/", compact = false, className }: BrandProps) {
   return (
     <Link
       to={to}
-      className={cn("group flex items-center gap-3", className)}
+      className={cn("relative group flex items-center gap-3", className)}
       aria-label="Ronds Pocket"
     >
       <span className="clay-sm grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl">

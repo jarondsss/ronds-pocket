@@ -1,26 +1,25 @@
-const logo = "/Logo.png";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router";
 
-/** Logo + wordmark for Ronds Pocket. */
-export function Brand({
-  to = "/",
-  compact = false,
-  className,
-}: {
+const LOGO_PNG = "/Logo.png";
+
+interface BrandProps {
   to?: string;
   compact?: boolean;
   className?: string;
-}) {
+}
+
+// Logo + wordmark untuk Ronds Pocket.
+export function Brand({ to = "/", compact = false, className }: BrandProps) {
   return (
     <Link
       to={to}
-      className={cn("group flex items-center gap-3", className)}
+      className={cn("relative group flex items-center gap-3", className)}
       aria-label="Ronds Pocket"
     >
       <span className="clay-sm grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl">
         <img
-          src={logo}
+          src={LOGO_PNG}
           alt=""
           width={44}
           height={44}

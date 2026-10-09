@@ -1,4 +1,13 @@
-.env.local
+# --- Rahasia: jangan pernah di-commit ---
+.env
+.env.*
+!.env.example
+# Kunci enkripsi dotenvx (pernah ikut ter-commit, lihat SECURITY.md)
+.env.keys
+.env.keys.backup
+*.pem
+*.key
+
 node_modules
 dist
 src/convex/_generated

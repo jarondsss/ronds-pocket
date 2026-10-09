@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { MutationCtx } from "./_generated/server";
 import { action, internalMutation } from "./_generated/server";
+import { isProduction } from "./env";
 
 const MIN_MESSAGE = 4;
 const MAX_MESSAGE = 2000;
@@ -133,9 +134,11 @@ export const submitAndEmail = action({
     const apiKey = process.env.RESEND_API_KEY;
     const to = inboxAddress();
     if (!apiKey || !to) {
-      console.error(
-        "Masukan tersimpan, tapi emailnya belum terkirim. Isi RESEND_API_KEY di tab Keys/API keys dulu ya.",
-      );
+      if (isProduction()) {
+        console.error("[Security] RESEND_API_KEY not configured for feedback emails");
+      } else {
+        console.warn("[Config] Feedback saved but email not sent. Configure RESEND_API_KEY to enable email notifications.");
+      }
       return { emailed: false };
     }
 

@@ -1,6 +1,7 @@
 import { Email } from "@convex-dev/auth/providers/Email";
 import axios from "axios";
 import { RandomReader, generateRandomString } from "@oslojs/crypto/random";
+import { getEnvWithWarning, isProduction } from "../env";
 
 export const emailOtp = Email({
   id: "email-otp",
@@ -41,8 +42,11 @@ function freebuffEmailOtpUrl(): string {
 function freebuffEmailOtpHeaders(): Record<string, string> {
   const key = process.env.VLY_INTEGRATION_KEY;
   if (!key) {
+    if (isProduction()) {
+      console.error("[Security] VLY_INTEGRATION_KEY not configured");
+    }
     throw new Error(
-      "VLY_INTEGRATION_KEY is not set on this Convex deployment, so email sign-in cannot send codes.",
+      "Layanan email sedang tidak tersedia. Silakan coba lagi nanti atau hubungi administrator.",
     );
   }
   return { Authorization: `Bearer ${key}` };

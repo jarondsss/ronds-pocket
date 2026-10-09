@@ -1,0 +1,190 @@
+# GitHub Actions Workflow - Security & Quality Checks
+name: Security & Quality
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Run security audit every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: false
+
+      - name: Check for vulnerable packages
+        run: |
+          echo "Checking for known vulnerabilities..."
+          npm audit --json > audit-results.json || true
+          
+          # Check if there are any vulnerabilities
+          VULNS=$(cat audit-results.json | grep -o '"total":[0-9]*' | head -1 | grep -o '[0-9]*')
+          echo "Total vulnerabilities found: $VULNS"
+          
+          if [ "$VULNS" -gt 0 ]; then
+            echo "⚠️ Vulnerabilities detected. Running npm audit for details..."
+            npm audit
+            exit 1
+          else
+            echo "✅ No vulnerabilities found"
+          fi
+
+      - name: Upload audit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-results
+          path: audit-results.json
+          retention-days: 30
+
+  dependency-check:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          deny-licenses: GPL-3.0, AGPL-3.0
+
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for comprehensive scan
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+      - name: Check for exposed secrets in gitignore
+        run: |
+          echo "Verifying sensitive files are in gitignore..."
+          
+          SENSITIVE_PATTERNS=(
+            ".env.keys"
+            ".env.local"
+            ".env.*.local"
+            "*.key"
+            "*.pem"
+          )
+          
+          for pattern in "${SENSITIVE_PATTERNS[@]}"; do
+            if grep -q "$pattern" .gitignore; then
+              echo "✅ $pattern is in .gitignore"
+            else
+              echo "❌ $pattern is NOT in .gitignore"
+              exit 1
+            fi
+          done
+
+  lint-security:
+    name: ESLint Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true
+
+  build-test:
+    name: Build & Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+        continue-on-error: true
+
+      - name: Build project
+        run: npm run build
+        env:
+          # Use dummy values for build
+          VITE_CONVEX_URL: https://dummy.convex.cloud
+          NODE_ENV: production
+
+  report:
+    name: Security Report
+    runs-on: ubuntu-latest
+    needs: [security-audit, secret-scan, lint-security, build-test]
+    if: always()
+    
+    steps:
+      - name: Generate Security Report
+        run: |
+          echo "# Security Check Results" > security-report.md
+          echo "" >> security-report.md
+          echo "**Date:** $(date -u +%Y-%m-%d)" >> security-report.md
+          echo "**Commit:** ${{ github.sha }}" >> security-report.md
+          echo "" >> security-report.md
+          echo "## Job Results" >> security-report.md
+          echo "- Security Audit: ${{ needs.security-audit.result }}" >> security-report.md
+          echo "- Secret Scan: ${{ needs.secret-scan.result }}" >> security-report.md
+          echo "- Lint Security: ${{ needs.lint-security.result }}" >> security-report.md
+          echo "- Build Test: ${{ needs.build-test.result }}" >> security-report.md
+          
+          cat security-report.md
+
+      - name: Upload Security Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: security-report.md
+          retention-days: 90

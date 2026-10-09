@@ -3,6 +3,7 @@ import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import { action, internalQuery } from "./_generated/server";
 import { requireMember } from "./books";
+import { isProduction } from "./env";
 
 /** Draft transaksi hasil racikan AI. Belum disimpan sampai user konfirmasi. */
 export interface AiDraft {
@@ -216,8 +217,11 @@ export const parseTransaction = action({
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
+      if (isProduction()) {
+        console.error("[Security] GEMINI_API_KEY not configured for AI features");
+      }
       throw new Error(
-        "Fitur AI belum aktif. Tambahkan GEMINI_API_KEY di tab Keys/API keys dulu ya.",
+        "Fitur AI sedang tidak tersedia. Silakan coba lagi nanti.",
       );
     }
 

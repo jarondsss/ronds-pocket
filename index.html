@@ -5,11 +5,13 @@
   <meta charset="UTF-8" />
 
   <link rel="manifest" href="/manifest.webmanifest" />
-  <!-- Ikon tab: SVG untuk browser modern, PNG sebagai cadangan (mis. Safari).
-       Tanpa baris ini browser meminta /favicon.ico dan hanya dapat halaman HTML. -->
+  <!-- Ikon tab: SVG untuk browser modern, PNG/ICO ringan (< 2 KB + 14 KB) sebagai
+       cadangan. Semua ditulis eksplisit supaya browser tidak jatuh ke /favicon.ico,
+       yang di domain ini mengembalikan halaman HTML. -->
   <link rel="icon" href="/logo.svg" type="image/svg+xml" />
-  <link rel="icon" href="/Logo.png" type="image/png" sizes="1254x1254" />
-  <link rel="apple-touch-icon" href="/Logo.png" />
+  <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"

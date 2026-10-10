@@ -1,4 +1,5 @@
 import { httpRouter } from "convex/server";
+import { httpAction } from "./_generated/server";
 import { auth } from "./auth";
 
 const http = httpRouter();
@@ -15,7 +16,7 @@ auth.addHttpRoutes(http);
 http.route({
   path: "/.well-known/security.txt",
   method: "GET",
-  handler: async () => {
+  handler: httpAction(async () => {
     return new Response(
       `Contact: jajangworj@gmail.com
 Expires: 2027-12-31T23:59:59.000Z
@@ -29,7 +30,7 @@ Preferred-Languages: id, en
         },
       }
     );
-  },
+  }),
 });
 
 export default http;

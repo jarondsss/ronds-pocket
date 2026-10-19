@@ -10,7 +10,13 @@ interface Summary {
   count: number;
 }
 
-export function SummaryHero({ summary }: { summary: Summary }) {
+export function SummaryHero({
+  summary,
+  periodLabel = "Sisa uang bulan ini",
+}: {
+  summary: Summary;
+  periodLabel?: string;
+}) {
   const positive = summary.balance >= 0;
   const total = summary.income + summary.expense;
   const usedPercent = total > 0 ? Math.round((summary.expense / total) * 100) : 0;
@@ -26,7 +32,7 @@ export function SummaryHero({ summary }: { summary: Summary }) {
         <div className="relative flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Sisa uang bulan ini
+              {periodLabel}
             </p>
             <p className="mt-2 bg-gradient-to-br from-[#8b7cff] to-[#5b4fe8] bg-clip-text font-display text-3xl font-extrabold leading-none text-transparent sm:text-4xl">
               {formatRupiah(summary.balance)}

@@ -1,6 +1,6 @@
 import { ClayLoader } from "@/components/ClayLoader";
 import { AiComposer } from "@/components/dashboard/AiComposer";
-import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
+import { DayNavigator } from "@/components/dashboard/DayNavigator";
 import {
   BillReminderDialog,
   type BillReminderSession,
@@ -32,7 +32,13 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { AiDraft } from "@/convex/ai";
 import { useBooks } from "@/lib/book-context";
-import { monthRange, toDateInput, toMonthKey } from "@/lib/format";
+import {
+  dayRange,
+  monthRange,
+  startOfDay,
+  toDateInput,
+  toMonthKey,
+} from "@/lib/format";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
@@ -104,7 +110,10 @@ const HOME_GRID: {
 
 export default function Ledger() {
   const { activeBook } = useBooks();
-  const [monthKey, setMonthKey] = useState(() => toMonthKey(Date.now()));
+  // Beranda mengikuti satu hari, bukan satu bulan. Snapshot "hari ini"
+  // dipakai untuk label dan tombol kembali ke hari berjalan.
+  const [day, setDay] = useState(() => startOfDay(Date.now()));
+  const [today] = useState(() => startOfDay(Date.now()));
   const [filter, setFilter] = useState<Filter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [session, setSession] = useState<EditorSession | null>(null);
@@ -135,7 +144,13 @@ export default function Ledger() {
   };
   const openNewBillReminder = () => openBillReminder(null);
 
-  const range = useMemo(() => monthRange(monthKey), [monthKey]);
+  const range = useMemo(() => dayRange(day), [day]);
+  // Anggaran tetap per bulan, walaupun daftar transaksi per hari.
+  const budgetRange = useMemo(
+    () => monthRange(toMonthKey(day)),
+    [day],
+  );
+  const isToday = day === today;
   const bookId = activeBook?._id;
 
   const summary = useQuery(
@@ -188,7 +203,7 @@ export default function Ledger() {
     setSession({
       key: sessionKey.current,
       mode,
-      today: toDateInput(Date.now()),
+      today: toDateInput(day),
       transaction,
       draft,
     });
@@ -268,17 +283,17 @@ export default function Ledger() {
         </div>
       </header>
 
-      <MonthNavigator monthKey={monthKey} onChange={setMonthKey} />
+      <DayNavigator day={day} onChange={setDay} />
 
       {summary === undefined ? (
         <div className="grid min-h-[24vh] place-items-center">
           <ClayLoader label="Memuat catatan..." />
         </div>
       ) : (
-        <SummaryHero summary={summary} />
+        <SummaryHero summary={summary} periodLabel="Sisa uang hari ini" />
       )}
 
-      {/* Daftar transaksi bulan ini */}
+      {/* Daftar transaksi hari ini */}
       <section className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-display text-base font-extrabold sm:text-lg">
@@ -341,15 +356,19 @@ export default function Ledger() {
               search
                 ? "Tidak ditemukan"
                 : filter === "all"
-                  ? "Bulan ini masih kosong"
+                  ? isToday
+                    ? "Hari ini masih kosong"
+                    : "Hari itu masih kosong"
                   : "Belum ada isinya"
             }
             emptyDescription={
               search
                 ? `Tidak ada catatan yang cocok dengan "${search}".`
                 : filter === "all"
-                  ? "Catat pengeluaran atau pemasukan pertamamu, nanti sisanya kami hitung."
-                  : "Coba ganti filternya atau pilih bulan lain ya."
+                  ? isToday
+                    ? "Catat pengeluaran atau pemasukan pertamamu, nanti sisanya kami hitung."
+                    : "Belum ada catatan di hari itu. Geser tanggal untuk lihat hari lain."
+                  : "Coba ganti filternya atau pilih hari lain ya."
             }
             onEmptyAction={!search && filter === "all" ? openNew : undefined}
           />
@@ -425,7 +444,7 @@ export default function Ledger() {
         ))}
       </section>
 
-      {bookId && <BudgetSnapshotCard bookId={bookId} range={range} />}
+      {bookId && <BudgetSnapshotCard bookId={bookId} range={budgetRange} />}
       {bookId && (
         <UpcomingBillRemindersCard
           bookId={bookId}

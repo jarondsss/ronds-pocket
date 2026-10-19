@@ -60,6 +60,27 @@ export function fromDateInput(value: string): number {
   return new Date(year, month - 1, day, 12, 0, 0, 0).getTime();
 }
 
+/** Local midnight (00:00) of the day that contains `ts`. */
+export function startOfDay(ts: number): number {
+  const d = new Date(ts);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+}
+
+/** First millisecond of the day containing `ts`, plus the next day's midnight. */
+export function dayRange(ts: number): { from: number; to: number } {
+  const d = new Date(ts);
+  return {
+    from: startOfDay(ts),
+    to: new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getTime(),
+  };
+}
+
+/** Midnight `delta` days away from the day containing `ts`. */
+export function shiftDay(ts: number, delta: number): number {
+  const d = new Date(ts);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + delta).getTime();
+}
+
 /** First and last millisecond of a month identified by `2026-09`. */
 export function monthRange(monthKey: string): { from: number; to: number } {
   const [year, month] = monthKey.split("-").map(Number);

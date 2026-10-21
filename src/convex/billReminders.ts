@@ -3,6 +3,7 @@ import { internalMutation, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import {
+  cleanTimestamp,
   displayNameOf,
   logActivity,
   notifyMembers,
@@ -10,6 +11,21 @@ import {
   requireOwnerOrCreator,
   rupiah,
 } from "./books";
+
+function cleanBillAmount(value: number) {
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error("Nominal harus lebih dari 0.");
+  }
+  return Math.floor(value);
+}
+
+/** Jangan sampai reminder disetel setahun sebelumnya atau bernilai aneh. */
+function cleanRemindDays(value: number) {
+  if (!Number.isFinite(value) || value < 0) {
+    throw new Error("Pengingat tidak valid.");
+  }
+  return Math.min(Math.round(value), 90);
+}
 
 export const list = query({
   args: { bookId: v.id("books") },
@@ -50,20 +66,17 @@ export const create = mutation({
     if (!title) {
       throw new Error("Judul reminder tidak boleh kosong.");
     }
-    if (args.amount <= 0) {
-      throw new Error("Nominal harus lebih dari 0.");
-    }
-    if (args.remind_days_before < 0) {
-      throw new Error("Pengingat tidak valid.");
-    }
+    const amount = cleanBillAmount(args.amount);
+    const remindDays = cleanRemindDays(args.remind_days_before);
+    const dueDate = cleanTimestamp(args.due_date, "Jatuh temponya");
 
     const reminderId = await ctx.db.insert("bill_reminders", {
       book_id: args.bookId,
       title: title.slice(0, 100),
-      amount: Math.floor(args.amount),
+      amount,
       category: (args.category ?? "").trim().slice(0, 40),
-      due_date: args.due_date,
-      remind_days_before: args.remind_days_before,
+      due_date: dueDate,
+      remind_days_before: remindDays,
       enabled: true,
       created_by: userId,
       created_at: Date.now(),
@@ -102,16 +115,12 @@ export const update = mutation({
     if (!title) {
       throw new Error("Judul reminder tidak boleh kosong.");
     }
-    if (args.amount <= 0) {
-      throw new Error("Nominal harus lebih dari 0.");
-    }
-
     await ctx.db.patch(args.id, {
       title: title.slice(0, 100),
-      amount: Math.floor(args.amount),
+      amount: cleanBillAmount(args.amount),
       category: (args.category ?? "").trim().slice(0, 40),
-      due_date: args.due_date,
-      remind_days_before: args.remind_days_before,
+      due_date: cleanTimestamp(args.due_date, "Jatuh temponya"),
+      remind_days_before: cleanRemindDays(args.remind_days_before),
     });
   },
 });

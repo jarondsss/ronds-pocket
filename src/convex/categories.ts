@@ -58,7 +58,7 @@ export const create = mutation({
       book_id: args.bookId,
       name: name.slice(0, 40),
       type: args.type,
-      color: args.color,
+      color: args.color.slice(0, 20),
       created_by: userId,
       created_at: Date.now(),
     });
@@ -94,7 +94,7 @@ export const update = mutation({
     });
     await ctx.db.patch(args.id, {
       name: name.slice(0, 40),
-      color: args.color,
+      color: args.color.slice(0, 20),
     });
   },
 });

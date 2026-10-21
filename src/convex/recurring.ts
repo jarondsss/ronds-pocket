@@ -3,6 +3,7 @@ import type { Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { internalMutation, mutation, query } from "./_generated/server";
 import {
+  cleanTimestamp,
   logActivity,
   notifyMembers,
   requireMember,
@@ -142,7 +143,7 @@ export const create = mutation({
       category: (args.category ?? "").trim().slice(0, 40),
       note: (args.note ?? "").trim().slice(0, 200),
       frequency: args.frequency,
-      next_due: args.next_due,
+      next_due: cleanTimestamp(args.next_due, "Jadwal berikutnya"),
       enabled: true,
       created_by: userId,
       created_at: Date.now(),
@@ -176,7 +177,7 @@ export const update = mutation({
       category: (args.category ?? "").trim().slice(0, 40),
       note: (args.note ?? "").trim().slice(0, 200),
       frequency: args.frequency,
-      next_due: args.next_due,
+      next_due: cleanTimestamp(args.next_due, "Jadwal berikutnya"),
       enabled: args.enabled,
     });
   },

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import {
+  cleanTimestamp,
   logActivity,
   notifyMembers,
   requireMember,
@@ -252,7 +253,7 @@ export const deposit = mutation({
       savings_id: args.id,
       type: "deposit",
       amount,
-      occurred_at: args.occurred_at,
+      occurred_at: cleanTimestamp(args.occurred_at),
       created_by: userId,
       created_at: Date.now(),
     });
@@ -310,7 +311,7 @@ export const withdraw = mutation({
       savings_id: args.id,
       type: "withdraw",
       amount,
-      occurred_at: args.occurred_at,
+      occurred_at: cleanTimestamp(args.occurred_at),
       created_by: userId,
       created_at: Date.now(),
     });

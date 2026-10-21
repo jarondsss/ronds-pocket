@@ -109,7 +109,10 @@ export const setAmount = mutation({
     if (!category) {
       throw new Error("Pilih kategorinya dulu ya.");
     }
-    const amount = Math.max(0, Math.round(args.amount));
+    if (!Number.isFinite(args.amount) || args.amount < 0) {
+      throw new Error("Nominal anggarannya sepertinya tidak valid.");
+    }
+    const amount = Math.round(args.amount);
 
     const existing = await ctx.db
       .query("budgets")
@@ -158,7 +161,7 @@ export const setAmount = mutation({
     });
     return await ctx.db.insert("budgets", {
       book_id: args.bookId,
-      category,
+      category: category.slice(0, 40),
       amount,
       updated_at: Date.now(),
     });

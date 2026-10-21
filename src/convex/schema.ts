@@ -295,7 +295,10 @@ const schema = defineSchema(
       contact: v.optional(v.string()),
       page: v.optional(v.string()), // halaman yang sedang dibuka saat menulis
       created_at: v.number(),
-    }).index("by_created", ["created_at"]),
+    })
+      .index("by_created", ["created_at"])
+      // Dipakai untuk pembatasan kiriman dan pembersihan saat akun dihapus.
+      .index("by_user", ["user_id"]),
 
     // Hitungan dukungan: user bilang "udah donasi" lewat modal.
     // Ini metrik semangat (social proof), BUKAN pencatatan pembayaran.

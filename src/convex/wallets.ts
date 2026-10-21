@@ -3,6 +3,7 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import {
+  cleanTimestamp,
   logActivity,
   notifyMembers,
   requireMember,
@@ -13,6 +14,19 @@ import {
 type Ctx = QueryCtx | MutationCtx;
 
 const MAX_AMOUNT = 1_000_000_000_000;
+
+/** Saldo awal boleh 0 atau minus (kartu kredit), tapi harus angka nyata. */
+function cleanOpeningBalance(value: number | undefined) {
+  const raw = value ?? 0;
+  if (!Number.isFinite(raw)) {
+    throw new Error("Saldo awalnya sepertinya tidak valid.");
+  }
+  const rounded = Math.round(raw);
+  if (Math.abs(rounded) > MAX_AMOUNT) {
+    throw new Error("Saldo awalnya kegedean. Cek lagi ya.");
+  }
+  return rounded;
+}
 
 function cleanAmount(amount: number) {
   if (!Number.isFinite(amount)) {
@@ -173,7 +187,7 @@ export const create = mutation({
     if (!name) {
       throw new Error("Nama dompetnya jangan dikosongkan ya.");
     }
-    const opening = Math.round(args.opening_balance ?? 0);
+    const opening = cleanOpeningBalance(args.opening_balance);
     await logActivity(ctx, {
       bookId: args.bookId,
       actorId: userId,
@@ -184,9 +198,9 @@ export const create = mutation({
     return await ctx.db.insert("wallets", {
       book_id: args.bookId,
       name: name.slice(0, 40),
-      type: args.type,
-      icon: args.icon,
-      color: args.color,
+      type: args.type.slice(0, 20),
+      icon: args.icon.slice(0, 8),
+      color: args.color.slice(0, 20),
       opening_balance: opening,
       created_by: userId,
       created_at: Date.now(),
@@ -226,10 +240,10 @@ export const update = mutation({
     });
     await ctx.db.patch(args.id, {
       name: name.slice(0, 40),
-      type: args.type,
-      icon: args.icon,
-      color: args.color,
-      opening_balance: Math.round(args.opening_balance ?? 0),
+      type: args.type.slice(0, 20),
+      icon: args.icon.slice(0, 8),
+      color: args.color.slice(0, 20),
+      opening_balance: cleanOpeningBalance(args.opening_balance),
     });
   },
 });
@@ -321,7 +335,7 @@ export const transfer = mutation({
       to_wallet_id: to,
       amount: amount,
       note: note.slice(0, 120),
-      occurred_at: args.occurred_at,
+      occurred_at: cleanTimestamp(args.occurred_at),
       created_by: userId,
       created_at: Date.now(),
     });

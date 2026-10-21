@@ -8,6 +8,10 @@ import { isProduction } from "./env";
 const MIN_MESSAGE = 4;
 const MAX_MESSAGE = 2000;
 const MAX_CONTACT = 120;
+// Tiap masukan mengirim satu email ke pemilik aplikasi, jadi dibatasi supaya
+// satu akun tidak bisa membanjiri kotak masuk dan kuota email.
+const MAX_PER_WINDOW = 5;
+const WINDOW_MS = 10 * 60 * 1000;
 
 const moodValidator = v.union(
   v.literal("senang"),
@@ -77,8 +81,21 @@ async function insertFeedback(
     throw new Error(`Masukan maksimal ${MAX_MESSAGE} huruf ya.`);
   }
 
-  const contact = args.contact?.trim().slice(0, MAX_CONTACT) || undefined;
   const created_at = Date.now();
+  const recent = await ctx.db
+    .query("feedback")
+    .withIndex("by_user", (q) => q.eq("user_id", userId))
+    .collect();
+  const inWindow = recent.filter(
+    (row) => created_at - row.created_at < WINDOW_MS,
+  ).length;
+  if (inWindow >= MAX_PER_WINDOW) {
+    throw new Error(
+      "Masukannya sudah banyak dalam waktu singkat. Coba lagi beberapa menit ya.",
+    );
+  }
+
+  const contact = args.contact?.trim().slice(0, MAX_CONTACT) || undefined;
 
   await ctx.db.insert("feedback", {
     user_id: userId,

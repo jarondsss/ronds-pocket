@@ -3,6 +3,8 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
 import {
+  assertUsersInBook,
+  cleanTimestamp,
   displayNameOf,
   logActivity,
   notifyMembers,
@@ -200,6 +202,15 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const { userId } = await requireMember(ctx, args.bookId);
     await assertWalletInBook(ctx, args.bookId, args.wallet_id);
+    // Pembagian tagihan hanya boleh menunjuk anggota kantong ini.
+    await assertUsersInBook(ctx, args.bookId, [args.paid_by, args.split_with]);
+    const amount = cleanAmount(args.amount);
+    const splitAmount = args.split_amount
+      ? cleanAmount(args.split_amount)
+      : undefined;
+    if (splitAmount !== undefined && splitAmount > amount) {
+      throw new Error("Bagian yang dibagi tidak boleh lebih besar dari totalnya.");
+    }
     await logActivity(ctx, {
       bookId: args.bookId,
       actorId: userId,
@@ -216,19 +227,19 @@ export const create = mutation({
       label: describeTransaction(args.category, args.note),
       detail: `${args.type === "income" ? "+" : "−"}${rupiah(args.amount)}`,
     });
-    const txId = await ctx.db.insert("transactions", {
+    const txId =    await ctx.db.insert("transactions", {
       book_id: args.bookId,
       wallet_id: args.wallet_id,
       type: args.type,
-      amount: cleanAmount(args.amount),
+      amount,
       category: (args.category ?? "").trim().slice(0, 40),
       note: (args.note ?? "").trim().slice(0, 200),
-      occurred_at: args.occurred_at,
+      occurred_at: cleanTimestamp(args.occurred_at),
       created_by: userId,
       created_at: Date.now(),
       paid_by: args.paid_by ?? userId,
       split_with: args.split_with,
-      split_amount: args.split_amount ? cleanAmount(args.split_amount) : undefined,
+      split_amount: splitAmount,
     });
 
     // Cek overspend: kalau transaksi ini expense dan ada anggaran untuk kategorinya,
@@ -321,6 +332,17 @@ export const update = mutation({
       existing.created_by,
     );
     await assertWalletInBook(ctx, existing.book_id, args.wallet_id);
+    await assertUsersInBook(ctx, existing.book_id, [
+      args.paid_by,
+      args.split_with,
+    ]);
+    const amount = cleanAmount(args.amount);
+    const splitAmount = args.split_amount
+      ? cleanAmount(args.split_amount)
+      : undefined;
+    if (splitAmount !== undefined && splitAmount > amount) {
+      throw new Error("Bagian yang dibagi tidak boleh lebih besar dari totalnya.");
+    }
     await logActivity(ctx, {
       bookId: existing.book_id,
       actorId: userId,
@@ -332,13 +354,13 @@ export const update = mutation({
     await ctx.db.patch(args.id, {
       wallet_id: args.wallet_id,
       type: args.type,
-      amount: cleanAmount(args.amount),
+      amount,
       category: (args.category ?? "").trim().slice(0, 40),
       note: (args.note ?? "").trim().slice(0, 200),
-      occurred_at: args.occurred_at,
+      occurred_at: cleanTimestamp(args.occurred_at),
       paid_by: args.paid_by,
       split_with: args.split_with,
-      split_amount: args.split_amount ? cleanAmount(args.split_amount) : undefined,
+      split_amount: splitAmount,
     });
   },
 });

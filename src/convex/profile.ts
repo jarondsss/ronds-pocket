@@ -138,10 +138,15 @@ async function deleteBookRows(
 
 /**
  * Hapus akun beserta seluruh data yang terkait:
- * - Buku yang dimiliki (dan seluruh isinya)
- * - Keanggotaan di buku orang lain
+ * - Buku yang dimiliki dan masih sendirian (beserta seluruh isinya)
+ * - Keanggotaan di buku orang lain (catatan mereka tetap utuh)
+ * - Masukan dan dukungan milik user ini
  * - Sesi auth
  * - Baris user itu sendiri
+ *
+ * Kalau buku yang dimiliki masih punya anggota lain, buku itu TIDAK dihapus:
+ * kepemilikannya dipindahkan ke anggota terlama supaya catatan partner tidak
+ * ikut hilang hanya karena pemilik menutup akun.
  */
 export const deleteAccount = mutation({
   args: {},
@@ -158,10 +163,26 @@ export const deleteAccount = mutation({
       .collect();
 
     for (const membership of memberships) {
-      if (membership.role === "owner") {
-        // Hapus seluruh isi buku yang dimiliki
-        const bookId = membership.book_id;
+      const bookId = membership.book_id;
+      const members = await ctx.db
+        .query("book_members")
+        .withIndex("by_book", (q) => q.eq("book_id", bookId))
+        .collect();
+      const others = members.filter((member) => member.user_id !== userId);
 
+      // Notifikasi untuk user ini di kantong tersebut ikut dibersihkan.
+      const inbox = await ctx.db
+        .query("notifications")
+        .withIndex("by_book_user", (q) =>
+          q.eq("book_id", bookId).eq("user_id", userId),
+        )
+        .collect();
+      for (const notif of inbox) {
+        await ctx.db.delete(notif._id);
+      }
+
+      // Buku hanya dihapus kalau pemiliknya pergi dan tidak ada anggota lain.
+      if (membership.role === "owner" && others.length === 0) {
         // Hapus savings_entries lebih dulu (FK ke savings)
         const savingsRows = await ctx.db
           .query("savings")
@@ -177,10 +198,6 @@ export const deleteAccount = mutation({
           }
         }
 
-        // Hapus invite_attempts per user pada buku ini (tidak punya index by_book,
-        // tapi jumlahnya kecil; skip untuk sekarang karena tabel invite_attempts
-        // per-user bukan per-book)
-
         await deleteBookRows(ctx, "transactions", bookId);
         await deleteBookRows(ctx, "transaction_comments", bookId);
         await deleteBookRows(ctx, "wallet_transfers", bookId);
@@ -192,11 +209,8 @@ export const deleteAccount = mutation({
         await deleteBookRows(ctx, "recurring_transactions", bookId);
         await deleteBookRows(ctx, "bill_reminders", bookId);
         await deleteBookRows(ctx, "activity", bookId);
-        // Notifications: tidak punya index by_book, jadi hapus per-member
-        const members = await ctx.db
-          .query("book_members")
-          .withIndex("by_book", (q) => q.eq("book_id", bookId))
-          .collect();
+        // Notifikasi anggota lain juga ikut dibersihkan sebelum bukunya hilang,
+        // supaya tidak ada baris yatim yang menunjuk ke buku yang sudah tiada.
         for (const member of members) {
           const notifs = await ctx.db
             .query("notifications")
@@ -212,19 +226,49 @@ export const deleteAccount = mutation({
         await deleteBookRows(ctx, "book_members", bookId);
 
         await ctx.db.delete(bookId);
-      } else {
-        // Partner: cukup hapus keanggotaan
-        await ctx.db.delete(membership._id);
+        continue;
       }
+
+      if (membership.role === "owner") {
+        // Pindahkan kepemilikan ke anggota terlama, lalu lepaskan keanggotaan
+        // user ini. Catatan partner tetap utuh dan tetap punya pemilik.
+        const heir = others.sort((a, b) =>
+          a.role === b.role
+            ? a._creationTime - b._creationTime
+            : a.role === "owner"
+              ? -1
+              : 1,
+        )[0];
+        await ctx.db.patch(heir._id, { role: "owner" });
+        await ctx.db.patch(bookId, { created_by: heir.user_id });
+      }
+
+      await ctx.db.delete(membership._id);
     }
 
-    // 2. Hapus invite_attempts milik user ini
+    // 2. Hapus data milik user ini yang menyimpan identitas/kontaknya.
     const attempts = await ctx.db
       .query("invite_attempts")
       .withIndex("by_user", (q) => q.eq("user_id", userId))
       .collect();
     for (const attempt of attempts) {
       await ctx.db.delete(attempt._id);
+    }
+
+    const feedbackRows = await ctx.db
+      .query("feedback")
+      .withIndex("by_user", (q) => q.eq("user_id", userId))
+      .collect();
+    for (const row of feedbackRows) {
+      await ctx.db.delete(row._id);
+    }
+
+    const supports = await ctx.db
+      .query("donations")
+      .withIndex("by_user", (q) => q.eq("user_id", userId))
+      .collect();
+    for (const row of supports) {
+      await ctx.db.delete(row._id);
     }
 
     // 3. Hapus sesi auth (tabel authSessions)

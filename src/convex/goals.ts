@@ -1,12 +1,20 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import {
+  cleanTimestamp,
   logActivity,
   notifyMembers,
   requireMember,
   requireOwnerOrCreator,
   rupiah,
 } from "./books";
+
+function cleanSaved(value: number) {
+  if (!Number.isFinite(value)) {
+    throw new Error("Nominal terkumpulnya sepertinya tidak valid.");
+  }
+  return Math.max(0, Math.round(value));
+}
 
 function cleanTarget(value: number) {
   if (!Number.isFinite(value)) {
@@ -66,8 +74,8 @@ export const create = mutation({
       book_id: args.bookId,
       name: name.slice(0, 60),
       target_amount: cleanTarget(args.target_amount),
-      saved_amount: Math.max(0, Math.round(args.saved_amount ?? 0)),
-      deadline: args.deadline,
+      saved_amount: cleanSaved(args.saved_amount ?? 0),
+      deadline: cleanTimestamp(args.deadline, "Tenggatnya"),
       created_by: userId,
       created_at: Date.now(),
     });
@@ -107,8 +115,8 @@ export const update = mutation({
     await ctx.db.patch(args.id, {
       name: name.slice(0, 60),
       target_amount: cleanTarget(args.target_amount),
-      deadline: args.deadline,
-      saved_amount: Math.max(0, Math.round(args.saved_amount)),
+      deadline: cleanTimestamp(args.deadline, "Tenggatnya"),
+      saved_amount: cleanSaved(args.saved_amount),
     });
   },
 });

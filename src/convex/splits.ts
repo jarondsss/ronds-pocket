@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { query } from "./_generated/server";
-import { requireMember } from "./books";
+import { displayNameOf, requireMember } from "./books";
 
 /**
  * Menghitung siapa yang harus bayar siapa dalam satu buku.
@@ -53,7 +53,7 @@ export const getBalance = query({
 
     return {
       partnerId,
-      partnerName: partnerUser?.name || "Partner",
+      partnerName: displayNameOf(partnerUser, "Partner"),
       partnerAvatar: partnerUser?.avatar || null,
       youOwe,
       theyOwe,

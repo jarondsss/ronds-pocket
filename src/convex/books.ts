@@ -14,6 +14,8 @@ const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // satu minggu
 const REDEEM_WINDOW_MS = 15 * 60 * 1000;
 const REDEEM_MAX_ATTEMPTS = 8;
 const NOTIFICATION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // satu bulan
+const EARLIEST_TIMESTAMP = Date.UTC(2000, 0, 1);
+const FURTHEST_AHEAD_MS = 10 * 365 * 24 * 60 * 60 * 1000; // 10 tahun ke depan
 
 /** Every request must resolve to a signed-in user. */
 export async function requireUserId(ctx: Ctx): Promise<Id<"users">> {
@@ -35,6 +37,41 @@ async function getMembership(
       q.eq("book_id", bookId).eq("user_id", userId),
     )
     .unique();
+}
+
+/**
+ * Pastikan id user yang dikirim klien memang anggota kantong ini.
+ *
+ * Dipakai untuk kolom yang menunjuk ke orang lain (misal `paid_by` dan
+ * `split_with` di transaksi). Tanpa cek ini, id user dari kantong lain bisa
+ * diselipkan ke catatan dan ikut terhitung di pembagian utang.
+ */
+export async function assertUsersInBook(
+  ctx: Ctx,
+  bookId: Id<"books">,
+  userIds: (Id<"users"> | undefined)[],
+) {
+  for (const userId of userIds) {
+    if (userId === undefined) continue;
+    const membership = await getMembership(ctx, bookId, userId);
+    if (membership === null) {
+      throw new Error("Orang yang dipilih bukan anggota kantong ini.");
+    }
+  }
+}
+
+/**
+ * Tanggal yang datang dari klien harus angka yang wajar. NaN/Infinity lolos
+ * `v.number()`, dan kalau tersimpan akan merusak urutan tanggal di beranda.
+ */
+export function cleanTimestamp(value: number, label = "Tanggalnya") {
+  if (!Number.isFinite(value)) {
+    throw new Error(`${label} sepertinya tidak valid.`);
+  }
+  if (value < EARLIEST_TIMESTAMP || value > Date.now() + FURTHEST_AHEAD_MS) {
+    throw new Error(`${label} di luar rentang yang wajar.`);
+  }
+  return Math.round(value);
 }
 
 /**

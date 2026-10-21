@@ -62,9 +62,9 @@ export function validateEnvironment() {
   ];
 
   const optionalButRecommended = [
-    { key: "VLY_INTEGRATION_KEY", feature: "email OTP" },
+    // Satu kunci ini dipakai untuk email OTP dan gateway AI transaksi.
+    { key: "VLY_INTEGRATION_KEY", feature: "email OTP & AI" },
     { key: "RESEND_API_KEY", feature: "feedback emails" },
-    { key: "GEMINI_API_KEY", feature: "AI features" },
   ];
 
   let hasErrors = false;

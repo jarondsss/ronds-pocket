@@ -240,6 +240,49 @@ export const create = mutation({
     if (splitAmount !== undefined && splitAmount > amount) {
       throw new Error("Bagian yang dibagi tidak boleh lebih besar dari totalnya.");
     }
+    
+    // Validasi: expense dari wallet harus cukup saldo (kecuali credit card)
+    // Note: Ini optional validation — user bisa pilih gak pake wallet
+    if (args.type === "expense" && args.wallet_id) {
+      // Import validateSufficientBalance dari wallets module
+      // Tapi karena circular dependency, gua compute inline aja
+      const wallet = await ctx.db.get(args.wallet_id);
+      if (wallet && wallet.type !== "credit") {
+        const allWallets = await ctx.db
+          .query("wallets")
+          .withIndex("by_book", (q) => q.eq("book_id", args.bookId))
+          .collect();
+        
+        // Compute current balance (simplified inline)
+        const transactions = await ctx.db
+          .query("transactions")
+          .withIndex("by_book", (q) => q.eq("book_id", args.bookId))
+          .collect();
+        const transfers = await ctx.db
+          .query("wallet_transfers")
+          .withIndex("by_book", (q) => q.eq("book_id", args.bookId))
+          .collect();
+        
+        let balance = wallet.opening_balance;
+        for (const tx of transactions) {
+          if (tx.wallet_id === args.wallet_id) {
+            balance += tx.type === "income" ? tx.amount : -tx.amount;
+          }
+        }
+        for (const move of transfers) {
+          if (move.from_wallet_id === args.wallet_id) balance -= move.amount;
+          if (move.to_wallet_id === args.wallet_id) balance += move.amount;
+        }
+        
+        if (balance < amount) {
+          const shortfall = amount - balance;
+          throw new Error(
+            `Saldo ${wallet.name} tidak cukup. Kurang ${rupiah(shortfall)}.`
+          );
+        }
+      }
+    }
+    
     await logActivity(ctx, {
       bookId: args.bookId,
       actorId: userId,

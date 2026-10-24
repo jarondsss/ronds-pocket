@@ -102,6 +102,40 @@ async function computeBalances(
   return balances;
 }
 
+/**
+ * Validasi saldo wallet sebelum transfer/expense.
+ * Kartu kredit boleh negatif, wallet lain harus cukup saldo.
+ */
+async function validateSufficientBalance(
+  ctx: Ctx,
+  bookId: Id<"books">,
+  walletId: Id<"wallets">,
+  amount: number,
+  operation: "expense" | "transfer",
+): Promise<void> {
+  const wallet = await ctx.db.get(walletId);
+  if (!wallet) return; // wallet sudah divalidasi di caller
+  
+  // Credit card boleh negatif
+  if (wallet.type === "credit") return;
+
+  // Hitung balance saat ini
+  const wallets = await ctx.db
+    .query("wallets")
+    .withIndex("by_book", (q) => q.eq("book_id", bookId))
+    .collect();
+  const balances = await computeBalances(ctx, bookId, wallets);
+  const currentBalance = balances.get(walletId) ?? wallet.opening_balance;
+
+  // Cek apakah saldo cukup
+  if (currentBalance < amount) {
+    const shortfall = amount - currentBalance;
+    throw new Error(
+      `Saldo ${wallet.name} tidak cukup. Kurang ${rupiah(shortfall)}.`
+    );
+  }
+}
+
 /** Semua dompet di kantong ini beserta saldonya, plus total saldo. */
 export const list = query({
   args: { bookId: v.id("books") },
@@ -299,6 +333,12 @@ export const transfer = mutation({
     if (to) await requireWalletInBook(ctx, args.bookId, to);
 
     const amount = cleanAmount(args.amount);
+    
+    // Validasi: cek saldo cukup kalau transfer dari wallet (bukan tambah saldo dari luar)
+    if (from) {
+      await validateSufficientBalance(ctx, args.bookId, from, amount, "transfer");
+    }
+    
     const note = (args.note ?? "").trim();
     const title = note || (from && to ? "Pindah antar dompet" : "Set saldo");
     const walletNames = new Map<string, string>();

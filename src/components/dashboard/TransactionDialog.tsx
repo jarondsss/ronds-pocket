@@ -424,7 +424,7 @@ export function TransactionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <SlideUpDialogContent className="transaction-sheet">
+      <SlideUpDialogContent className="max-h-[86dvh] overflow-y-auto">
         <TransactionForm
           key={active.key}
           session={active}

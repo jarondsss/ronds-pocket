@@ -225,17 +225,27 @@ export const remove = mutation({
 
 // ───────── Cron handler ─────────
 
+// Safety limits untuk mencegah DoS kalau cron down lama
+const MAX_BACKFILL_DAYS = 7; // max 1 minggu ke belakang
+const MAX_BACKFILL_COUNT = 50; // max 50 transaksi per template per run
+
 /**
  * Proses semua recurring_transactions yang sudah jatuh tempo (next_due <= now).
  * Dipanggil oleh cron setiap jam. Untuk setiap template yang due:
- *   1. Buat transaksi asli
+ *   1. Buat transaksi asli (dengan safety limits)
  *   2. Geser next_due ke periode berikutnya
  *   3. Ulangi kalau masih due (misal user baru buka app setelah lama)
+ *
+ * Safety guards:
+ * - Max 7 hari backfill (skip transaksi yang lebih lama)
+ * - Max 50 transaksi per template per run (prevent timeout)
  */
 export const processDue = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
+    const maxBackfillTime = now - MAX_BACKFILL_DAYS * 24 * 60 * 60 * 1000;
+    
     const dueTemplates = await ctx.db
       .query("recurring_transactions")
       .withIndex("by_next_due", (q) =>
@@ -243,11 +253,35 @@ export const processDue = internalMutation({
       )
       .collect();
 
+    let processedTemplates = 0;
+    let createdTransactions = 0;
+    let skippedOld = 0;
+    let skippedLimit = 0;
+    let oldestBackfillDays = 0;
+
     for (const template of dueTemplates) {
       let nextDue = template.next_due;
+      let txCount = 0;
+      let skippedInTemplate = 0;
+
+      // Safety: skip transaksi yang terlalu lama (> MAX_BACKFILL_DAYS)
+      if (nextDue < maxBackfillTime) {
+        // Lompat langsung ke periode yang masih dalam window
+        while (nextDue < maxBackfillTime) {
+          nextDue = advanceDue(nextDue, template.frequency);
+          skippedInTemplate++;
+        }
+        skippedOld += skippedInTemplate;
+      }
+
+      // Track oldest backfill untuk monitoring
+      const daysBehind = Math.floor((now - nextDue) / (24 * 60 * 60 * 1000));
+      if (daysBehind > oldestBackfillDays) {
+        oldestBackfillDays = daysBehind;
+      }
 
       // Buat transaksi untuk setiap periode yang terlewat (catch up)
-      while (nextDue <= now) {
+      while (nextDue <= now && txCount < MAX_BACKFILL_COUNT) {
         await ctx.db.insert("transactions", {
           book_id: template.book_id,
           wallet_id: template.wallet_id,
@@ -269,9 +303,30 @@ export const processDue = internalMutation({
         });
 
         nextDue = advanceDue(nextDue, template.frequency);
+        txCount++;
+        createdTransactions++;
+      }
+
+      // Safety: kalau masih ada yang due tapi udah mentok limit, lompat ke now
+      if (nextDue <= now && txCount >= MAX_BACKFILL_COUNT) {
+        while (nextDue <= now) {
+          nextDue = advanceDue(nextDue, template.frequency);
+          skippedLimit++;
+        }
       }
 
       await ctx.db.patch(template._id, { next_due: nextDue });
+      processedTemplates++;
     }
+
+    // Return stats untuk monitoring di Convex dashboard
+    return {
+      processed: processedTemplates,
+      created: createdTransactions,
+      skippedOld,
+      skippedLimit,
+      oldestBackfillDays,
+      timestamp: now,
+    };
   },
 });

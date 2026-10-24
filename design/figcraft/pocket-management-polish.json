@@ -1,0 +1,282 @@
+[
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "VariableID:21",
+      "ids": [
+        1983
+      ],
+      "field": "visible"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "characters": "Semua catatan di dalamnya juga sudah terhapus. Kantong yang tersisa sekarang aktif.",
+      "id": 2250
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "characters": "Satu-satunya kantong yang tersisa.",
+      "id": 2214
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2190,
+      "type": "text",
+      "name": "Kantong/Satu kantong/Nama",
+      "select": false,
+      "text": "Pribadi",
+      "props": {
+        "fontStyle": "Bold",
+        "fontSize": 16,
+        "fill": "#242034",
+        "lineHeight": "145%",
+        "textAutoResize": "height",
+        "fontFamily": "Plus Jakarta Sans"
+      },
+      "height": 24,
+      "width": 294,
+      "index": 2
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "characters": "Pribadi · kantong pribadi",
+      "id": 2207
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "characters": "",
+      "id": 2321
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "width": 64,
+      "id": 2324
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "id": 2348,
+      "characters": "Keluarkan",
+      "width": 64,
+      "fontSize": 10
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "width": 64,
+      "id": 2327
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "id": 2351,
+      "characters": "Keluarkan",
+      "width": 64,
+      "fontSize": 10
+    }
+  },
+  {
+    "command": "proto.interaction.clear",
+    "params": {
+      "ids": [
+        2352
+      ]
+    }
+  },
+  {
+    "command": "proto.interaction.add",
+    "params": {
+      "actions": [
+        {
+          "variable": "VariableID:13",
+          "value": "Keluarga",
+          "type": "setVariable"
+        },
+        {
+          "type": "conditional",
+          "blocks": [
+            {
+              "expression": "Peran kantong == \"Pemilik\"",
+              "actions": [
+                {
+                  "type": "conditional",
+                  "blocks": [
+                    {
+                      "expression": "Jumlah kantong == 1",
+                      "actions": [
+                        {
+                          "type": "swapOverlay",
+                          "dest": 2190
+                        }
+                      ]
+                    },
+                    {
+                      "actions": [
+                        {
+                          "type": "swapOverlay",
+                          "dest": 2188
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "actions": [
+                {
+                  "type": "swapOverlay",
+                  "dest": 2191
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "id": 2352
+    }
+  },
+  {
+    "command": "proto.interaction.clear",
+    "params": {
+      "ids": [
+        2353
+      ]
+    }
+  },
+  {
+    "command": "proto.interaction.add",
+    "params": {
+      "actions": [
+        {
+          "variable": "VariableID:13",
+          "value": "Pribadi",
+          "type": "setVariable"
+        },
+        {
+          "type": "conditional",
+          "blocks": [
+            {
+              "expression": "Jumlah kantong == 1",
+              "actions": [
+                {
+                  "type": "swapOverlay",
+                  "dest": 2190
+                }
+              ]
+            },
+            {
+              "actions": [
+                {
+                  "type": "swapOverlay",
+                  "dest": 2189
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "id": 2353
+    }
+  },
+  {
+    "command": "proto.interaction.clear",
+    "params": {
+      "ids": [
+        2238
+      ]
+    }
+  },
+  {
+    "command": "proto.interaction.add",
+    "params": {
+      "action": {
+        "type": "conditional",
+        "blocks": [
+          {
+            "expression": "Jumlah kantong == 1",
+            "actions": [
+              {
+                "type": "swapOverlay",
+                "dest": 2194
+              }
+            ]
+          },
+          {
+            "actions": [
+              {
+                "variable": "VariableID:16",
+                "value": 1,
+                "type": "setVariable"
+              },
+              {
+                "type": "conditional",
+                "blocks": [
+                  {
+                    "expression": "Kantong kelola == \"Keluarga\"",
+                    "actions": [
+                      {
+                        "variable": "VariableID:18",
+                        "value": false,
+                        "type": "setVariable"
+                      },
+                      {
+                        "variable": "VariableID:4",
+                        "value": "Pribadi",
+                        "type": "setVariable"
+                      },
+                      {
+                        "variable": "VariableID:6",
+                        "value": "Pribadi",
+                        "type": "setVariable"
+                      }
+                    ]
+                  },
+                  {
+                    "actions": [
+                      {
+                        "variable": "VariableID:21",
+                        "value": false,
+                        "type": "setVariable"
+                      },
+                      {
+                        "variable": "VariableID:4",
+                        "value": "Keluarga",
+                        "type": "setVariable"
+                      },
+                      {
+                        "variable": "VariableID:6",
+                        "value": "Keluarga",
+                        "type": "setVariable"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "swapOverlay",
+                "dest": 2196
+              }
+            ]
+          }
+        ]
+      },
+      "id": 2238
+    }
+  }
+]

@@ -1,0 +1,314 @@
+[
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 160,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 163
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 164,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 169
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 1883,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 1896
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 1884,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 1897
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 1885,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 1898
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 170,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 174
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 262,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 265
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 266,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 271
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 1890,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 1907
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 1891,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 1908
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 1892,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 1909
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "sizingV": "fixed",
+      "height": 48,
+      "crossAlign": "center",
+      "padding": 10,
+      "layout": "horizontal",
+      "gap": 6,
+      "width": 108,
+      "id": 272,
+      "sizingH": "fixed",
+      "mainAlign": "center"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "fontStyle": "SemiBold",
+      "lineHeight": "145%",
+      "fontFamily": "Plus Jakarta Sans",
+      "textAutoResize": "widthAndHeight",
+      "fontSize": 10,
+      "id": 276
+    }
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "command": "node.create",
+    "params": {
+      "name": "Profil · Slot ikon Feedback",
+      "height": 20,
+      "type": "frame",
+      "index": 0,
+      "select": false,
+      "props": {
+        "mainAlign": "center",
+        "padding": 0,
+        "sizingH": "fixed",
+        "gap": 0,
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "crossAlign": "center",
+        "fill": "transparent"
+      },
+      "width": 20,
+      "parent": 1939
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "name": "Profil · Slot ikon Donasi",
+      "height": 20,
+      "type": "frame",
+      "index": 0,
+      "select": false,
+      "props": {
+        "mainAlign": "center",
+        "padding": 0,
+        "sizingH": "fixed",
+        "gap": 0,
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "crossAlign": "center",
+        "fill": "transparent"
+      },
+      "width": 20,
+      "parent": 1941
+    }
+  }
+]

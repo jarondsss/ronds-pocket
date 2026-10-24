@@ -1,0 +1,11 @@
+[
+  {
+    "params": {
+      "modes": [
+        "Default"
+      ],
+      "name": "Profil Prototype"
+    },
+    "command": "variable.createCollection"
+  }
+]

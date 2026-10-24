@@ -1,0 +1,1182 @@
+[
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2188,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2188,
+      "type": "text",
+      "text": "Keluarga · kantong bersama",
+      "width": 294,
+      "name": "Kantong/Kelola Keluarga/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2188,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Edit",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2188,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Anggota",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 8
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2188,
+      "type": "text",
+      "text": "Hanya pemilik yang bisa mengeluarkan anggota.",
+      "width": 294,
+      "name": "Kantong/Kelola Keluarga/Aturan",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 11,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2188,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Hapus",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2188,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2189,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Pribadi/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2189,
+      "type": "text",
+      "text": "Pribadi · hanya lu yang punya akses",
+      "width": 294,
+      "name": "Kantong/Kelola Pribadi/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2189,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Pribadi/Edit",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2189,
+      "type": "text",
+      "text": "Pemilik: Rani",
+      "width": 294,
+      "name": "Kantong/Kelola Pribadi/Pemilik",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2189,
+      "type": "text",
+      "text": "Catatan di kantong ini hanya bisa dilihat pemiliknya.",
+      "width": 294,
+      "name": "Kantong/Kelola Pribadi/Privasi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2189,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Pribadi/Hapus",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2189,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Pribadi/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2190,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Satu kantong/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2190,
+      "type": "text",
+      "text": "Pribadi · satu-satunya kantong",
+      "width": 294,
+      "name": "Kantong/Satu kantong/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2190,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Satu kantong/Edit",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2190,
+      "type": "text",
+      "text": "Pemilik: Rani",
+      "width": 294,
+      "name": "Kantong/Satu kantong/Pemilik",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2190,
+      "width": 294,
+      "type": "frame",
+      "height": 80,
+      "name": "Kantong/Satu kantong/Lock",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 16,
+        "gap": 8,
+        "cornerRadius": 14
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2190,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Satu kantong/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2191,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Anggota/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2191,
+      "type": "text",
+      "text": "Keluarga · kantong bersama",
+      "width": 294,
+      "name": "Kantong/Anggota/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2191,
+      "width": 294,
+      "type": "frame",
+      "height": 56,
+      "name": "Kantong/Anggota/Rani",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 10
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2191,
+      "width": 294,
+      "type": "frame",
+      "height": 56,
+      "name": "Kantong/Anggota/Dimas",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 10
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2191,
+      "width": 294,
+      "type": "frame",
+      "height": 56,
+      "name": "Kantong/Anggota/Sinta",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 10
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2191,
+      "type": "text",
+      "text": "Hanya pemilik yang bisa mengubah nama, menghapus kantong, atau mengeluarkan anggota.",
+      "width": 294,
+      "name": "Kantong/Anggota/Izin",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2191,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Anggota/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2192,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Edit nama/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2192,
+      "type": "text",
+      "text": "Nama baru juga terlihat oleh anggota kantong.",
+      "width": 294,
+      "name": "Kantong/Edit nama/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2192,
+      "type": "text",
+      "text": "Nama kantong",
+      "width": 294,
+      "name": "Kantong/Edit nama/Label",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 11,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2192,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Edit nama/Input",
+      "props": {
+        "fill": "transparent",
+        "mainAlign": "center",
+        "layout": "vertical",
+        "sizingV": "fixed",
+        "padding": 16,
+        "gap": 8,
+        "cornerRadius": 14
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2192,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Edit nama/Simpan",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2192,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Edit nama/Batal",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2193,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Hapus/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2193,
+      "type": "text",
+      "text": "Periksa nama kantong sebelum melanjutkan.",
+      "width": 294,
+      "name": "Kantong/Hapus/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2193,
+      "type": "text",
+      "text": "Keluarga",
+      "width": 294,
+      "name": "Kantong/Hapus/Target",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 16,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Bold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2193,
+      "width": 294,
+      "type": "frame",
+      "height": 110,
+      "name": "Kantong/Hapus/Peringatan",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 16,
+        "gap": 8,
+        "cornerRadius": 14
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2193,
+      "type": "text",
+      "text": "Pada kantong bersama, seluruh anggota juga kehilangan akses ke kantong dan catatannya.",
+      "width": 294,
+      "name": "Kantong/Hapus/Bersama",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2193,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Hapus/Batal",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2193,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Hapus/Konfirmasi",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2194,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Hapus terkunci/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2194,
+      "type": "text",
+      "text": "Ini satu-satunya kantong yang tersisa.",
+      "width": 294,
+      "name": "Kantong/Hapus terkunci/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2194,
+      "width": 294,
+      "type": "frame",
+      "height": 90,
+      "name": "Kantong/Hapus terkunci/Alasan",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 16,
+        "gap": 8,
+        "cornerRadius": 14
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2194,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Hapus terkunci/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2195,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Keluarkan anggota/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2195,
+      "type": "text",
+      "text": "Anggota berikut akan kehilangan akses ke kantong Keluarga.",
+      "width": 294,
+      "name": "Kantong/Keluarkan anggota/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2195,
+      "type": "text",
+      "text": "Dimas",
+      "width": 294,
+      "name": "Kantong/Keluarkan anggota/Target",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 16,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Bold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2195,
+      "type": "text",
+      "text": "Catatan yang sudah dibuat tetap tersimpan di kantong ini. Yang dihapus hanya akses anggotanya.",
+      "width": 294,
+      "name": "Kantong/Keluarkan anggota/Dampak",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2195,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Keluarkan anggota/Batal",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2195,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Keluarkan anggota/Konfirmasi",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2196,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Hapus sukses/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2196,
+      "type": "text",
+      "text": "Semua catatan di dalamnya juga sudah terhapus. Kantong Pribadi sekarang aktif.",
+      "width": 294,
+      "name": "Kantong/Hapus sukses/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2196,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Hapus sukses/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2197,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Anggota dikeluarkan/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2197,
+      "type": "text",
+      "text": "Anggota tersebut tidak lagi bisa membuka kantong Keluarga. Catatannya tetap tersimpan.",
+      "width": 294,
+      "name": "Kantong/Anggota dikeluarkan/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2197,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Anggota dikeluarkan/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2198,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Nama disimpan/Header",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "hug",
+        "padding": 0,
+        "gap": 12
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2198,
+      "type": "text",
+      "text": "Nama baru akan terlihat oleh seluruh anggota kantong.",
+      "width": 294,
+      "name": "Kantong/Nama disimpan/Deskripsi",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 12,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2198,
+      "width": 294,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Nama disimpan/Kembali",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  }
+]

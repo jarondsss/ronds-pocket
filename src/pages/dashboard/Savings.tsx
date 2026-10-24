@@ -1,5 +1,8 @@
 import { BackToHome } from "@/components/BackToHome";
-import { SavingsDialog, type SavingsSession } from "@/components/dashboard/SavingsDialog";
+import {
+  SavingsDialog,
+  type SavingsSession,
+} from "@/components/dashboard/SavingsDialog";
 import { SegmentedChips } from "@/components/dashboard/ChoiceChips";
 import { DatePicker } from "@/components/dashboard/DatePicker";
 import { RupiahInput } from "@/components/RupiahInput";
@@ -323,23 +326,32 @@ export default function Savings() {
         </div>
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="clay-sm p-4">
+          <div className="rounded-[1.6rem] bg-card p-5 sm:p-6">
+            <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                 Total tabungan
               </p>
-              <p className="mt-1 font-display text-xl font-extrabold">
+              <p className="mt-1 font-display text-3xl font-extrabold">
                 {formatRupiah(data.total)}
               </p>
             </div>
-            <div className="clay-sm p-4">
-              <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                <TrendingUp className="size-3.5 text-income" />
-                Potensi bunga setahun
-              </p>
-              <p className="mt-1 font-display text-xl font-extrabold text-income">
-                {formatRupiah(data.potentialInterest)}
-              </p>
+            <div className="mt-5 grid grid-cols-2 gap-4 border-t border-border pt-4">
+              <div>
+                <p className="text-[11px] font-bold text-muted-foreground">
+                  Potensi bunga setahun
+                </p>
+                <p className="mt-1 font-display text-lg font-extrabold text-income">
+                  {formatRupiah(data.potentialInterest)}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] font-bold text-muted-foreground">
+                  Proyeksi setahun
+                </p>
+                <p className="mt-1 font-display text-lg font-extrabold">
+                  {formatRupiah(data.total + data.potentialInterest)}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -366,12 +378,10 @@ export default function Savings() {
                         <span className="rounded-full bg-primary/12 px-2 py-0.5 text-[10px] font-bold text-primary">
                           {kind.label}
                         </span>
-                        {account.interest_rate > 0 && (
-                          <span className="flex items-center gap-1">
-                            <TrendingUp className="size-3" />
-                            {account.interest_rate}% / tahun
-                          </span>
-                        )}
+                        <span className="flex items-center gap-1 font-bold text-income">
+                          <TrendingUp className="size-3" />
+                          {account.interest_rate}% / tahun
+                        </span>
                       </span>
                     </span>
                   </div>
@@ -393,11 +403,9 @@ export default function Savings() {
                         {formatShortDate(account.started_at)}
                       </span>
                     </div>
-                    {account.yearlyInterest > 0 && (
-                      <p className="mt-2 text-xs font-semibold text-income">
-                        Setahun lagi jadi {formatRupiah(account.projected)}
-                      </p>
-                    )}
+                    <p className="mt-2 text-xs font-semibold text-income">
+                      Proyeksi setahun {formatRupiah(account.projected)}
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -454,18 +462,14 @@ export default function Savings() {
         open={formOpen}
         onOpenChange={setFormOpen}
         bookId={bookId}
-        session={
-          formSession ?? { key: 0, account: null, today: "" }
-        }
+        session={formSession ?? { key: 0, account: null, today: "" }}
       />
       <MoveDialog
         open={moving !== null}
         onOpenChange={(open) => {
           if (!open) setMoving(null);
         }}
-        session={
-          moveSession ?? { key: 0, direction: "deposit", today: "" }
-        }
+        session={moveSession ?? { key: 0, direction: "deposit", today: "" }}
         account={moving}
       />
       <HistoryDialog

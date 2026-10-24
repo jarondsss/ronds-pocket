@@ -1,0 +1,166 @@
+[
+  {
+    "command": "variable.create",
+    "params": {
+      "value": "Keluarga",
+      "collection": "Profil Prototype",
+      "name": "Kantong kelola",
+      "type": "string"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "value": "Dimas",
+      "collection": "Profil Prototype",
+      "name": "Anggota target",
+      "type": "string"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "value": "3 anggota",
+      "collection": "Profil Prototype",
+      "name": "Anggota ringkasan",
+      "type": "string"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "value": 2,
+      "collection": "Profil Prototype",
+      "name": "Jumlah kantong",
+      "type": "number"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "value": 3,
+      "collection": "Profil Prototype",
+      "name": "Jumlah anggota",
+      "type": "number"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "value": true,
+      "collection": "Profil Prototype",
+      "name": "Keluarga tersedia",
+      "type": "boolean"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "value": true,
+      "collection": "Profil Prototype",
+      "name": "Dimas tersedia",
+      "type": "boolean"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "value": true,
+      "collection": "Profil Prototype",
+      "name": "Sinta tersedia",
+      "type": "boolean"
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "padding": 10,
+      "gap": 6,
+      "id": 1982,
+      "height": 64
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "id": 2065,
+      "width": 198
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "width": 20,
+      "id": 2066,
+      "textAlign": "center"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 1982,
+      "width": 44,
+      "type": "frame",
+      "height": 44,
+      "name": "Kantong/Kelola Keluarga trigger",
+      "props": {
+        "cornerRadius": 12,
+        "mainAlign": "center",
+        "sizingH": "fixed",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "fill": "#FFFFFF",
+        "padding": 0,
+        "gap": 0,
+        "crossAlign": "center"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "padding": 10,
+      "gap": 6,
+      "id": 1983,
+      "height": 64
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "id": 2067,
+      "width": 198
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "width": 20,
+      "id": 2068,
+      "textAlign": "center"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 1983,
+      "width": 44,
+      "type": "frame",
+      "height": 44,
+      "name": "Kantong/Kelola Pribadi trigger",
+      "props": {
+        "cornerRadius": 12,
+        "mainAlign": "center",
+        "sizingH": "fixed",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "fill": "#FFFFFF",
+        "padding": 0,
+        "gap": 0,
+        "crossAlign": "center"
+      }
+    }
+  }
+]

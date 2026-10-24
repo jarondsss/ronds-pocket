@@ -1,0 +1,734 @@
+[
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2049,
+      "width": 44,
+      "name": "Modal Profil/Nama/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Rani",
+      "select": false,
+      "parent": 2051,
+      "width": 262,
+      "name": "Modal Profil/Nama/Nama/Input/Value",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2055,
+      "width": 44,
+      "name": "Modal Profil/Tema/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2064,
+      "width": 44,
+      "name": "Modal Profil/Kantong/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2071,
+      "width": 44,
+      "name": "Modal Profil/Bantuan/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2075,
+      "width": 44,
+      "name": "Modal Profil/Feedback/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Suka",
+      "select": false,
+      "parent": 2076,
+      "width": 90,
+      "name": "Modal Profil/Feedback/Suasana/Suka/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Lumayan",
+      "select": false,
+      "parent": 2077,
+      "width": 90,
+      "name": "Modal Profil/Feedback/Suasana/Lumayan/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Ada masalah",
+      "select": false,
+      "parent": 2078,
+      "width": 90,
+      "name": "Modal Profil/Feedback/Suasana/Masalah/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Tulis ceritamu di sini…",
+      "select": false,
+      "parent": 2080,
+      "width": 262,
+      "name": "Modal Profil/Feedback/Pesan/Input/Value",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Email atau nomor WhatsApp",
+      "select": false,
+      "parent": 2082,
+      "width": 262,
+      "name": "Modal Profil/Feedback/Kontak/Input/Value",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2086,
+      "width": 44,
+      "name": "Modal Profil/Donasi/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2090,
+      "width": 44,
+      "name": "Modal Profil/Keluar/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2094,
+      "width": 44,
+      "name": "Modal Profil/Hapus/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2099,
+      "width": 44,
+      "name": "Modal Profil/Fitur/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2117,
+      "width": 44,
+      "name": "Modal Profil/Avatar/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2120,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Rubah"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2120,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Panda"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2120,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Koala"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2120,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Macan"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2121,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Singa"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2121,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Katak"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2121,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Gurita"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2121,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Burung hantu"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2122,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Penguin"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2122,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Kura-kura"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2122,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Lebah"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2122,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Kelinci"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2123,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Babi"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2123,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Monyet"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2123,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Paus"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 64,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 56,
+      "parent": 2123,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Dino"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2127,
+      "width": 44,
+      "name": "Modal Profil/Feedback sukses/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2130,
+      "width": 44,
+      "name": "Modal Profil/Donasi sukses/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "×",
+      "select": false,
+      "parent": 2133,
+      "width": 44,
+      "name": "Modal Profil/Simpan sukses/Header/Tutup/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  }
+]

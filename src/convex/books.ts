@@ -107,7 +107,9 @@ export async function requireOwnerOrCreator(
   const { userId, role } = await requireMember(ctx, bookId);
   if (role === "owner") return { userId, role };
   if (createdBy !== undefined && createdBy === userId) return { userId, role };
-  throw new Error("Ini punya orang lain, jadi cuma pembuatnya yang boleh diubah.");
+  throw new Error(
+    "Ini punya orang lain, jadi cuma pembuatnya yang boleh diubah.",
+  );
 }
 
 /** Angka acak yang diacak dari sumber kriptografis bila tersedia. */
@@ -374,7 +376,9 @@ export const invites = query({
 
     const now = Date.now();
     return rows
-      .filter((row) => row.accepted_by === undefined && row.revoked_at === undefined)
+      .filter(
+        (row) => row.accepted_by === undefined && row.revoked_at === undefined,
+      )
       .sort((a, b) => b.created_at - a.created_at)
       .map((row) => ({
         _id: row._id,
@@ -431,6 +435,54 @@ export const rename = mutation({
       label: clean.slice(0, 60),
     });
     await ctx.db.patch(bookId, { name: clean.slice(0, 60) });
+  },
+});
+
+/** Hapus kantong beserta semua catatan terkait. Pemilik harus punya kantong lain. */
+export const remove = mutation({
+  args: { bookId: v.id("books") },
+  handler: async (ctx, { bookId }) => {
+    const userId = await requireOwner(ctx, bookId);
+    const mine = await ctx.db
+      .query("book_members")
+      .withIndex("by_user", (q) => q.eq("user_id", userId))
+      .collect();
+    if (mine.length <= 1) {
+      throw new Error(
+        "Kantong terakhir tidak bisa dihapus. Buat kantong lain dulu.",
+      );
+    }
+    const tables = [
+      "transactions",
+      "transaction_comments",
+      "wallet_transfers",
+      "wallets",
+      "categories",
+      "budgets",
+      "goals",
+      "savings_entries",
+      "savings",
+      "liabilities",
+      "recurring_transactions",
+      "bill_reminders",
+      "activity",
+      "invites",
+      "book_members",
+    ] as const;
+    for (const table of tables) {
+      const rows = await ctx.db
+        .query(table)
+        .withIndex("by_book", (q) => q.eq("book_id", bookId))
+        .collect();
+      for (const row of rows) await ctx.db.delete(row._id);
+    }
+    const notifications = await ctx.db
+      .query("notifications")
+      .withIndex("by_book_user", (q) => q.eq("book_id", bookId))
+      .collect();
+    for (const notification of notifications)
+      await ctx.db.delete(notification._id);
+    await ctx.db.delete(bookId);
   },
 });
 
@@ -493,7 +545,11 @@ export const revokeInvite = mutation({
 });
 
 /** Buang percobaan lama milik seorang user, kembalikan sisa yang masih dihitung. */
-async function countRecentAttempts(ctx: MutationCtx, userId: Id<"users">, now: number) {
+async function countRecentAttempts(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+  now: number,
+) {
   const rows = await ctx.db
     .query("invite_attempts")
     .withIndex("by_user", (q) => q.eq("user_id", userId))
@@ -525,7 +581,9 @@ export const redeemInvite = mutation({
 
     const now = Date.now();
     if ((await countRecentAttempts(ctx, userId, now)) >= REDEEM_MAX_ATTEMPTS) {
-      throw new Error("Terlalu banyak percobaan. Tunggu 15 menit lalu coba lagi ya.");
+      throw new Error(
+        "Terlalu banyak percobaan. Tunggu 15 menit lalu coba lagi ya.",
+      );
     }
 
     const fail = async (message: string): Promise<never> => {
@@ -544,7 +602,9 @@ export const redeemInvite = mutation({
       return await fail("Kode undangannya sudah dicabut oleh pemiliknya.");
     }
     if (invite.expires_at !== undefined && invite.expires_at < now) {
-      return await fail("Kode undangannya sudah kedaluwarsa. Minta kode baru ya.");
+      return await fail(
+        "Kode undangannya sudah kedaluwarsa. Minta kode baru ya.",
+      );
     }
     if (invite.accepted_by !== undefined) {
       return await fail("Kode ini sudah dipakai orang lain.");
@@ -578,7 +638,9 @@ export const leaveBook = mutation({
   handler: async (ctx, { bookId }) => {
     const { userId, role } = await requireMember(ctx, bookId);
     if (role === "owner") {
-      throw new Error("Pemilik nggak bisa keluar sendiri. Minta pemilik lainnya ya.");
+      throw new Error(
+        "Pemilik nggak bisa keluar sendiri. Minta pemilik lainnya ya.",
+      );
     }
     const membership = await getMembership(ctx, bookId, userId);
     if (membership === null) return null;

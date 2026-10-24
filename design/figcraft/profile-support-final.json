@@ -1,0 +1,18 @@
+[
+  {
+    "command": "node.set",
+    "params": {
+      "width": 8,
+      "height": 12,
+      "id": 1944
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "width": 8,
+      "height": 12,
+      "id": 1947
+    }
+  }
+]

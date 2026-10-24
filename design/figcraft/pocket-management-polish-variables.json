@@ -1,0 +1,20 @@
+[
+  {
+    "command": "variable.create",
+    "params": {
+      "collection": "Profil Prototype",
+      "value": true,
+      "type": "boolean",
+      "name": "Pribadi tersedia"
+    }
+  },
+  {
+    "command": "variable.create",
+    "params": {
+      "collection": "Profil Prototype",
+      "value": "Pemilik",
+      "type": "string",
+      "name": "Peran kantong"
+    }
+  }
+]

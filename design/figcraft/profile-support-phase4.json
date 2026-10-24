@@ -1,0 +1,136 @@
+[
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1943,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontSize": 13,
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fill": "#242034",
+        "fontFamily": "Plus Jakarta Sans"
+      },
+      "name": "Profil · Label Feedback",
+      "height": 20,
+      "width": 242,
+      "type": "text",
+      "select": false,
+      "text": "Kirim masukan"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1943,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontSize": 10,
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fill": "#696378",
+        "fontFamily": "Plus Jakarta Sans"
+      },
+      "name": "Profil · Deskripsi Feedback",
+      "height": 20,
+      "width": 242,
+      "type": "text",
+      "select": false,
+      "text": "Bantu kami memperbaiki Ronds Pocket"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1942
+      ],
+      "field": "stroke",
+      "variable": "Light/primary"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1944
+      ],
+      "field": "stroke",
+      "variable": "Light/muted"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1946,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontSize": 13,
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fill": "#242034",
+        "fontFamily": "Plus Jakarta Sans"
+      },
+      "name": "Profil · Label Donasi",
+      "height": 20,
+      "width": 242,
+      "type": "text",
+      "select": false,
+      "text": "Donasi"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1946,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontSize": 10,
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fill": "#696378",
+        "fontFamily": "Plus Jakarta Sans"
+      },
+      "name": "Profil · Deskripsi Donasi",
+      "height": 20,
+      "width": 242,
+      "type": "text",
+      "select": false,
+      "text": "Dukung pengembangan lewat QRIS"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1945
+      ],
+      "field": "stroke",
+      "variable": "Light/primary"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1947
+      ],
+      "field": "stroke",
+      "variable": "Light/muted"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1940
+      ],
+      "field": "fill",
+      "variable": "Light/border"
+    }
+  }
+]

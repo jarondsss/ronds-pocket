@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { BookManagement } from "@/components/dashboard/BookManagement";
 import {
   Dialog,
   DialogDescription,
@@ -55,13 +56,20 @@ function BookItem({
   );
 }
 
-export function BookSwitcher({ className }: { className?: string }) {
+export function BookSwitcher({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
   const { books, activeBook, setActiveBookId } = useBooks();
   const createBook = useMutation(api.books.create);
   const save = useSaveTracker();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [managing, setManaging] = useState(false);
 
   // Kantong yang sudah diundang orang lain dikelompokkan terpisah, biar jelas
   // mana yang punyamu sendiri dan mana yang dipakai bareng.
@@ -95,28 +103,41 @@ export function BookSwitcher({ className }: { className?: string }) {
           <button
             type="button"
             className={cn(
-              "clay-sm clay-press flex w-full items-center gap-2.5 px-3 py-2.5 text-left",
+              compact
+                ? "grid size-11 place-items-center rounded-2xl bg-card text-primary"
+                : "clay-sm clay-press flex w-full items-center gap-2.5 px-3 py-2.5 text-left",
               className,
             )}
+            aria-label={
+              compact
+                ? `Ganti kantong: ${activeBook?.name ?? "memuat"}`
+                : undefined
+            }
           >
-            <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/12 text-sm font-black text-primary">
-              {activeBook ? activeBook.name.charAt(0).toUpperCase() : "?"}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-bold">
-                {activeBook?.name ?? "Memuat kantong..."}
-              </span>
-              <span className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground">
-                {activeBook && activeBook.memberCount > 1
-                  ? "Kantong bersama"
-                  : activeBook?.role === "owner"
-                    ? "Pemilik"
-                    : "Teman"}
-                <Users className="size-3" />
-                {activeBook?.memberCount ?? 1}
-              </span>
-            </span>
-            <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
+            {compact ? (
+              <ChevronDown className="size-5" />
+            ) : (
+              <>
+                <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/12 text-sm font-black text-primary">
+                  {activeBook ? activeBook.name.charAt(0).toUpperCase() : "?"}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-bold">
+                    {activeBook?.name ?? "Memuat kantong..."}
+                  </span>
+                  <span className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground">
+                    {activeBook && activeBook.memberCount > 1
+                      ? "Kantong bersama"
+                      : activeBook?.role === "owner"
+                        ? "Pemilik"
+                        : "Teman"}
+                    <Users className="size-3" />
+                    {activeBook?.memberCount ?? 1}
+                  </span>
+                </span>
+                <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
+              </>
+            )}
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64">
@@ -169,6 +190,13 @@ export function BookSwitcher({ className }: { className?: string }) {
             <Plus className="size-4" />
             Kantong baru
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => setManaging(true)}
+            className="gap-2 font-semibold"
+          >
+            <Users className="size-4" />
+            Kelola kantong
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -214,6 +242,7 @@ export function BookSwitcher({ className }: { className?: string }) {
           </DialogFooter>
         </SlideUpDialogContent>
       </Dialog>
+      <BookManagement open={managing} onOpenChange={setManaging} />
     </>
   );
 }

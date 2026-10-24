@@ -1,0 +1,1770 @@
+[
+  {
+    "params": {
+      "text": "Nama tampilan",
+      "select": false,
+      "parent": 1967,
+      "width": 238,
+      "name": "Modal Profil/Nama/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1967,
+      "name": "Modal Profil/Nama/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Nama tampilan",
+      "select": false,
+      "parent": 1969,
+      "width": 294,
+      "name": "Modal Profil/Nama/Nama/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 11
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 294,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 14,
+        "mainAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 16,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1969,
+      "name": "Modal Profil/Nama/Nama/Input"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Simpan nama",
+      "select": false,
+      "parent": 1971,
+      "width": 294,
+      "name": "Modal Profil/Nama/Simpan/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Batal",
+      "select": false,
+      "parent": 1972,
+      "width": 294,
+      "name": "Modal Profil/Nama/Batal/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih tampilan",
+      "select": false,
+      "parent": 1973,
+      "width": 238,
+      "name": "Modal Profil/Tema/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1973,
+      "name": "Modal Profil/Tema/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Ikuti perangkat",
+      "select": false,
+      "parent": 1975,
+      "width": 230,
+      "name": "Modal Profil/Tema/Sistem/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Dipilih",
+      "select": false,
+      "parent": 1975,
+      "width": 40,
+      "name": "Modal Profil/Tema/Sistem/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Terang",
+      "select": false,
+      "parent": 1976,
+      "width": 230,
+      "name": "Modal Profil/Tema/Terang/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 1976,
+      "width": 40,
+      "name": "Modal Profil/Tema/Terang/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Gelap",
+      "select": false,
+      "parent": 1977,
+      "width": 230,
+      "name": "Modal Profil/Tema/Gelap/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 1977,
+      "width": 40,
+      "name": "Modal Profil/Tema/Gelap/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Simpan tampilan",
+      "select": false,
+      "parent": 1979,
+      "width": 294,
+      "name": "Modal Profil/Tema/Simpan/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Ganti kantong",
+      "select": false,
+      "parent": 1980,
+      "width": 238,
+      "name": "Modal Profil/Kantong/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1980,
+      "name": "Modal Profil/Kantong/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Keluarga",
+      "select": false,
+      "parent": 1982,
+      "width": 230,
+      "name": "Modal Profil/Kantong/Keluarga/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Dipilih",
+      "select": false,
+      "parent": 1982,
+      "width": 40,
+      "name": "Modal Profil/Kantong/Keluarga/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pribadi",
+      "select": false,
+      "parent": 1983,
+      "width": 230,
+      "name": "Modal Profil/Kantong/Pribadi/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 1983,
+      "width": 40,
+      "name": "Modal Profil/Kantong/Pribadi/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Gunakan kantong",
+      "select": false,
+      "parent": 1985,
+      "width": 294,
+      "name": "Modal Profil/Kantong/Simpan/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Bantuan",
+      "select": false,
+      "parent": 1986,
+      "width": 238,
+      "name": "Modal Profil/Bantuan/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1986,
+      "name": "Modal Profil/Bantuan/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Kirim masukan",
+      "select": false,
+      "parent": 1994,
+      "width": 294,
+      "name": "Modal Profil/Bantuan/Feedback/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Mengerti",
+      "select": false,
+      "parent": 1995,
+      "width": 294,
+      "name": "Modal Profil/Bantuan/Selesai/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Masukan untuk kami",
+      "select": false,
+      "parent": 1996,
+      "width": 238,
+      "name": "Modal Profil/Feedback/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1996,
+      "name": "Modal Profil/Feedback/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 90,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1999,
+      "name": "Modal Profil/Feedback/Suasana/Suka"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 90,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1999,
+      "name": "Modal Profil/Feedback/Suasana/Lumayan"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 90,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 1999,
+      "name": "Modal Profil/Feedback/Suasana/Masalah"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Masukan kamu",
+      "select": false,
+      "parent": 2000,
+      "width": 294,
+      "name": "Modal Profil/Feedback/Pesan/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 11
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 294,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 14,
+        "mainAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 16,
+        "sizingV": "fixed"
+      },
+      "height": 100,
+      "parent": 2000,
+      "name": "Modal Profil/Feedback/Pesan/Input"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Kontak (opsional)",
+      "select": false,
+      "parent": 2002,
+      "width": 294,
+      "name": "Modal Profil/Feedback/Kontak/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 11
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 294,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 14,
+        "mainAlign": "center",
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 16,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2002,
+      "name": "Modal Profil/Feedback/Kontak/Input"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Kirim masukan",
+      "select": false,
+      "parent": 2004,
+      "width": 294,
+      "name": "Modal Profil/Feedback/Kirim/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Nanti saja",
+      "select": false,
+      "parent": 2005,
+      "width": 294,
+      "name": "Modal Profil/Feedback/Batal/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Dukung Ronds Pocket",
+      "select": false,
+      "parent": 2006,
+      "width": 238,
+      "name": "Modal Profil/Donasi/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2006,
+      "name": "Modal Profil/Donasi/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Simpan QRIS",
+      "select": false,
+      "parent": 2011,
+      "width": 294,
+      "name": "Modal Profil/Donasi/Simpan QRIS/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Sudah donasi",
+      "select": false,
+      "parent": 2012,
+      "width": 294,
+      "name": "Modal Profil/Donasi/Terima kasih/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Keluar dari akun?",
+      "select": false,
+      "parent": 2014,
+      "width": 238,
+      "name": "Modal Profil/Keluar/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2014,
+      "name": "Modal Profil/Keluar/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Keluar dari akun",
+      "select": false,
+      "parent": 2016,
+      "width": 294,
+      "name": "Modal Profil/Keluar/Konfirmasi/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Tetap di sini",
+      "select": false,
+      "parent": 2017,
+      "width": 294,
+      "name": "Modal Profil/Keluar/Batal/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Hapus akun permanen?",
+      "select": false,
+      "parent": 2018,
+      "width": 238,
+      "name": "Modal Profil/Hapus/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2018,
+      "name": "Modal Profil/Hapus/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Data yang dihapus tidak bisa dikembalikan.",
+      "select": false,
+      "parent": 2020,
+      "width": 262,
+      "name": "Modal Profil/Hapus/Peringatan/Teks",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 12
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Batal, simpan akun saya",
+      "select": false,
+      "parent": 2021,
+      "width": 294,
+      "name": "Modal Profil/Hapus/Batal/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Hapus akun permanen",
+      "select": false,
+      "parent": 2022,
+      "width": 294,
+      "name": "Modal Profil/Hapus/Konfirmasi/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Semua fitur",
+      "select": false,
+      "parent": 2023,
+      "width": 238,
+      "name": "Modal Profil/Fitur/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2023,
+      "name": "Modal Profil/Fitur/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Anggaran",
+      "select": false,
+      "parent": 2025,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Anggaran/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2025,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Anggaran/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Tujuan",
+      "select": false,
+      "parent": 2026,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Tujuan/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2026,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Tujuan/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Tabungan",
+      "select": false,
+      "parent": 2027,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Tabungan/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2027,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Tabungan/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Transaksi berulang",
+      "select": false,
+      "parent": 2028,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Transaksi berulang/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2028,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Transaksi berulang/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Rekap",
+      "select": false,
+      "parent": 2029,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Rekap/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2029,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Rekap/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Partner",
+      "select": false,
+      "parent": 2030,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Partner/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2030,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Partner/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Kekayaan bersih",
+      "select": false,
+      "parent": 2031,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Kekayaan bersih/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2031,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Kekayaan bersih/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Riwayat perubahan",
+      "select": false,
+      "parent": 2032,
+      "width": 230,
+      "name": "Modal Profil/Fitur/Riwayat perubahan/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih",
+      "select": false,
+      "parent": 2032,
+      "width": 40,
+      "name": "Modal Profil/Fitur/Riwayat perubahan/State",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 10
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilih maskot kamu",
+      "select": false,
+      "parent": 2033,
+      "width": 238,
+      "name": "Modal Profil/Avatar/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2033,
+      "name": "Modal Profil/Avatar/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🦊",
+      "select": false,
+      "parent": 2035,
+      "width": 294,
+      "name": "Modal Profil/Avatar/Pratinjau/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 36
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pilihanmu",
+      "select": false,
+      "parent": 2035,
+      "width": 294,
+      "name": "Modal Profil/Avatar/Pratinjau/Label",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 11
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 294,
+      "props": {
+        "gap": 12,
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "hug"
+      },
+      "height": 48,
+      "parent": 2036,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 294,
+      "props": {
+        "gap": 12,
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "hug"
+      },
+      "height": 48,
+      "parent": 2036,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 294,
+      "props": {
+        "gap": 12,
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "hug"
+      },
+      "height": 48,
+      "parent": 2036,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 294,
+      "props": {
+        "gap": 12,
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "hug"
+      },
+      "height": 48,
+      "parent": 2036,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Simpan avatar",
+      "select": false,
+      "parent": 2037,
+      "width": 294,
+      "name": "Modal Profil/Avatar/Simpan/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Pakai inisial nama",
+      "select": false,
+      "parent": 2038,
+      "width": 294,
+      "name": "Modal Profil/Avatar/Inisial/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Masukan terkirim",
+      "select": false,
+      "parent": 2039,
+      "width": 238,
+      "name": "Modal Profil/Feedback sukses/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2039,
+      "name": "Modal Profil/Feedback sukses/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Selesai",
+      "select": false,
+      "parent": 2041,
+      "width": 294,
+      "name": "Modal Profil/Feedback sukses/Selesai/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Terima kasih!",
+      "select": false,
+      "parent": 2042,
+      "width": 238,
+      "name": "Modal Profil/Donasi sukses/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2042,
+      "name": "Modal Profil/Donasi sukses/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Kembali ke profil",
+      "select": false,
+      "parent": 2044,
+      "width": 294,
+      "name": "Modal Profil/Donasi sukses/Selesai/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Perubahan disimpan",
+      "select": false,
+      "parent": 2045,
+      "width": 238,
+      "name": "Modal Profil/Simpan sukses/Header/Judul",
+      "height": 20,
+      "props": {
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "Bold",
+        "lineHeight": "145%",
+        "fontSize": 20
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "type": "frame",
+      "select": false,
+      "width": 44,
+      "props": {
+        "gap": 8,
+        "cornerRadius": 16,
+        "mainAlign": "center",
+        "crossAlign": "center",
+        "fill": "transparent",
+        "layout": "horizontal",
+        "padding": 0,
+        "sizingV": "fixed"
+      },
+      "height": 48,
+      "parent": 2045,
+      "name": "Modal Profil/Simpan sukses/Header/Tutup"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "Kembali ke profil",
+      "select": false,
+      "parent": 2047,
+      "width": 294,
+      "name": "Modal Profil/Simpan sukses/Selesai/Label",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%",
+        "fontSize": 13
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  }
+]

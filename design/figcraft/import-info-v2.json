@@ -1,0 +1,239 @@
+{
+  "file": "design/figcraft/Ronds Pocket - Mobile Refactor v2.figcraft",
+  "images": 0,
+  "missingFonts": [],
+  "name": "Ronds Pocket · Mobile Refactor",
+  "nodes": 1920,
+  "notes": [],
+  "pages": [
+    {
+      "frames": [
+        {
+          "height": 792.0,
+          "id": 3,
+          "name": "Mulai di sini · Konsep refactor",
+          "type": "FRAME",
+          "width": 1000.0
+        },
+        {
+          "height": 290.0,
+          "id": 22,
+          "name": "Ronds/Button",
+          "type": "COMPONENT_SET",
+          "width": 800.0
+        },
+        {
+          "height": 270.0,
+          "id": 35,
+          "name": "Ronds/Field",
+          "type": "COMPONENT_SET",
+          "width": 800.0
+        },
+        {
+          "height": 160.0,
+          "id": 48,
+          "name": "Ronds/BottomNav",
+          "type": "COMPONENT_SET",
+          "width": 800.0
+        }
+      ],
+      "id": 2,
+      "name": "00 · Fondasi & komponen",
+      "nodes": 94,
+      "topLevel": 4
+    },
+    {
+      "frames": [
+        {
+          "height": 844.0,
+          "id": 98,
+          "name": "01 · Beranda",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 200,
+          "name": "02 · Beranda gelap",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 302,
+          "name": "03 · Catat uang",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 353,
+          "name": "04 · Dompet",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 432,
+          "name": "05 · Riwayat transaksi",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 526,
+          "name": "06 · Anggaran",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 598,
+          "name": "07 · Tujuan",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 664,
+          "name": "08 · Tabungan",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 729,
+          "name": "09 · Rekap",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 822,
+          "name": "10 · Kekayaan bersih",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 898,
+          "name": "11 · Partner",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 960,
+          "name": "12 · Profil",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1041,
+          "name": "13 · Riwayat perubahan",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1110,
+          "name": "14 · Kantong baru",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1155,
+          "name": "15 · Gagal memuat",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1199,
+          "name": "16 · Semua fitur",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1293,
+          "name": "17 · Pilih dompet",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1337,
+          "name": "18 · Catatan tersimpan",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1363,
+          "name": "19 · Memuat catatan",
+          "type": "FRAME",
+          "width": 390.0
+        }
+      ],
+      "id": 97,
+      "name": "01 · Aplikasi mobile",
+      "nodes": 1353,
+      "topLevel": 38
+    },
+    {
+      "frames": [
+        {
+          "height": 2966.60009765625,
+          "id": 1410,
+          "name": "01 · Landing · Desktop",
+          "type": "FRAME",
+          "width": 1440.0
+        },
+        {
+          "height": 3340.159912109375,
+          "id": 1583,
+          "name": "02 · Landing · Mobile",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 960.0,
+          "id": 1755,
+          "name": "03 · Masuk · Desktop",
+          "type": "FRAME",
+          "width": 1440.0
+        },
+        {
+          "height": 844.0,
+          "id": 1793,
+          "name": "04 · Masuk · Mobile",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1820,
+          "name": "05 · Kode masuk · Mobile",
+          "type": "FRAME",
+          "width": 390.0
+        },
+        {
+          "height": 844.0,
+          "id": 1852,
+          "name": "06 · Email tidak sesuai · Mobile",
+          "type": "FRAME",
+          "width": 390.0
+        }
+      ],
+      "id": 1409,
+      "name": "02 · Landing & masuk",
+      "nodes": 470,
+      "topLevel": 12
+    }
+  ],
+  "styles": 35,
+  "variables": 55
+}

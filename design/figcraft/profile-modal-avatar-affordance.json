@@ -1,0 +1,32 @@
+[
+  {
+    "params": {
+      "variable": "Light/primary",
+      "ids": [
+        2187
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "expression": "Avatar",
+          "variable": "VariableID:2",
+          "type": "setVariable"
+        },
+        {
+          "background": "#24203466",
+          "dest": 1963,
+          "close_on_outside": true,
+          "type": "openOverlay",
+          "position": "center"
+        }
+      ],
+      "id": 2187
+    },
+    "command": "proto.interaction.add"
+  }
+]

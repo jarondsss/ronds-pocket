@@ -1,0 +1,338 @@
+[
+  {
+    "params": {
+      "text": "🦊",
+      "select": false,
+      "parent": 2151,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Rubah/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐼",
+      "select": false,
+      "parent": 2152,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Panda/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐨",
+      "select": false,
+      "parent": 2153,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Koala/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐯",
+      "select": false,
+      "parent": 2154,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris0/Macan/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🦁",
+      "select": false,
+      "parent": 2155,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Singa/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐸",
+      "select": false,
+      "parent": 2156,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Katak/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐙",
+      "select": false,
+      "parent": 2157,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Gurita/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🦉",
+      "select": false,
+      "parent": 2158,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris1/Burung hantu/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐧",
+      "select": false,
+      "parent": 2159,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Penguin/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐢",
+      "select": false,
+      "parent": 2160,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Kura-kura/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐝",
+      "select": false,
+      "parent": 2161,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Lebah/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐰",
+      "select": false,
+      "parent": 2162,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris2/Kelinci/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐷",
+      "select": false,
+      "parent": 2163,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Babi/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐵",
+      "select": false,
+      "parent": 2164,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Monyet/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🐳",
+      "select": false,
+      "parent": 2165,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Paus/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "text": "🦕",
+      "select": false,
+      "parent": 2166,
+      "width": 64,
+      "name": "Modal Profil/Avatar/Pilihan/Baris3/Dino/Emoji",
+      "height": 20,
+      "props": {
+        "textAlign": "center",
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontFamily": "Segoe UI Emoji",
+        "fontStyle": "Regular",
+        "lineHeight": "145%",
+        "fontSize": 28
+      },
+      "type": "text"
+    },
+    "command": "node.create"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "params": {
+      "collection": "Profil Prototype",
+      "value": "●",
+      "type": "string",
+      "name": "Tanda Tema Sistem"
+    },
+    "command": "variable.create"
+  },
+  {
+    "params": {
+      "collection": "Profil Prototype",
+      "value": "○",
+      "type": "string",
+      "name": "Tanda Tema Terang"
+    },
+    "command": "variable.create"
+  },
+  {
+    "params": {
+      "collection": "Profil Prototype",
+      "value": "○",
+      "type": "string",
+      "name": "Tanda Tema Gelap"
+    },
+    "command": "variable.create"
+  },
+  {
+    "params": {
+      "collection": "Profil Prototype",
+      "value": "●",
+      "type": "string",
+      "name": "Tanda Kantong Keluarga"
+    },
+    "command": "variable.create"
+  },
+  {
+    "params": {
+      "collection": "Profil Prototype",
+      "value": "○",
+      "type": "string",
+      "name": "Tanda Kantong Pribadi"
+    },
+    "command": "variable.create"
+  }
+]

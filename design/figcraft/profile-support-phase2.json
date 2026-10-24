@@ -1,0 +1,106 @@
+[
+  {
+    "command": "node.reparent",
+    "params": {
+      "ids": [
+        961
+      ],
+      "parent": 1936,
+      "index": 0
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "paddingBottom": 32,
+      "id": 961,
+      "sizingV": "hug"
+    }
+  },
+  {
+    "command": "node.reorder",
+    "params": {
+      "id": 1937,
+      "index": 5
+    }
+  },
+  {
+    "command": "node.reorder",
+    "params": {
+      "id": 1938,
+      "index": 6
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1938
+      ],
+      "field": "fill",
+      "variable": "Light/surface"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1937
+      ],
+      "field": "fill",
+      "variable": "Light/text"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 1938,
+      "width": 302,
+      "height": 64,
+      "props": {
+        "crossAlign": "center",
+        "fill": "transparent",
+        "sizingV": "fixed",
+        "padding": 0,
+        "layout": "horizontal",
+        "gap": 12
+      },
+      "name": "Profil · Feedback",
+      "type": "frame"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 1938,
+      "width": 302,
+      "height": 1,
+      "props": {
+        "fill": "#DFDCEB"
+      },
+      "name": "Profil · Pemisah dukungan",
+      "type": "rectangle"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 1938,
+      "width": 302,
+      "height": 64,
+      "props": {
+        "crossAlign": "center",
+        "fill": "transparent",
+        "sizingV": "fixed",
+        "padding": 0,
+        "layout": "horizontal",
+        "gap": 12
+      },
+      "name": "Profil · Donasi",
+      "type": "frame"
+    }
+  }
+]

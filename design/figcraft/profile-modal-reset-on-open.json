@@ -1,0 +1,178 @@
+[
+  {
+    "command": "proto.interaction.clear",
+    "params": {
+      "ids": [
+        991
+      ]
+    }
+  },
+  {
+    "command": "proto.interaction.add",
+    "params": {
+      "actions": [
+        {
+          "type": "setVariable",
+          "variable": "VariableID:5",
+          "expression": "Tema"
+        },
+        {
+          "blocks": [
+            {
+              "actions": [
+                {
+                  "value": "●",
+                  "type": "setVariable",
+                  "variable": "VariableID:8"
+                }
+              ],
+              "expression": "Tema == \"Sistem\""
+            },
+            {
+              "actions": [
+                {
+                  "value": "○",
+                  "type": "setVariable",
+                  "variable": "VariableID:8"
+                }
+              ]
+            }
+          ],
+          "type": "conditional"
+        },
+        {
+          "blocks": [
+            {
+              "actions": [
+                {
+                  "value": "●",
+                  "type": "setVariable",
+                  "variable": "VariableID:9"
+                }
+              ],
+              "expression": "Tema == \"Terang\""
+            },
+            {
+              "actions": [
+                {
+                  "value": "○",
+                  "type": "setVariable",
+                  "variable": "VariableID:9"
+                }
+              ]
+            }
+          ],
+          "type": "conditional"
+        },
+        {
+          "blocks": [
+            {
+              "actions": [
+                {
+                  "value": "●",
+                  "type": "setVariable",
+                  "variable": "VariableID:10"
+                }
+              ],
+              "expression": "Tema == \"Gelap\""
+            },
+            {
+              "actions": [
+                {
+                  "value": "○",
+                  "type": "setVariable",
+                  "variable": "VariableID:10"
+                }
+              ]
+            }
+          ],
+          "type": "conditional"
+        },
+        {
+          "dest": 1955,
+          "background": "#24203466",
+          "type": "openOverlay",
+          "position": "center",
+          "close_on_outside": true
+        }
+      ],
+      "id": 991
+    }
+  },
+  {
+    "command": "proto.interaction.clear",
+    "params": {
+      "ids": [
+        998
+      ]
+    }
+  },
+  {
+    "command": "proto.interaction.add",
+    "params": {
+      "actions": [
+        {
+          "type": "setVariable",
+          "variable": "VariableID:6",
+          "expression": "Kantong"
+        },
+        {
+          "blocks": [
+            {
+              "actions": [
+                {
+                  "value": "●",
+                  "type": "setVariable",
+                  "variable": "VariableID:11"
+                }
+              ],
+              "expression": "Kantong == \"Keluarga\""
+            },
+            {
+              "actions": [
+                {
+                  "value": "○",
+                  "type": "setVariable",
+                  "variable": "VariableID:11"
+                }
+              ]
+            }
+          ],
+          "type": "conditional"
+        },
+        {
+          "blocks": [
+            {
+              "actions": [
+                {
+                  "value": "●",
+                  "type": "setVariable",
+                  "variable": "VariableID:12"
+                }
+              ],
+              "expression": "Kantong == \"Pribadi\""
+            },
+            {
+              "actions": [
+                {
+                  "value": "○",
+                  "type": "setVariable",
+                  "variable": "VariableID:12"
+                }
+              ]
+            }
+          ],
+          "type": "conditional"
+        },
+        {
+          "dest": 1956,
+          "background": "#24203466",
+          "type": "openOverlay",
+          "position": "center",
+          "close_on_outside": true
+        }
+      ],
+      "id": 998
+    }
+  }
+]

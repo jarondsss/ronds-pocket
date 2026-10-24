@@ -1,0 +1,132 @@
+[
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1954
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1955
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1956
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1957
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1958
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1959
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1960
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1961
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1962
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1963
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1964
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1965
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/surface",
+      "ids": [
+        1966
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  }
+]

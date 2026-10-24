@@ -1,0 +1,118 @@
+[
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1939,
+      "props": {
+        "strokeWeight": 1.6,
+        "stroke": "#6251D9",
+        "sizingV": "fixed",
+        "strokeJoin": "round",
+        "sizingH": "fixed",
+        "strokeCap": "round",
+        "fill": "transparent"
+      },
+      "name": "Profil · Ikon Feedback",
+      "height": 20,
+      "width": 20,
+      "type": "vector",
+      "select": false,
+      "path": "M3 3 H21 V17 H10 L5 21 V17 H3 Z M7 7 H17 M7 11 H14"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 1939,
+      "width": 242,
+      "height": 42,
+      "props": {
+        "gap": 3,
+        "layout": "vertical",
+        "fill": "transparent",
+        "padding": 0,
+        "sizingV": "hug"
+      },
+      "name": "Profil · Salinan Feedback",
+      "type": "frame"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1939,
+      "props": {
+        "strokeWeight": 1.6,
+        "strokeCap": "round",
+        "stroke": "#696378",
+        "fill": "transparent",
+        "strokeJoin": "round"
+      },
+      "name": "Profil · Panah Feedback",
+      "height": 16,
+      "width": 16,
+      "type": "vector",
+      "select": false,
+      "path": "M6 3 L12 9 L6 15"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1941,
+      "props": {
+        "strokeWeight": 1.6,
+        "stroke": "#6251D9",
+        "sizingV": "fixed",
+        "strokeJoin": "round",
+        "sizingH": "fixed",
+        "strokeCap": "round",
+        "fill": "transparent"
+      },
+      "name": "Profil · Ikon Donasi",
+      "height": 20,
+      "width": 20,
+      "type": "vector",
+      "select": false,
+      "path": "M12 21 L3.8 13 C-2 6 6 -1 12 6 C18 -1 26 6 20.2 13 Z"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 1941,
+      "width": 242,
+      "height": 42,
+      "props": {
+        "gap": 3,
+        "layout": "vertical",
+        "fill": "transparent",
+        "padding": 0,
+        "sizingV": "hug"
+      },
+      "name": "Profil · Salinan Donasi",
+      "type": "frame"
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 1941,
+      "props": {
+        "strokeWeight": 1.6,
+        "strokeCap": "round",
+        "stroke": "#696378",
+        "fill": "transparent",
+        "strokeJoin": "round"
+      },
+      "name": "Profil · Panah Donasi",
+      "height": 16,
+      "width": 16,
+      "type": "vector",
+      "select": false,
+      "path": "M6 3 L12 9 L6 15"
+    }
+  }
+]

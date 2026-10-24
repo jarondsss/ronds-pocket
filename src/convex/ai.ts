@@ -2,7 +2,7 @@
 
 import { createVlyIntegrations } from "@vly-ai/integrations";
 import { v } from "convex/values";
-import { internal } from "./_generated/api";
+import { makeFunctionReference } from "convex/server";
 import type { Id } from "./_generated/dataModel";
 import { action } from "./_generated/server";
 import { isProduction } from "./env";
@@ -154,7 +154,18 @@ export const parseTransaction = action({
       );
     }
 
-    const data = await ctx.runQuery(internal.aiContext.context, { bookId });
+    const data = await ctx.runQuery(
+      makeFunctionReference<
+        "query",
+        { bookId: Id<"books"> },
+        {
+          wallets: { id: string; name: string }[];
+          expense: string[];
+          income: string[];
+        }
+      >("aiContext:context"),
+      { bookId },
+    );
     const today = isoToTimestamp(todayIso, tzOffsetMinutes, Date.now());
     const prompt = buildUserPrompt(clean, todayIso, tzOffsetMinutes, data);
 
@@ -183,7 +194,9 @@ export const parseTransaction = action({
 
     const raw = extractJson(content);
     if (!raw) {
-      throw new Error("AI-nya tidak bisa membaca catatan itu. Coba tulis ulang ya.");
+      throw new Error(
+        "AI-nya tidak bisa membaca catatan itu. Coba tulis ulang ya.",
+      );
     }
 
     let parsed: Record<string, unknown>;
@@ -195,7 +208,9 @@ export const parseTransaction = action({
 
     const type = parsed.type === "income" ? "income" : "expense";
     const walletName =
-      typeof parsed.wallet === "string" ? parsed.wallet.trim().toLowerCase() : "";
+      typeof parsed.wallet === "string"
+        ? parsed.wallet.trim().toLowerCase()
+        : "";
     const matchedWallet = walletName
       ? data.wallets.find((wallet) => wallet.name.toLowerCase() === walletName)
       : undefined;

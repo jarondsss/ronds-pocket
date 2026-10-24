@@ -1,0 +1,542 @@
+[
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2258
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2259
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2260
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2261
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/surface",
+      "field": "fill",
+      "ids": [
+        2265
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2266
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2267
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2268
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2269
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/surface",
+      "field": "fill",
+      "ids": [
+        2270
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2271
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2272
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2273
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2274
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/muted",
+      "field": "fill",
+      "ids": [
+        2275
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/muted",
+      "field": "fill",
+      "ids": [
+        2276
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2277
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2278
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2279
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2280
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/primary",
+      "field": "fill",
+      "ids": [
+        2282
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2283
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/primary",
+      "field": "fill",
+      "ids": [
+        2285
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2286
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/primary",
+      "field": "fill",
+      "ids": [
+        2288
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2289
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2290
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2291
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2292
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/onPrimary",
+      "field": "fill",
+      "ids": [
+        2293
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2294
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2295
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2296
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/expense",
+      "field": "fill",
+      "ids": [
+        2297
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2298
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2299
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/surface",
+      "field": "fill",
+      "ids": [
+        2300
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2301
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2302
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2303
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/onPrimary",
+      "field": "fill",
+      "ids": [
+        2304
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2305
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2306
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2307
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/surface",
+      "field": "fill",
+      "ids": [
+        2308
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2309
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2310
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/onPrimary",
+      "field": "fill",
+      "ids": [
+        2311
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2312
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2313
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/onPrimary",
+      "field": "fill",
+      "ids": [
+        2314
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2315
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/inset",
+      "field": "fill",
+      "ids": [
+        2316
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/onPrimary",
+      "field": "fill",
+      "ids": [
+        2317
+      ]
+    }
+  }
+]

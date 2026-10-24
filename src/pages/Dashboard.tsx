@@ -54,7 +54,11 @@ const OTHER_TABS = [
   { to: "/dashboard/partner", label: "Sharing", icon: Users },
   // Jejak perubahan tidak lagi punya tab sendiri di nav bawah; di desktop
   // tetap bisa dibuka dari sini (di HP lewat tautan di notifikasi).
-  { to: "/dashboard/riwayat/aktivitas", label: "Riwayat perubahan", icon: History },
+  {
+    to: "/dashboard/riwayat/aktivitas",
+    label: "Riwayat perubahan",
+    icon: History,
+  },
 ];
 
 function BottomNav({ onAdd }: { onAdd: () => void }) {
@@ -76,7 +80,7 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
         end={tab.end}
         className={({ isActive }) =>
           cn(
-            "flex flex-1 flex-col items-center gap-1 rounded-full px-1 py-1.5 text-[10px] font-bold transition-colors",
+            "flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 py-1 text-[10px] font-bold transition-colors",
             isActive
               ? "text-primary"
               : "text-muted-foreground hover:text-primary",
@@ -90,10 +94,7 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
             <motion.span
               animate={{ y: isActive ? -1 : 0 }}
               transition={{ type: "spring", stiffness: 420, damping: 18 }}
-              className={cn(
-                "grid size-9 place-items-center rounded-full transition-all",
-                isActive && "clay-nav-active",
-              )}
+              className="grid size-8 place-items-center rounded-xl transition-all"
             >
               {isProfile ? (
                 <span className="grid size-6 place-items-center rounded-lg bg-accent text-[13px] leading-none text-accent-foreground">
@@ -115,15 +116,16 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
   };
 
   return (
-    <nav className="clay-nav fixed bottom-4 left-1/2 z-40 flex w-[min(94vw,28rem)] -translate-x-1/2 items-center gap-0.5 p-1.5 lg:hidden">
+    <nav className="fixed bottom-5 left-1/2 z-40 flex w-[min(88vw,26rem)] -translate-x-1/2 items-center gap-0.5 rounded-[1.5rem] bg-card p-1.5 shadow-[0_12px_32px_-18px_var(--clay-dark)] lg:hidden">
       {left.map(renderTab)}
       <button
         type="button"
         onClick={onAdd}
         aria-label="Catat uang"
-        className="clay-primary clay-press relative -my-2 grid size-14 shrink-0 place-items-center rounded-full shadow-[0_0.6rem_1.2rem_-0.35rem_var(--clay-dark)]"
+        className="clay-primary clay-press relative grid min-h-14 flex-1 flex-col items-center justify-center rounded-2xl text-[10px] font-bold"
       >
-        <Plus className="size-7" />
+        <Plus className="size-5" />
+        Catat
       </button>
       {right.map(renderTab)}
     </nav>
@@ -211,10 +213,7 @@ function Shell() {
   const outlet = useOutlet();
   const bookId = activeBook?._id;
 
-  const walletData = useQuery(
-    api.wallets.list,
-    bookId ? { bookId } : "skip",
-  );
+  const walletData = useQuery(api.wallets.list, bookId ? { bookId } : "skip");
   const categories = useQuery(
     api.categories.list,
     bookId ? { bookId } : "skip",
@@ -264,11 +263,21 @@ function Shell() {
 
         <main className="min-w-0 flex-1">
           <header className="mb-4 flex items-center justify-between gap-2 lg:hidden">
-            <Brand compact />
+            {location.pathname === "/dashboard" ? (
+              <span className="text-xs font-bold text-muted-foreground">
+                Ronds Pocket
+              </span>
+            ) : (
+              <Brand compact />
+            )}
             <div className="flex items-center gap-1.5">
-              <SupportActions />
+              <span className="hidden sm:block">
+                <SupportActions />
+              </span>
               <NotificationBell />
-              <ThemeToggle />
+              <span className="hidden sm:block">
+                <ThemeToggle />
+              </span>
             </div>
           </header>
 

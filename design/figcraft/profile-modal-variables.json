@@ -1,0 +1,38 @@
+[
+  {
+    "params": {
+      "name": "Avatar",
+      "value": "🦊",
+      "collection": "Profil Prototype",
+      "type": "string"
+    },
+    "command": "variable.create"
+  },
+  {
+    "params": {
+      "name": "Avatar brouillon",
+      "value": "🦊",
+      "collection": "Profil Prototype",
+      "type": "string"
+    },
+    "command": "variable.create"
+  },
+  {
+    "params": {
+      "name": "Tema",
+      "value": "Sistem",
+      "collection": "Profil Prototype",
+      "type": "string"
+    },
+    "command": "variable.create"
+  },
+  {
+    "params": {
+      "name": "Kantong",
+      "value": "Keluarga",
+      "collection": "Profil Prototype",
+      "type": "string"
+    },
+    "command": "variable.create"
+  }
+]

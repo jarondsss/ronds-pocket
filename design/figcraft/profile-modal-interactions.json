@@ -1,0 +1,1241 @@
+[
+  {
+    "params": {
+      "ids": [
+        984
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 984,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1954,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        991
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 991,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1955,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        998
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 998,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1956,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        1005
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1005,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1957,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        1011
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1011,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1960,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        1013
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1013,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1961,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        1014
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1014,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1962,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        976
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 976,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1963,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        1939
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1939,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1958,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        1941
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1941,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "position": "center",
+        "background": "#24203466",
+        "dest": 1959,
+        "close_on_outside": true,
+        "type": "openOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2049,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1972,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2055,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2064,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2071,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1995,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2075,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2005,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2086,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2090,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2017,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2094,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2021,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2099,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2117,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2127,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2041,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2130,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2044,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2133,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2047,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "type": "closeOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1971,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "dest": 1966,
+        "type": "swapOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1979,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "dest": 1966,
+        "type": "swapOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1985,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "dest": 1966,
+        "type": "swapOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1994,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "dest": 1958,
+        "type": "swapOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2004,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "dest": 1964,
+        "type": "swapOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2012,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "dest": 1965,
+        "type": "swapOverlay"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2016,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 1793,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2022,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 1793,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2025,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 526,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2026,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 598,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2027,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 664,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2028,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 1199,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2029,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 729,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2030,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 898,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2031,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 822,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2032,
+      "actions": [
+        {
+          "type": "closeOverlay"
+        },
+        {
+          "dest": 1041,
+          "type": "navigate"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1975,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Tema",
+        "value": "Sistem",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1976,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Tema",
+        "value": "Terang",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1977,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Tema",
+        "value": "Gelap",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "Profil Prototype/Tema",
+      "ids": [
+        996
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1982,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Kantong",
+        "value": "Keluarga",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 1983,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Kantong",
+        "value": "Pribadi",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "Profil Prototype/Kantong",
+      "ids": [
+        1003
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "fontSize": 28,
+      "id": 977,
+      "fontStyle": "Regular",
+      "textAutoResize": "widthAndHeight",
+      "fontFamily": "Segoe UI Emoji",
+      "characters": "🦊"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "layout": "horizontal",
+      "id": 976,
+      "padding": 0,
+      "mainAlign": "center",
+      "crossAlign": "center"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "variable": "Profil Prototype/Avatar",
+      "ids": [
+        977
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Profil Prototype/Avatar brouillon",
+      "ids": [
+        2118
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2151,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🦊",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2152,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐼",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2153,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐨",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2154,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐯",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2155,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🦁",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2156,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐸",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2157,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐙",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2158,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🦉",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2159,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐧",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2160,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐢",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2161,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐝",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2162,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐰",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2163,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐷",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2164,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐵",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2165,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🐳",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2166,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "🦕",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "easing": "easeOut",
+      "id": 2038,
+      "transition": {
+        "type": "dissolve"
+      },
+      "action": {
+        "variable": "Profil Prototype/Avatar brouillon",
+        "value": "R",
+        "type": "setVariable"
+      },
+      "durationMs": 180
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "id": 2037,
+      "actions": [
+        {
+          "variable": "Profil Prototype/Avatar",
+          "expression": "[Profil Prototype/Avatar brouillon]",
+          "type": "setVariable"
+        },
+        {
+          "type": "closeOverlay"
+        }
+      ]
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "height": 204,
+      "mode": "fit",
+      "path": "C:\\Users\\ROG STRIX\\Documents\\Project\\ronds-pocket\\public\\qris-ronds-pocket.png",
+      "parent": 2008,
+      "width": 204
+    },
+    "command": "image.place"
+  },
+  {
+    "params": {
+      "id": 97
+    },
+    "command": "page.select"
+  }
+]

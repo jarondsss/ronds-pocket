@@ -1,0 +1,356 @@
+[
+  {
+    "params": {
+      "ids": [
+        1975
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "variable": "VariableID:5",
+          "value": "Sistem",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:8",
+          "value": "●",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:9",
+          "value": "○",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:10",
+          "value": "○",
+          "type": "setVariable"
+        }
+      ],
+      "id": 1975
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "VariableID:8",
+      "ids": [
+        2057
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        1975
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "ids": [
+        1976
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "variable": "VariableID:5",
+          "value": "Terang",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:8",
+          "value": "○",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:9",
+          "value": "●",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:10",
+          "value": "○",
+          "type": "setVariable"
+        }
+      ],
+      "id": 1976
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "VariableID:9",
+      "ids": [
+        2059
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        1976
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "ids": [
+        1977
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "variable": "VariableID:5",
+          "value": "Gelap",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:8",
+          "value": "○",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:9",
+          "value": "○",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:10",
+          "value": "●",
+          "type": "setVariable"
+        }
+      ],
+      "id": 1977
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "VariableID:10",
+      "ids": [
+        2061
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        1977
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "ids": [
+        1982
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "variable": "VariableID:6",
+          "value": "Keluarga",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:11",
+          "value": "●",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:12",
+          "value": "○",
+          "type": "setVariable"
+        }
+      ],
+      "id": 1982
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "VariableID:11",
+      "ids": [
+        2066
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        1982
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "ids": [
+        1983
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "variable": "VariableID:6",
+          "value": "Pribadi",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:11",
+          "value": "○",
+          "type": "setVariable"
+        },
+        {
+          "variable": "VariableID:12",
+          "value": "●",
+          "type": "setVariable"
+        }
+      ],
+      "id": 1983
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "VariableID:12",
+      "ids": [
+        2068
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        1983
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "value": "Pengalamanmu: Suka",
+      "variable": "VariableID:7"
+    },
+    "command": "variable.set"
+  },
+  {
+    "params": {
+      "ids": [
+        2076
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:7",
+        "value": "Pengalamanmu: Suka",
+        "type": "setVariable"
+      },
+      "id": 2076
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        2077
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:7",
+        "value": "Pengalamanmu: Lumayan",
+        "type": "setVariable"
+      },
+      "id": 2077
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        2078
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:7",
+        "value": "Pengalamanmu: Ada masalah",
+        "type": "setVariable"
+      },
+      "id": 2078
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "height": 16,
+      "props": {
+        "lineHeight": "145%",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 10,
+        "fontStyle": "SemiBold",
+        "fill": "#6251D9",
+        "textAutoResize": "height"
+      },
+      "select": false,
+      "width": 230,
+      "name": "Profil · Ubah avatar",
+      "type": "text",
+      "text": "Ganti avatar",
+      "parent": 978
+    },
+    "command": "node.create"
+  }
+]

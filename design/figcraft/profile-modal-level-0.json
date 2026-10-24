@@ -1,0 +1,275 @@
+[
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3100,
+      "width": 342,
+      "name": "Modal Profil/Nama",
+      "y": 3500.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3520,
+      "width": 342,
+      "name": "Modal Profil/Tema",
+      "y": 3500.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3940,
+      "width": 342,
+      "name": "Modal Profil/Kantong",
+      "y": 3500.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 4360,
+      "width": 342,
+      "name": "Modal Profil/Bantuan",
+      "y": 3500.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3100,
+      "width": 342,
+      "name": "Modal Profil/Feedback",
+      "y": 4350.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3520,
+      "width": 342,
+      "name": "Modal Profil/Donasi",
+      "y": 4350.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3940,
+      "width": 342,
+      "name": "Modal Profil/Keluar",
+      "y": 4350.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 4360,
+      "width": 342,
+      "name": "Modal Profil/Hapus",
+      "y": 4350.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3100,
+      "width": 342,
+      "name": "Modal Profil/Fitur",
+      "y": 5200.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3520,
+      "width": 342,
+      "name": "Modal Profil/Avatar",
+      "y": 5200.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3940,
+      "width": 342,
+      "name": "Modal Profil/Feedback sukses",
+      "y": 5200.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 4360,
+      "width": 342,
+      "name": "Modal Profil/Donasi sukses",
+      "y": 5200.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  },
+  {
+    "params": {
+      "select": false,
+      "parent": 97,
+      "x": 3100,
+      "width": 342,
+      "name": "Modal Profil/Simpan sukses",
+      "y": 6050.0,
+      "height": 400,
+      "props": {
+        "gap": 14,
+        "cornerRadius": 28,
+        "fill": "transparent",
+        "layout": "vertical",
+        "padding": 24,
+        "sizingV": "hug"
+      },
+      "type": "frame"
+    },
+    "command": "node.create"
+  }
+]

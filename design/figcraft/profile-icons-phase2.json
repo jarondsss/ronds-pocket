@@ -1,0 +1,48 @@
+[
+  {
+    "command": "node.reparent",
+    "params": {
+      "index": 0,
+      "ids": [
+        1942
+      ],
+      "parent": 1952
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "height": 16,
+      "sizingH": "fixed",
+      "id": 1942,
+      "strokeCap": "round",
+      "strokeWeight": 1.7,
+      "sizingV": "fixed",
+      "width": 16,
+      "strokeJoin": "round"
+    }
+  },
+  {
+    "command": "node.reparent",
+    "params": {
+      "index": 0,
+      "ids": [
+        1945
+      ],
+      "parent": 1953
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "height": 16,
+      "sizingH": "fixed",
+      "id": 1945,
+      "strokeCap": "round",
+      "strokeWeight": 1.7,
+      "sizingV": "fixed",
+      "width": 16,
+      "strokeJoin": "round"
+    }
+  }
+]

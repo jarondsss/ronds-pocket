@@ -1,0 +1,96 @@
+[
+  {
+    "command": "node.reparent",
+    "params": {
+      "ids": [
+        665
+      ],
+      "index": 0,
+      "parent": 1928
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "id": 665,
+      "sizingV": "hug",
+      "paddingBottom": 32
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1929
+      ],
+      "variable": "Light/income",
+      "field": "fill"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1930
+      ],
+      "variable": "Light/muted",
+      "field": "fill"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1931
+      ],
+      "variable": "Light/income",
+      "field": "fill"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1932
+      ],
+      "variable": "Light/muted",
+      "field": "fill"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1933
+      ],
+      "variable": "Light/text",
+      "field": "fill"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1934
+      ],
+      "variable": "Light/muted",
+      "field": "fill"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1935
+      ],
+      "variable": "Light/text",
+      "field": "fill"
+    }
+  },
+  {
+    "command": "page.select",
+    "params": {
+      "id": 97
+    }
+  }
+]

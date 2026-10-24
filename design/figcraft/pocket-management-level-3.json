@@ -1,0 +1,532 @@
+[
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2259,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Kelola Keluarga/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2262,
+      "type": "text",
+      "text": "🦊",
+      "width": 36,
+      "name": "Kantong/Kelola Keluarga/Anggota/Rani/Emoji",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Segoe UI Emoji",
+        "fontSize": 22,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2262,
+      "width": 170,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Anggota/Rani/Identitas",
+      "props": {
+        "sizingV": "hug",
+        "gap": 8,
+        "padding": 0,
+        "fill": "transparent",
+        "layout": "vertical"
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2262,
+      "type": "text",
+      "text": "Pemilik",
+      "width": 44,
+      "name": "Kantong/Kelola Keluarga/Anggota/Rani/Penanda",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 9,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2263,
+      "type": "text",
+      "text": "🐼",
+      "width": 36,
+      "name": "Kantong/Kelola Keluarga/Anggota/Dimas/Emoji",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Segoe UI Emoji",
+        "fontSize": 22,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2263,
+      "width": 170,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Anggota/Dimas/Identitas",
+      "props": {
+        "sizingV": "hug",
+        "gap": 8,
+        "padding": 0,
+        "fill": "transparent",
+        "layout": "vertical"
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2263,
+      "width": 44,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Anggota/Dimas/Keluarkan",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2264,
+      "type": "text",
+      "text": "🐰",
+      "width": 36,
+      "name": "Kantong/Kelola Keluarga/Anggota/Sinta/Emoji",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Segoe UI Emoji",
+        "fontSize": 22,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2264,
+      "width": 170,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Anggota/Sinta/Identitas",
+      "props": {
+        "sizingV": "hug",
+        "gap": 8,
+        "padding": 0,
+        "fill": "transparent",
+        "layout": "vertical"
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "select": false,
+      "parent": 2264,
+      "width": 44,
+      "type": "frame",
+      "height": 48,
+      "name": "Kantong/Kelola Keluarga/Anggota/Sinta/Keluarkan",
+      "props": {
+        "fill": "transparent",
+        "crossAlign": "center",
+        "layout": "horizontal",
+        "sizingV": "fixed",
+        "padding": 0,
+        "gap": 8,
+        "mainAlign": "center",
+        "cornerRadius": 16
+      }
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2268,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Kelola Pribadi/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2273,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Satu kantong/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2279,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Anggota/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2281,
+      "type": "text",
+      "text": "Rani",
+      "width": 170,
+      "name": "Kantong/Anggota/Rani/Identitas/Nama",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2281,
+      "type": "text",
+      "text": "Pemilik",
+      "width": 170,
+      "name": "Kantong/Anggota/Rani/Identitas/Peran",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 10,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2284,
+      "type": "text",
+      "text": "Dimas",
+      "width": 170,
+      "name": "Kantong/Anggota/Dimas/Identitas/Nama",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2284,
+      "type": "text",
+      "text": "Anggota",
+      "width": 170,
+      "name": "Kantong/Anggota/Dimas/Identitas/Peran",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 10,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2287,
+      "type": "text",
+      "text": "Sinta",
+      "width": 170,
+      "name": "Kantong/Anggota/Sinta/Identitas/Nama",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2287,
+      "type": "text",
+      "text": "Anggota",
+      "width": 170,
+      "name": "Kantong/Anggota/Sinta/Identitas/Peran",
+      "props": {
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 10,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "Regular",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2291,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Edit nama/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2296,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Hapus/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2302,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Hapus terkunci/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2306,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Keluarkan anggota/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2310,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Hapus sukses/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2313,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Anggota dikeluarkan/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "parent": 2316,
+      "type": "text",
+      "text": "×",
+      "width": 44,
+      "name": "Kantong/Nama disimpan/Header/Tutup/Label",
+      "props": {
+        "textAlign": "center",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontSize": 13,
+        "textAutoResize": "height",
+        "sizingV": "hug",
+        "fontStyle": "SemiBold",
+        "lineHeight": "145%"
+      },
+      "height": 20,
+      "select": false
+    }
+  }
+]

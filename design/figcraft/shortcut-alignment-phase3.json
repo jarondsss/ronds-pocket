@@ -1,0 +1,164 @@
+[
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 162
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 166
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 167
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 168
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 1916
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 1917
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 1918
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 172
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 173
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 264
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 268
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 269
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 270
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 1919
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 1920
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 1921
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 274
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "strokeJoin": "round",
+      "strokeCap": "round",
+      "strokeWeight": 1.4,
+      "id": 275
+    }
+  }
+]

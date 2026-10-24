@@ -1,6 +1,5 @@
 import { ClayLoader } from "@/components/ClayLoader";
 import { AiComposer } from "@/components/dashboard/AiComposer";
-import { DayNavigator } from "@/components/dashboard/DayNavigator";
 import {
   BillReminderDialog,
   type BillReminderSession,
@@ -14,7 +13,6 @@ import {
   RecurringList,
   type RecurringRow,
 } from "@/components/dashboard/RecurringList";
-import { SummaryHero } from "@/components/dashboard/SummaryHero";
 import { BudgetSnapshotCard } from "@/components/dashboard/BudgetSnapshotCard";
 import { UpcomingBillRemindersCard } from "@/components/dashboard/UpcomingBillRemindersCard";
 import { NotificationInsightCard } from "@/components/dashboard/NotificationInsightCard";
@@ -39,17 +37,23 @@ import {
   toDateInput,
   toMonthKey,
 } from "@/lib/format";
-import { formatRupiah } from "@/lib/format";
+import { formatRupiah, formatShortDate, shiftDay } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChartPie,
+  HandCoins,
+  PiggyBank,
+  Target,
+  Users,
   Plus,
   Repeat,
   SearchIcon,
   Sparkles,
-  Wallet,
   X,
 } from "@/components/icons";
 import { useMemo, useRef, useState } from "react";
@@ -57,35 +61,6 @@ import { toast } from "sonner";
 import { NavLink } from "react-router";
 
 type Filter = "all" | "expense" | "income";
-
-function TotalBalance({
-  total,
-  className,
-}: {
-  total: number;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "clay-sm flex min-w-0 items-center gap-2 px-4 text-left",
-        className,
-      )}
-    >
-      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-income/15 text-income">
-        <Wallet className="size-4" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-          Saldo
-        </span>
-        <span className="block truncate font-display text-base font-extrabold leading-tight text-foreground">
-          {formatRupiah(total)}
-        </span>
-      </span>
-    </div>
-  );
-}
 
 const FILTERS: { value: Filter; label: string }[] = [
   { value: "all", label: "Semua" },
@@ -97,15 +72,24 @@ const HOME_GRID: {
   to: string;
   label: string;
   title: string;
-  desc: string;
-  emoji: string;
+  icon: typeof HandCoins;
 }[] = [
-  { to: "/dashboard/anggaran", label: "Anggaran", title: "Anggaran", desc: "Atur batas belanja per kategori", emoji: "🧮" },
-  { to: "/dashboard/goals", label: "Goals", title: "Goals", desc: "Kejar target tabunganmu", emoji: "🎯" },
-  { to: "/dashboard/tabungan", label: "Tabungan", title: "Tabungan", desc: "Deposito, reksa dana, emas", emoji: "🐷" },
-  { to: "/dashboard/net-worth", label: "Net Worth", title: "Net Worth", desc: "Harta dikurangi utang", emoji: "🏦" },
-  { to: "/dashboard/rekap", label: "Rekap", title: "Rekap", desc: "Tren pemasukan & pengeluaran", emoji: "📊" },
-  { to: "/dashboard/partner", label: "Sharing", title: "Sharing", desc: "Catat bareng atau split bill", emoji: "👥" },
+  {
+    to: "/dashboard/anggaran",
+    label: "Anggaran",
+    title: "Anggaran",
+    icon: HandCoins,
+  },
+  { to: "/dashboard/goals", label: "Tujuan", title: "Tujuan", icon: Target },
+  {
+    to: "/dashboard/tabungan",
+    label: "Tabungan",
+    title: "Tabungan",
+    icon: PiggyBank,
+  },
+  { to: "#berulang", label: "Berulang", title: "Berulang", icon: Repeat },
+  { to: "/dashboard/rekap", label: "Rekap", title: "Rekap", icon: ChartPie },
+  { to: "/dashboard/partner", label: "Partner", title: "Partner", icon: Users },
 ];
 
 export default function Ledger() {
@@ -124,7 +108,9 @@ export default function Ledger() {
 
   // Recurring transactions state
   const [recDialogOpen, setRecDialogOpen] = useState(false);
-  const [recSession, setRecSession] = useState<RecurringEditorSession | null>(null);
+  const [recSession, setRecSession] = useState<RecurringEditorSession | null>(
+    null,
+  );
   const recSessionKey = useRef(0);
   const [recExpanded, setRecExpanded] = useState(false);
   const toggleRecurring = useMutation(api.recurring.toggle);
@@ -132,7 +118,9 @@ export default function Ledger() {
   const [brDialogOpen, setBrDialogOpen] = useState(false);
   const [brSession, setBrSession] = useState<BillReminderSession | null>(null);
   const brSessionKey = useRef(0);
-  const openBillReminder = (reminder: NonNullable<BillReminderSession["reminder"]> | null) => {
+  const openBillReminder = (
+    reminder: NonNullable<BillReminderSession["reminder"]> | null,
+  ) => {
     brSessionKey.current += 1;
     setBrSession({
       key: brSessionKey.current,
@@ -146,10 +134,7 @@ export default function Ledger() {
 
   const range = useMemo(() => dayRange(day), [day]);
   // Anggaran tetap per bulan, walaupun daftar transaksi per hari.
-  const budgetRange = useMemo(
-    () => monthRange(toMonthKey(day)),
-    [day],
-  );
+  const budgetRange = useMemo(() => monthRange(toMonthKey(day)), [day]);
   const isToday = day === today;
   const bookId = activeBook?._id;
 
@@ -166,10 +151,7 @@ export default function Ledger() {
     api.categories.list,
     bookId ? { bookId } : "skip",
   );
-  const recurring = useQuery(
-    api.recurring.list,
-    bookId ? { bookId } : "skip",
-  );
+  const recurring = useQuery(api.recurring.list, bookId ? { bookId } : "skip");
 
   const visible = useMemo(() => {
     let rows: LedgerTransaction[] = transactions ?? [];
@@ -262,42 +244,134 @@ export default function Ledger() {
     setRecDialogOpen(true);
   };
 
-  const handleToggleRecurring = (id: Id<"recurring_transactions">, enabled: boolean) => {
+  const handleToggleRecurring = (
+    id: Id<"recurring_transactions">,
+    enabled: boolean,
+  ) => {
     toggleRecurring({ id, enabled }).catch(() => {
       toast.error("Gagal mengubah status.");
     });
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <header className="flex flex-col gap-3">
-        <div className="flex items-stretch gap-2">
-          {/* Kantong utama dibuat tetap sempit; saldo mengambil sisa lebar,
-              supaya angka saldo lebih lega daripada nama kantong. */}
-          <div className="w-40 shrink-0 sm:w-48">
-            <BookSwitcher />
-          </div>
-          {walletData && (
-            <TotalBalance total={walletData.total} className="flex-1" />
-          )}
+    <div className="flex flex-col gap-4">
+      <header className="flex items-end justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-xs text-muted-foreground">Selamat datang di</p>
+          <h1 className="truncate font-display text-2xl font-extrabold tracking-tight">
+            {activeBook.name}
+          </h1>
         </div>
+        <BookSwitcher compact />
       </header>
 
-      <DayNavigator day={day} onChange={setDay} />
-
-      {summary === undefined ? (
+      {summary === undefined || walletData === undefined ? (
         <div className="grid min-h-[24vh] place-items-center">
           <ClayLoader label="Memuat catatan..." />
         </div>
       ) : (
-        <SummaryHero summary={summary} periodLabel="Sisa uang hari ini" />
+        <section
+          className="rounded-[1.6rem] bg-card p-5 shadow-[0_12px_28px_-22px_var(--clay-dark)] sm:p-6"
+          aria-label="Ringkasan kantong"
+        >
+          <p className="text-xs text-muted-foreground">Saldo semua dompet</p>
+          <p className="mt-2 font-display text-[2rem] font-extrabold leading-tight tracking-tight sm:text-4xl">
+            {formatRupiah(walletData.total)}
+          </p>
+          <div className="mt-4 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              aria-label="Hari sebelumnya"
+              onClick={() => setDay(shiftDay(day, -1))}
+              className="grid size-11 place-items-center rounded-2xl bg-secondary text-primary"
+            >
+              <ChevronLeft className="size-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setDay(today)}
+              className="min-w-0 text-center text-xs font-semibold text-muted-foreground"
+            >
+              {isToday ? "Hari ini" : "Catatan"} · {formatShortDate(day)}
+            </button>
+            <button
+              type="button"
+              aria-label="Hari berikutnya"
+              disabled={isToday}
+              onClick={() => setDay(shiftDay(day, 1))}
+              className="grid size-11 place-items-center rounded-2xl bg-secondary text-primary disabled:opacity-40"
+            >
+              <ChevronRight className="size-5" />
+            </button>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3 border-t border-border pt-4">
+            <div>
+              <p className="text-[11px] text-muted-foreground">
+                Masuk {isToday ? "hari ini" : "hari itu"}
+              </p>
+              <p className="mt-1 font-display text-lg font-extrabold text-income">
+                {formatRupiah(summary.income)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[11px] text-muted-foreground">
+                Keluar {isToday ? "hari ini" : "hari itu"}
+              </p>
+              <p className="mt-1 font-display text-lg font-extrabold text-expense">
+                {formatRupiah(summary.expense)}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section
+        aria-label="Pintasan fitur kantong"
+        className="grid grid-cols-3 gap-2"
+      >
+        {HOME_GRID.map((item) => {
+          const Icon = item.icon;
+          const className =
+            "flex min-h-12 items-center justify-center gap-1.5 rounded-[1.1rem] bg-card px-2 text-[11px] font-bold text-foreground transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-sm";
+          return item.to === "#berulang" ? (
+            <button
+              key={item.title}
+              type="button"
+              className={className}
+              onClick={() => {
+                setRecExpanded(true);
+                document
+                  .getElementById("berulang")
+                  ?.scrollIntoView({ behavior: "smooth", block: "center" });
+              }}
+            >
+              <Icon className="size-4 shrink-0 text-primary" />
+              {item.title}
+            </button>
+          ) : (
+            <NavLink key={item.to} to={item.to} className={className}>
+              <Icon className="size-4 shrink-0 text-primary" />
+              {item.title}
+            </NavLink>
+          );
+        })}
+      </section>
+
+      {bookId && (
+        <UpcomingBillRemindersCard
+          bookId={bookId}
+          onAdd={openNewBillReminder}
+          onEdit={(reminder) => {
+            void openBillReminder(reminder);
+          }}
+        />
       )}
 
       {/* Daftar transaksi hari ini */}
       <section className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
           <h2 className="font-display text-base font-extrabold sm:text-lg">
-            Transaksi
+            Transaksi {isToday ? "hari ini" : "hari itu"}
           </h2>
         </div>
         <div className="clay-sunken flex items-center gap-1.5 p-1.5">
@@ -377,7 +451,7 @@ export default function Ledger() {
 
       {/* Transaksi berulang */}
       {recurring && (
-        <section className="clay overflow-hidden">
+        <section id="berulang" className="clay overflow-hidden">
           <button
             type="button"
             onClick={() => setRecExpanded(!recExpanded)}
@@ -421,39 +495,7 @@ export default function Ledger() {
         </section>
       )}
 
-      {/* Pintu ke semua fitur kantong. Tanpa judul: tiap kartu sudah punya
-          nama dan keterangan sendiri, jadi teksnya tidak diulang di atas. */}
-      <section
-        aria-label="Pintasan fitur kantong"
-        className="grid grid-cols-2 gap-2 sm:grid-cols-3"
-      >
-          {HOME_GRID.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className="clay clay-press flex flex-col gap-2 p-3 text-left"
-            >
-              <span className="grid size-9 place-items-center rounded-xl bg-secondary text-lg">
-                {item.emoji}
-              </span>
-              <span className="text-sm font-extrabold">{item.title}</span>
-              <span className="text-[11px] leading-snug text-muted-foreground">
-                {item.desc}
-              </span>
-            </NavLink>
-        ))}
-      </section>
-
       {bookId && <BudgetSnapshotCard bookId={bookId} range={budgetRange} />}
-      {bookId && (
-        <UpcomingBillRemindersCard
-          bookId={bookId}
-          onAdd={openNewBillReminder}
-          onEdit={(reminder) => {
-            void openBillReminder(reminder);
-          }}
-        />
-      )}
       {bookId && <NotificationInsightCard bookId={bookId} />}
 
       {/* Panel chat AI melayang, di atas tombol chat. */}

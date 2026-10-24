@@ -91,11 +91,31 @@ const PILLARS = [
 
 /** Kartu "What you'll accomplish" — tujuan yang bisa dicapai pengguna. */
 const ACCOMPLISHMENTS = [
-  { emoji: "🧘", title: "Berhenti kehabisan uang", body: "Tahu sisa duit sebelum akhir bulan, bukan sesudahnya." },
-  { emoji: "🛟", title: "Bangun dana darurat", body: "Sisihin pelan-pelan tiap bulan sampai jadi bantalan." },
-  { emoji: "🏷️", title: "Lunasin utang lebih cepat", body: "Lihat utang dan piutang di satu papan, bayar yang paling dulu." },
-  { emoji: "🏝️", title: "Nabung buat target besar", body: "DP rumah, nikahan, liburan: pantau progresnya bareng." },
-  { emoji: "🔍", title: "Tahu uang pergi ke mana", body: "Rekap per kategori bikin kebocoran kelihatan cepat." },
+  {
+    emoji: "🧘",
+    title: "Berhenti kehabisan uang",
+    body: "Tahu sisa duit sebelum akhir bulan, bukan sesudahnya.",
+  },
+  {
+    emoji: "🛟",
+    title: "Bangun dana darurat",
+    body: "Sisihin pelan-pelan tiap bulan sampai jadi bantalan.",
+  },
+  {
+    emoji: "🏷️",
+    title: "Lunasin utang lebih cepat",
+    body: "Lihat utang dan piutang di satu papan, bayar yang paling dulu.",
+  },
+  {
+    emoji: "🏝️",
+    title: "Nabung buat target besar",
+    body: "DP rumah, nikahan, liburan: pantau progresnya bareng.",
+  },
+  {
+    emoji: "🔍",
+    title: "Tahu uang pergi ke mana",
+    body: "Rekap per kategori bikin kebocoran kelihatan cepat.",
+  },
 ];
 
 const WHY = [
@@ -118,10 +138,25 @@ const WHY = [
 ];
 
 const MOCK_ROWS = [
-  { emoji: "🍜", label: "Makan & Minum", note: "sarapan di warung", amount: -35000 },
+  {
+    emoji: "🍜",
+    label: "Makan & Minum",
+    note: "sarapan di warung",
+    amount: -35000,
+  },
   { emoji: "💼", label: "Gaji", note: "gajian bulan ini", amount: 5000000 },
-  { emoji: "🛵", label: "Transportasi", note: "ojek ke kantor", amount: -18000 },
-  { emoji: "🛍️", label: "Belanja", note: "stok sabun & sampo", amount: -215000 },
+  {
+    emoji: "🛵",
+    label: "Transportasi",
+    note: "ojek ke kantor",
+    amount: -18000,
+  },
+  {
+    emoji: "🛍️",
+    label: "Belanja",
+    note: "stok sabun & sampo",
+    amount: -215000,
+  },
 ];
 
 const FACTS = [
@@ -205,7 +240,11 @@ function MockPreview() {
             aria-hidden
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: EASE, delay: 0.5 + index * 0.12 }}
+            transition={{
+              duration: 0.5,
+              ease: EASE,
+              delay: 0.5 + index * 0.12,
+            }}
             className={`clay clay-float absolute z-10 grid size-11 place-items-center text-primary ${item.pos}`}
           >
             <Glyph className="size-5" />
@@ -316,27 +355,36 @@ export default function Landing() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative min-h-screen overflow-x-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none fixed -left-32 -top-32 size-96 rounded-full bg-primary/18 blur-3xl"
-        />
+        <div aria-hidden className="pointer-events-none hidden" />
 
         <div className="relative">
           <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6">
-            <div className="clay mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-2.5">
+            <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 rounded-[1.4rem] bg-card px-4 py-2.5">
               <Brand />
               <ThemeToggle />
               <nav className="hidden items-center gap-6 text-sm font-semibold text-muted-foreground md:flex">
-                <a href="#fitur" className="transition-colors hover:text-primary">
+                <a
+                  href="#fitur"
+                  className="transition-colors hover:text-primary"
+                >
                   Fitur
                 </a>
-                <a href="#kenapa" className="transition-colors hover:text-primary">
+                <a
+                  href="#kenapa"
+                  className="transition-colors hover:text-primary"
+                >
                   Kenapa kami
                 </a>
-                <a href="#cara" className="transition-colors hover:text-primary">
+                <a
+                  href="#cara"
+                  className="transition-colors hover:text-primary"
+                >
                   Cara pakai
                 </a>
-                <a href="#tanya" className="transition-colors hover:text-primary">
+                <a
+                  href="#tanya"
+                  className="transition-colors hover:text-primary"
+                >
                   Tanya jawab
                 </a>
               </nav>
@@ -355,7 +403,7 @@ export default function Landing() {
           </header>
 
           <main className="mx-auto w-full max-w-5xl px-4 sm:px-6">
-            {/* Hero: badge + judul + CTA + mock aplikasi, seperti acuan kynan.id */}
+            {/* Hero utama mengikuti arah visual Figcraft. */}
             <section className="grid items-center gap-12 py-10 sm:py-14 lg:min-h-[calc(100dvh-7rem)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
               <motion.div
                 variants={fadeUp}
@@ -363,17 +411,17 @@ export default function Landing() {
                 animate="show"
                 transition={{ duration: 0.8, ease: EASE }}
               >
-                <span className="clay-sm inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-income">
+                <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-primary">
                   <Check className="size-3.5" />
                   Gratis untuk mulai
                 </span>
                 <h1 className="mt-4 font-display text-4xl font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-6xl">
-                  Atur uang keluarga,{" "}
-                  <span className="text-primary">jadi tenang.</span>
+                  Uang keluarga,{" "}
+                  <span className="text-primary">lebih terarah.</span>
                 </h1>
                 <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  Catat transaksi, jaga anggaran, hubungkan semua dompet, dan
-                  rencanakan masa depan bareng orang tersayang. Semudah itu.
+                  Catat uang harian, atur anggaran, dan rencanakan tabungan
+                  bersama dalam satu kantong yang mudah dipakai.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                   {primaryAction}
@@ -382,7 +430,7 @@ export default function Landing() {
                   </Button>
                 </div>
                 <p className="mt-4 text-xs font-semibold text-muted-foreground">
-                  Mulai dalam 2 menit · Tanpa syarat aneh-aneh
+                  Gratis untuk mulai · Bisa dipakai sendiri atau bersama
                 </p>
               </motion.div>
 
@@ -394,9 +442,18 @@ export default function Landing() {
             {/* Tiga blurb log-in cepat, seperti acuan */}
             <section className="grid grid-cols-1 divide-y divide-border/70 border-y border-border/70 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               {[
-                { title: "Log in seconds", body: "Tambah transaksi dalam sekali ketik." },
-                { title: "Budgets that stick", body: "Jatah per kategori yang kejaga." },
-                { title: "Better, together", body: "Kelola bareng pasangan atau keluarga." },
+                {
+                  title: "Catat cepat",
+                  body: "Tambah transaksi dalam beberapa detik.",
+                },
+                {
+                  title: "Anggaran jelas",
+                  body: "Tahu sisa jatah tiap kategori.",
+                },
+                {
+                  title: "Bisa bersama",
+                  body: "Kelola bareng pasangan atau keluarga.",
+                },
               ].map((item) => (
                 <p
                   key={item.title}
@@ -448,7 +505,7 @@ export default function Landing() {
                         delay: index * 0.06,
                       }}
                       whileHover={{ y: -6 }}
-                      className="clay p-6"
+                      className="rounded-[1.5rem] bg-card p-6"
                     >
                       <span className="grid size-11 place-items-center rounded-2xl bg-primary/12 text-primary">
                         <Icon className="size-5" />
@@ -564,9 +621,7 @@ export default function Landing() {
                       6 bulan terakhir
                     </p>
                   </div>
-                  <span className="clay-chip text-income">
-                    On track ✓
-                  </span>
+                  <span className="clay-chip text-income">On track ✓</span>
                 </div>
                 {/* Batang naik sederhana: angka contoh, bukan data pengguna. */}
                 <div className="mt-6 flex h-36 items-end gap-2 sm:gap-3">
@@ -659,7 +714,11 @@ export default function Landing() {
               </motion.h2>
               <Accordion type="single" collapsible className="mt-8">
                 {FAQS.map((faq) => (
-                  <AccordionItem key={faq.q} value={faq.q} className="clay mb-3 rounded-3xl px-4 sm:px-5">
+                  <AccordionItem
+                    key={faq.q}
+                    value={faq.q}
+                    className="clay mb-3 rounded-3xl px-4 sm:px-5"
+                  >
                     <AccordionTrigger className="text-left text-sm font-bold hover:no-underline">
                       {faq.q}
                     </AccordionTrigger>

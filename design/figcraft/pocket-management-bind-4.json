@@ -1,0 +1,82 @@
+[
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2344
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/muted",
+      "field": "fill",
+      "ids": [
+        2345
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2346
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/muted",
+      "field": "fill",
+      "ids": [
+        2347
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2348
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2349
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/muted",
+      "field": "fill",
+      "ids": [
+        2350
+      ]
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "field": "fill",
+      "ids": [
+        2351
+      ]
+    }
+  }
+]

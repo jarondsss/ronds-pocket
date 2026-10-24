@@ -1,0 +1,233 @@
+[
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3100,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Kelola Keluarga",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7100.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3520,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Kelola Pribadi",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7100.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3940,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Satu kantong",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7100.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 4360,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Anggota",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7100.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3100,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Edit nama",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7950.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3520,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Hapus",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7950.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3940,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Hapus terkunci",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7950.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 4360,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Keluarkan anggota",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 7950.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3100,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Hapus sukses",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 8800.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3520,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Anggota dikeluarkan",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 8800.0,
+      "height": 400,
+      "select": false
+    }
+  },
+  {
+    "command": "node.create",
+    "params": {
+      "x": 3940,
+      "parent": 97,
+      "type": "frame",
+      "width": 342,
+      "name": "Kantong/Nama disimpan",
+      "props": {
+        "fill": "transparent",
+        "layout": "vertical",
+        "sizingV": "hug",
+        "padding": 24,
+        "gap": 14,
+        "cornerRadius": 28
+      },
+      "y": 8800.0,
+      "height": 400,
+      "select": false
+    }
+  }
+]

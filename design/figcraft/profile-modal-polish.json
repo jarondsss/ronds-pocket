@@ -1,0 +1,524 @@
+[
+  {
+    "params": {
+      "ids": [
+        1975
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:5",
+        "value": "Sistem",
+        "type": "setVariable"
+      },
+      "id": 1975
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "characters": "○",
+      "id": 2057
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "ids": [
+        1976
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:5",
+        "value": "Terang",
+        "type": "setVariable"
+      },
+      "id": 1976
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "characters": "○",
+      "id": 2059
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "ids": [
+        1977
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:5",
+        "value": "Gelap",
+        "type": "setVariable"
+      },
+      "id": 1977
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "characters": "○",
+      "id": 2061
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "ids": [
+        1982
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:6",
+        "value": "Keluarga",
+        "type": "setVariable"
+      },
+      "id": 1982
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "characters": "○",
+      "id": 2066
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "ids": [
+        1983
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:6",
+        "value": "Pribadi",
+        "type": "setVariable"
+      },
+      "id": 1983
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "characters": "○",
+      "id": 2068
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "variable": "VariableID:5",
+      "ids": [
+        1978
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "ids": [
+        1979
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "expression": "Tema pilihan",
+          "variable": "VariableID:3",
+          "type": "setVariable"
+        },
+        {
+          "dest": 1966,
+          "type": "swapOverlay"
+        }
+      ],
+      "id": 1979
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "VariableID:6",
+      "ids": [
+        1984
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "ids": [
+        1985
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "expression": "Kantong pilihan",
+          "variable": "VariableID:4",
+          "type": "setVariable"
+        },
+        {
+          "dest": 1966,
+          "type": "swapOverlay"
+        }
+      ],
+      "id": 1985
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        976
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "expression": "Avatar",
+          "variable": "VariableID:2",
+          "type": "setVariable"
+        },
+        {
+          "background": "#24203466",
+          "dest": 1963,
+          "close_on_outside": true,
+          "type": "openOverlay",
+          "position": "center"
+        }
+      ],
+      "id": 976
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        991
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "expression": "Tema",
+          "variable": "VariableID:5",
+          "type": "setVariable"
+        },
+        {
+          "background": "#24203466",
+          "dest": 1955,
+          "close_on_outside": true,
+          "type": "openOverlay",
+          "position": "center"
+        }
+      ],
+      "id": 991
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "ids": [
+        998
+      ]
+    },
+    "command": "proto.interaction.clear"
+  },
+  {
+    "params": {
+      "actions": [
+        {
+          "expression": "Kantong",
+          "variable": "VariableID:6",
+          "type": "setVariable"
+        },
+        {
+          "background": "#24203466",
+          "dest": 1956,
+          "close_on_outside": true,
+          "type": "openOverlay",
+          "position": "center"
+        }
+      ],
+      "id": 998
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:7",
+        "value": "Suka",
+        "type": "setVariable"
+      },
+      "id": 2076
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        2076
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:7",
+        "value": "Lumayan",
+        "type": "setVariable"
+      },
+      "id": 2077
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        2077
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "action": {
+        "variable": "VariableID:7",
+        "value": "Ada masalah",
+        "type": "setVariable"
+      },
+      "id": 2078
+    },
+    "command": "proto.interaction.add"
+  },
+  {
+    "params": {
+      "variable": "Light/inset",
+      "ids": [
+        2078
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "variable": "VariableID:7",
+      "ids": [
+        1998
+      ],
+      "field": "characters"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "textAlign": "center",
+      "id": 2119
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2101,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2103,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2105,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2107,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2109,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2111,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2113,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fontSize": 18,
+      "id": 2115,
+      "textAlign": "right",
+      "characters": "›"
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "id": 984,
+      "sizingV": "fixed",
+      "height": 44
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "id": 991,
+      "sizingV": "fixed",
+      "height": 44
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "id": 998,
+      "sizingV": "fixed",
+      "height": 44
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "id": 1005,
+      "sizingV": "fixed",
+      "height": 44
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "characters": "Fitur lainnya",
+      "id": 2106
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "mainAlign": "min",
+      "id": 2080
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "fill": "#696378",
+      "id": 2144
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "variable": "Light/muted",
+      "ids": [
+        2144
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "fill": "#696378",
+      "id": 2145
+    },
+    "command": "node.set"
+  },
+  {
+    "params": {
+      "variable": "Light/muted",
+      "ids": [
+        2145
+      ],
+      "field": "fill"
+    },
+    "command": "variable.bind"
+  },
+  {
+    "params": {
+      "id": 97
+    },
+    "command": "page.select"
+  }
+]

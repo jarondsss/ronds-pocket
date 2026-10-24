@@ -1,0 +1,12 @@
+[
+  {
+    "command": "edit.duplicate",
+    "params": {
+      "ids": [
+        2188
+      ],
+      "dy": 2550,
+      "dx": 0
+    }
+  }
+]

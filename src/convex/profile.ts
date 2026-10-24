@@ -63,9 +63,7 @@ export const setPassword = action({
   args: { password: v.string() },
   handler: async (ctx, { password }) => {
     if (password.length < MIN_PASSWORD_LENGTH) {
-      throw new Error(
-        `Kata sandi minimal ${MIN_PASSWORD_LENGTH} karakter ya.`,
-      );
+      throw new Error(`Kata sandi minimal ${MIN_PASSWORD_LENGTH} karakter ya.`);
     }
 
     // createAccount butuh ActionCtx, jadi email diambil lewat query di atas.
@@ -103,7 +101,10 @@ export const myEmail = query({
       .query("authAccounts")
       .withIndex("userIdAndProvider", (q) => q.eq("userId", userId))
       .collect();
-    return accounts.find((a) => a.provider === "email-otp")?.providerAccountId ?? null;
+    return (
+      accounts.find((a) => a.provider === "email-otp")?.providerAccountId ??
+      null
+    );
   },
 });
 
@@ -117,6 +118,7 @@ async function deleteBookRows(
     | "categories"
     | "budgets"
     | "goals"
+    | "liabilities"
     | "savings"
     | "savings_entries"
     | "activity"
@@ -205,6 +207,7 @@ export const deleteAccount = mutation({
         await deleteBookRows(ctx, "categories", bookId);
         await deleteBookRows(ctx, "budgets", bookId);
         await deleteBookRows(ctx, "goals", bookId);
+        await deleteBookRows(ctx, "liabilities", bookId);
         await deleteBookRows(ctx, "savings", bookId);
         await deleteBookRows(ctx, "recurring_transactions", bookId);
         await deleteBookRows(ctx, "bill_reminders", bookId);

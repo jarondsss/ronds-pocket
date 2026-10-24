@@ -1,14 +1,15 @@
-import { EASE } from "@/lib/motion";
-import { formatRupiah, formatShortDate } from "@/lib/format";
+import { formatRupiah } from "@/lib/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
-import { motion } from "framer-motion";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { CalendarClock, Plus, PencilLine } from "@/components/icons";
+import {
+  ArrowRight,
+  CalendarDays,
+  CalendarClock,
+  Plus,
+} from "@/components/icons";
 import { useMemo } from "react";
 
 function daysLabel(dueDate: number) {
@@ -18,14 +19,6 @@ function daysLabel(dueDate: number) {
   if (diffDays === 0) return "Hari ini";
   if (diffDays === 1) return "Besok";
   return `${diffDays} hari lagi`;
-}
-
-function daysSeverity(dueDate: number) {
-  const now = Date.now();
-  const diffDays = Math.round((dueDate - now) / 86400000);
-  if (diffDays < 0) return "destructive";
-  if (diffDays <= 3) return "warning";
-  return "default";
 }
 
 interface UpcomingBillRemindersCardProps {
@@ -50,7 +43,7 @@ export function UpcomingBillRemindersCard({
 }: UpcomingBillRemindersCardProps) {
   const reminders = useQuery(
     api.billReminders.list,
-    bookId ? { bookId } : "skip"
+    bookId ? { bookId } : "skip",
   );
 
   const items = useMemo(() => {
@@ -67,9 +60,7 @@ export function UpcomingBillRemindersCard({
     // eslint-disable-next-line react-hooks/purity
     const now = Date.now();
     if (!reminders) return 0;
-    return reminders.filter(
-      (r) => r.enabled && r.due_date < now
-    ).length;
+    return reminders.filter((r) => r.enabled && r.due_date < now).length;
   }, [reminders]);
 
   if (items.length === 0 && overdueCount === 0) {
@@ -95,86 +86,38 @@ export function UpcomingBillRemindersCard({
   }
 
   return (
-    <Card className="border-border/50 bg-card/60">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="font-display text-lg font-extrabold flex items-center gap-2">
-            <CalendarClock className="size-4 text-primary" />
-            Tagihan akan datang
-          </CardTitle>
-          <div className="flex items-center gap-2">
-            {overdueCount > 0 && (
-              <Badge variant="destructive" className="gap-1 text-xs">
-                {overdueCount} lewat
-              </Badge>
-            )}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onAdd}
-              className="gap-1.5 text-xs"
-            >
-              <Plus className="size-3.5" />
-              Tambah
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-2">
-        {items.map((item, idx) => (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <motion.div
-                key={item._id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.25, ease: EASE, delay: idx * 0.04 }}
-                className="flex items-center justify-between rounded-xl border border-border/50 bg-card/80 p-3 cursor-pointer hover:bg-primary/[2%]"
-                onClick={() => onEdit(item)}
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold">{item.title}</p>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="font-medium">{formatShortDate(item.due_date)}</span>
-                    {item.category && <span>· {item.category}</span>}
-                  </div>
-                </div>
-                <div className="shrink-0 ml-3 text-right">
-                  <p className="text-sm font-extrabold text-expense">
-                    {formatRupiah(item.amount)}
-                  </p>
-                  <p
-                    className={`text-xs font-bold ${
-                      daysSeverity(item.due_date) === "destructive"
-                        ? "text-destructive"
-                        : daysSeverity(item.due_date) === "warning"
-                          ? "text-amber-500"
-                          : "text-muted-foreground"
-                    }`}
-                  >
-                    {daysLabel(item.due_date)}
-                  </p>
-                  <span className="inline-flex items-center gap-1 ml-2 text-[10px] font-medium text-muted-foreground/60">
-                    <PencilLine className="size-3" />
-                    edit
-                  </span>
-                </div>
-              </motion.div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Klik untuk mengedit</p>
-            </TooltipContent>
-          </Tooltip>
-        ))}
-
-        {items.length === 0 && overdueCount > 0 && (
-          <p className="text-sm text-muted-foreground text-center pt-2">
-            Semua tagihan yang diingatkan sudah lewat.
-          </p>
-        )}
-      </CardContent>
-    </Card>
+    <section aria-label="Pengingat tagihan" className="space-y-2">
+      {items.map((item) => (
+        <button
+          key={item._id}
+          type="button"
+          onClick={() => onEdit(item)}
+          className="flex min-h-[70px] w-full items-center gap-3 rounded-[1.3rem] bg-accent px-4 text-left focus-visible:outline-2 focus-visible:outline-primary"
+        >
+          <CalendarDays className="size-5 shrink-0 text-primary" />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-sm font-bold">
+              {item.title}
+            </span>
+            <span className="block truncate text-xs text-muted-foreground">
+              {daysLabel(item.due_date)} · {formatRupiah(item.amount)}
+            </span>
+          </span>
+          <ArrowRight className="size-5 shrink-0 text-primary" />
+        </button>
+      ))}
+      {overdueCount > 0 && (
+        <p className="px-2 text-xs font-semibold text-destructive">
+          {overdueCount} pengingat sudah lewat
+        </p>
+      )}
+      <button
+        type="button"
+        onClick={onAdd}
+        className="px-2 py-1 text-xs font-bold text-primary"
+      >
+        + Tambah pengingat
+      </button>
+    </section>
   );
 }

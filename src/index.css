@@ -10,8 +10,8 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Baloo 2", "Plus Jakarta Sans", ui-sans-serif, system-ui,
-    sans-serif;
+  --font-display:
+    "Baloo 2", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -51,28 +51,27 @@
 :root {
   --radius: 1.3rem;
 
-  /* Palette acuan: latar biru-lavender sangat lembut, kartu hampir putih,
-     satu ungu jenuh (#5B4FE8) untuk aksi utama. */
-  --background: oklch(0.945 0.024 282);
-  --foreground: oklch(0.3 0.05 285);
-  --card: oklch(0.995 0.004 285);
-  --card-foreground: oklch(0.3 0.05 285);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.3 0.05 285);
-  --primary: oklch(0.55 0.215 283);
-  --primary-foreground: oklch(0.99 0.005 285);
-  --secondary: oklch(0.965 0.012 282);
-  --secondary-foreground: oklch(0.37 0.07 285);
-  --muted: oklch(0.96 0.01 282);
-  --muted-foreground: oklch(0.56 0.05 285);
-  --accent: oklch(0.94 0.035 285);
-  --accent-foreground: oklch(0.42 0.13 283);
-  --destructive: oklch(0.62 0.2 22);
-  --income: oklch(0.72 0.16 155);
-  --expense: oklch(0.62 0.19 28);
-  --border: oklch(0.915 0.016 282);
-  --input: oklch(0.955 0.012 282);
-  --ring: oklch(0.55 0.215 283);
+  /* Warna mobile Figcraft: latar lavender, permukaan putih, ungu untuk aksi. */
+  --background: #f4f3fa;
+  --foreground: #242034;
+  --card: #ffffff;
+  --card-foreground: #242034;
+  --popover: #ffffff;
+  --popover-foreground: #242034;
+  --primary: #6251d9;
+  --primary-foreground: #ffffff;
+  --secondary: #eceaf5;
+  --secondary-foreground: #242034;
+  --muted: #eceaf5;
+  --muted-foreground: #696378;
+  --accent: #eae5ff;
+  --accent-foreground: #6251d9;
+  --destructive: #b1404f;
+  --income: #147557;
+  --expense: #b1404f;
+  --border: #dfdceb;
+  --input: #eceaf5;
+  --ring: #6251d9;
   --chart-1: oklch(0.55 0.215 283);
   --chart-2: oklch(0.62 0.19 28);
   --chart-3: oklch(0.72 0.16 155);
@@ -87,9 +86,7 @@
   --sidebar-border: oklch(0.915 0.016 282);
   --sidebar-ring: oklch(0.55 0.215 283);
 
-  /* Clay light model: bayangan biru lembut di bawah, sorotan putih di atas.
-     Semua warna bayangan memakai nada biru-lavender, bukan cokelat, supaya
-     permukaan terasa seperti plastik lembut yang duduk di atas latar. */
+  /* Bayangan clay dibuat tipis agar angka dan isi kartu tetap memimpin. */
   --clay-dark: rgba(84, 92, 176, 0.15);
   --clay-light: rgba(255, 255, 255, 0.92);
   --clay-inset-dark: rgba(94, 102, 190, 0.1);
@@ -104,26 +101,26 @@
 }
 
 .dark {
-  --background: oklch(0.245 0.032 285);
-  --foreground: oklch(0.96 0.01 285);
-  --card: oklch(0.3 0.036 285);
-  --card-foreground: oklch(0.96 0.01 285);
-  --popover: oklch(0.31 0.036 285);
-  --popover-foreground: oklch(0.96 0.01 285);
-  --primary: oklch(0.7 0.16 283);
-  --primary-foreground: oklch(0.21 0.045 300);
-  --secondary: oklch(0.35 0.042 302);
-  --secondary-foreground: oklch(0.96 0.012 310);
-  --muted: oklch(0.345 0.038 300);
-  --muted-foreground: oklch(0.74 0.035 310);
-  --accent: oklch(0.44 0.08 62);
-  --accent-foreground: oklch(0.96 0.03 75);
-  --destructive: oklch(0.68 0.17 22);
-  --income: oklch(0.76 0.13 168);
-  --expense: oklch(0.78 0.17 32);
-  --border: oklch(0.39 0.035 300);
-  --input: oklch(0.37 0.035 300);
-  --ring: oklch(0.72 0.15 296);
+  --background: #181724;
+  --foreground: #f6f4ff;
+  --card: #242233;
+  --card-foreground: #f6f4ff;
+  --popover: #242233;
+  --popover-foreground: #f6f4ff;
+  --primary: #b5a8ff;
+  --primary-foreground: #211a3d;
+  --secondary: #2f2c40;
+  --secondary-foreground: #f6f4ff;
+  --muted: #2f2c40;
+  --muted-foreground: #bab4cd;
+  --accent: #39314f;
+  --accent-foreground: #b5a8ff;
+  --destructive: #ff9fab;
+  --income: #7adbb4;
+  --expense: #ff9fab;
+  --border: #474157;
+  --input: #2f2c40;
+  --ring: #b5a8ff;
   --chart-1: oklch(0.72 0.15 296);
   --chart-2: oklch(0.78 0.17 32);
   --chart-3: oklch(0.78 0.12 170);
@@ -199,51 +196,26 @@
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Claymorphism surfaces: plush rounded shapes, matte colour, inflated shadows
-   (soft outer drop + inner highlight) so elements read as pressed clay.
---------------------------------------------------------------------------- */
+/* Permukaan clay yang tenang, dengan bentuk membulat dan kedalaman tipis. */
 @layer components {
   .clay {
     border-radius: calc(var(--radius) + 0.35rem);
     background-color: var(--card);
-    box-shadow:
-      0 1.6rem 2.6rem -1.5rem var(--clay-ambient),
-      0.45rem 0.45rem 1.2rem var(--clay-dark),
-      -0.35rem -0.35rem 0.9rem var(--clay-light),
-      inset -0.12rem -0.12rem 0.4rem var(--clay-inset-dark),
-      inset 0.12rem 0.12rem 0.4rem var(--clay-inset-light);
+    box-shadow: 0 0.9rem 2rem -1.5rem var(--clay-dark);
   }
 
   .clay-sm {
     border-radius: var(--radius);
     background-color: var(--card);
-    box-shadow:
-      0 0.9rem 1.5rem -0.9rem var(--clay-ambient),
-      0.22rem 0.22rem 0.6rem var(--clay-dark),
-      -0.18rem -0.18rem 0.5rem var(--clay-light),
-      inset -0.08rem -0.08rem 0.28rem var(--clay-inset-dark),
-      inset 0.08rem 0.08rem 0.28rem var(--clay-inset-light);
+    box-shadow: 0 0.7rem 1.6rem -1.2rem var(--clay-dark);
   }
 
-  /* Permukaan ungu: gradien dari ungu muda ke ungu pekat, cahayanya sendiri
-     dibuat halus supaya permukaannya terasa seperti plastik lembut, bukan
-     tombol glossy. */
+  /* Aksi utama tampil solid agar keterbacaan teks stabil di dua tema. */
   .clay-primary {
     border-radius: calc(var(--radius) + 0.35rem);
-    background-image: linear-gradient(
-      140deg,
-      color-mix(in oklab, var(--primary) 76%, white),
-      color-mix(in oklab, var(--primary) 92%, black 6%)
-    );
+    background: var(--primary);
     color: var(--primary-foreground);
-    box-shadow:
-      0 1.4rem 2.2rem -1.1rem
-        color-mix(in oklab, var(--primary) 55%, transparent),
-      0.5rem 0.5rem 1.2rem var(--clay-primary-dark),
-      -0.35rem -0.35rem 0.9rem var(--clay-primary-light),
-      inset -0.18rem -0.18rem 0.5rem rgba(0, 0, 0, 0.14),
-      inset 0.18rem 0.18rem 0.5rem rgba(255, 255, 255, 0.32);
+    box-shadow: 0 0.75rem 1.4rem -1rem var(--clay-primary-dark);
   }
 
   /* Navigasi mengambang: bilah putih melayang dengan garis ungu sangat tipis,
@@ -277,17 +249,8 @@
     padding: 0.3rem 0.7rem;
     font-size: 0.7rem;
     font-weight: 700;
-    color: #fff;
-    background-image: linear-gradient(
-      140deg,
-      color-mix(in oklab, var(--primary) 78%, white),
-      var(--primary)
-    );
-    box-shadow:
-      0 0.4rem 0.9rem -0.3rem
-        color-mix(in oklab, var(--primary) 65%, transparent),
-      inset 0.08rem 0.08rem 0.3rem rgba(0, 0, 0, 0.14),
-      inset 0.08rem 0.08rem 0.3rem rgba(255, 255, 255, 0.3);
+    color: var(--primary-foreground);
+    background: var(--primary);
   }
 
   .clay-sunken {

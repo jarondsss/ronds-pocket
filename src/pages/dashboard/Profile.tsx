@@ -1,382 +1,398 @@
-import { ClayLoader } from "@/components/ClayLoader";
 import { useConfirm } from "@/components/ConfirmDialog";
+import { BookManagement } from "@/components/dashboard/BookManagement";
+import { FeedbackDialog } from "@/components/dashboard/FeedbackDialog";
+import { DonateDialog } from "@/components/dashboard/DonateDialog";
+import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { ANIMAL_AVATARS } from "@/lib/avatars";
+import { useBooks } from "@/lib/book-context";
 import { toastError } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 import { useAction, useMutation } from "convex/react";
-import { ShieldCheck, Loader2, LogOut, Moon, Sun, Trash2 } from "@/components/icons";
+import {
+  ChevronRight,
+  Heart,
+  Lock,
+  LogOut,
+  MessageCircle,
+  Moon,
+  PencilLine,
+  ShieldCheck,
+  Sun,
+  Trash2,
+  Users,
+} from "@/components/icons";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 
-const NAME_MAX_LENGTH = 24;
+type Panel = "avatar" | "name" | "theme" | "password" | "help" | null;
+const rowClass =
+  "flex min-h-16 w-full items-center gap-3 border-b border-border/70 px-4 text-left last:border-0 hover:bg-secondary/50 focus-visible:outline-2 focus-visible:outline-primary";
 
 export default function Profile() {
   const profile = useProfile();
   const { signOut } = useAuth();
+  const { activeBook } = useBooks();
   const saveProfile = useMutation(api.profile.update);
-  const setPasswordAction = useAction(api.profile.setPassword);
-  const deleteAccountMutation = useMutation(api.profile.deleteAccount);
+  const setPassword = useAction(api.profile.setPassword);
+  const deleteAccount = useMutation(api.profile.deleteAccount);
   const navigate = useNavigate();
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const confirm = useConfirm();
+  const [panel, setPanel] = useState<Panel>(null);
+  const [managing, setManaging] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [donateOpen, setDonateOpen] = useState(false);
+  const [name, setName] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [password, setPasswordDraft] = useState("");
+  const [passwordAgain, setPasswordAgain] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  // Draft lokal: null berarti "belum disentuh", jadi nilai dari server selalu
-  // dipakai sampai user benar-benar mengubahnya. Tidak perlu effect reset.
-  const [nameDraft, setNameDraft] = useState<string | null>(null);
-  const [avatarDraft, setAvatarDraft] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [isLeaving, setIsLeaving] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isSettingPassword, setIsSettingPassword] = useState(false);
-
-  const name = nameDraft ?? profile.name;
-  const avatar = avatarDraft ?? profile.avatar;
-  const isDirty =
-    name.trim() !== profile.name || (avatar ?? null) !== (profile.avatar ?? null);
-
-  const handleSave = async () => {
-    setIsSaving(true);
+  const update = async (kind: "name" | "avatar") => {
+    setBusy(true);
     try {
       await saveProfile({
-        displayName: name,
-        avatar: avatar ?? undefined,
+        displayName:
+          kind === "name" ? name?.trim() || profile.name : profile.name,
+        avatar:
+          kind === "avatar"
+            ? (avatar ?? profile.avatar ?? undefined)
+            : (profile.avatar ?? undefined),
       });
-      setNameDraft(null);
-      setAvatarDraft(null);
-      toast.success("Profil disimpan");
-    } catch (caught) {
-      toastError(caught, "Profilnya belum tersimpan. Coba lagi ya.");
+      setPanel(null);
+      setName(null);
+      setAvatar(null);
+      toast.success("Profil diperbarui.");
+    } catch (error) {
+      toastError(error, "Profil gagal disimpan.");
     } finally {
-      setIsSaving(false);
+      setBusy(false);
     }
   };
-
-  const hasEmail = !profile.isAnonymous && Boolean(profile.email);
-  const [pw, setPw] = useState("");
-  const [pwConfirm, setPwConfirm] = useState("");
-
-  const handleSetPassword = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSettingPassword(true);
-    try {
-      await setPasswordAction({ password: pw.trim() });
-      setPw("");
-      setPwConfirm("");
-      toast.success("Kata sandi tersimpan. Mulai sekarang bisa masuk pakai email dan kata sandi.");
-    } catch (caught) {
-      toastError(caught, "Kata sandinya belum tersimpan. Coba lagi ya.");
-    } finally {
-      setIsSettingPassword(false);
-    }
-  };
-
-  const handleSignOut = async () => {
-    setIsLeaving(true);
+  const signOutNow = async () => {
+    setBusy(true);
     try {
       await signOut();
       navigate("/", { replace: true });
-    } catch (caught) {
-      toastError(caught, "Gagal keluar. Coba lagi ya.");
-      setIsLeaving(false);
+    } catch (error) {
+      toastError(error, "Gagal keluar.");
+      setBusy(false);
     }
   };
-
-  const handleDeleteAccount = async () => {
-    const confirmed = await confirm({
+  const deleteNow = async () => {
+    const ok = await confirm({
       title: "Hapus akun secara permanen?",
       description:
-        "Semua data kamu akan dihapus dan tidak bisa dikembalikan: kantong, transaksi, dompet, anggaran, goals, tabungan, dan riwayat.",
+        "Semua data yang kamu miliki akan dihapus dan tidak bisa dikembalikan. Kantong bersama yang masih punya anggota akan dialihkan ke anggota lain.",
       confirmLabel: "Hapus akun",
       tone: "destructive",
     });
-    if (!confirmed) return;
-    setIsDeleting(true);
+    if (!ok) return;
+    setBusy(true);
     try {
-      await deleteAccountMutation();
+      await deleteAccount();
       await signOut();
       navigate("/", { replace: true });
-      toast.success("Akun berhasil dihapus.");
-    } catch (caught) {
-      toastError(caught, "Gagal menghapus akun. Coba lagi ya.");
-      setIsDeleting(false);
+    } catch (error) {
+      toastError(error, "Akun gagal dihapus.");
+      setBusy(false);
     }
   };
-
-  if (profile.isLoading) {
+  const savePassword = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (password.length < 8 || password !== passwordAgain) return;
+    setBusy(true);
+    try {
+      await setPassword({ password });
+      setPanel(null);
+      setPasswordDraft("");
+      setPasswordAgain("");
+      toast.success("Kata sandi tersimpan.");
+    } catch (error) {
+      toastError(error, "Kata sandi gagal disimpan.");
+    } finally {
+      setBusy(false);
+    }
+  };
+  const row = (
+    label: string,
+    detail: string,
+    icon: typeof Users,
+    action: () => void,
+  ) => {
+    const Icon = icon;
     return (
-      <div className="grid min-h-[40vh] place-items-center">
-        <ClayLoader label="Memuat profil..." />
-      </div>
+      <button type="button" onClick={action} className={rowClass}>
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary text-primary">
+          <Icon className="size-[18px]" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-bold">{label}</span>
+          <span className="block truncate text-xs text-muted-foreground">
+            {detail}
+          </span>
+        </span>
+        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+      </button>
     );
-  }
+  };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="mx-auto flex max-w-2xl flex-col gap-5 pb-8">
       <header>
-        <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Profil kamu
-        </h1>
+        <h1 className="font-display text-2xl font-extrabold">Profil</h1>
         <p className="text-sm text-muted-foreground">
-          Ganti maskot dan nama yang muncul saat kamu catat bareng.
+          Atur akun dan kantongmu.
         </p>
       </header>
-
-      {/* Ringkasan: bentuk akhir dari pilihan di bawah, langsung kelihatan. */}
-      <section className="clay flex items-center gap-4 p-5 sm:p-6">
-        <span className="clay-primary grid size-16 shrink-0 place-items-center rounded-3xl text-3xl leading-none">
-          {avatar ?? (
-            <span className="font-display text-2xl font-black">
-              {profile.initial}
-            </span>
-          )}
+      <section className="flex items-center gap-4 rounded-[1.5rem] bg-card p-5">
+        <span className="grid size-16 shrink-0 place-items-center rounded-[1.3rem] bg-accent text-3xl">
+          {profile.avatar ?? profile.initial}
         </span>
-        <div className="min-w-0">
-          <p className="truncate font-display text-lg font-extrabold">{name}</p>
-          <p className="truncate text-sm text-muted-foreground">
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate font-display text-lg font-extrabold">
+            {profile.name}
+          </h2>
+          <p className="truncate text-xs text-muted-foreground">
             {profile.email ?? "Masuk sebagai tamu"}
           </p>
-          <span className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-income">
-            <ShieldCheck className="size-3.5" />
-            {profile.isAnonymous ? "Akun tamu" : "Akun email"}
-          </span>
-        </div>
-      </section>
-
-      {/* Maskot */}
-      <section className="clay p-5 sm:p-6">
-        <h2 className="font-display text-lg font-extrabold">Maskot kamu</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Pilih satu hewan buat jadi wajahmu di kantong bersama.
-        </p>
-        <div className="clay-sunken mt-4 grid grid-cols-4 gap-2 p-3 sm:grid-cols-8">
-          {ANIMAL_AVATARS.map((item) => {
-            const selected = avatar === item.emoji;
-            return (
-              <button
-                key={item.emoji}
-                type="button"
-                onClick={() => setAvatarDraft(item.emoji)}
-                aria-pressed={selected}
-                aria-label={item.label}
-                title={item.label}
-                className={cn(
-                  "clay-press grid aspect-square place-items-center rounded-2xl text-2xl leading-none transition-colors",
-                  selected
-                    ? "clay-primary text-2xl"
-                    : "bg-secondary/60 hover:bg-secondary",
-                )}
-              >
-                {item.emoji}
-              </button>
-            );
-          })}
-        </div>
-        {avatar && (
           <button
             type="button"
-            onClick={() => setAvatarDraft("")}
-            className="mt-3 text-xs font-semibold text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            onClick={() => setPanel("avatar")}
+            className="mt-2 text-xs font-bold text-primary"
           >
-            Pakai inisial nama saja
+            Ganti avatar
           </button>
+        </div>
+      </section>
+      <section
+        className="overflow-hidden rounded-[1.5rem] bg-card"
+        aria-label="Pengaturan profil"
+      >
+        {row("Nama tampilan", profile.name, PencilLine, () => setPanel("name"))}
+        {row(
+          "Tema",
+          theme === "dark"
+            ? "Gelap"
+            : theme === "light"
+              ? "Terang"
+              : "Ikuti perangkat",
+          Moon,
+          () => setPanel("theme"),
+        )}
+        {row("Kantong aktif", activeBook?.name ?? "-", Users, () =>
+          setManaging(true),
+        )}
+        {profile.email &&
+          row("Kata sandi", "Masuk tanpa kode email", Lock, () =>
+            setPanel("password"),
+          )}
+        {row("Bantuan", "Cara menggunakan Ronds Pocket", ShieldCheck, () =>
+          setPanel("help"),
         )}
       </section>
-
-      {/* Nama tampilan */}
-      <section className="clay p-5 sm:p-6">
-        <h2 className="font-display text-lg font-extrabold">Nama tampilan</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Nama ini yang muncul di notifikasi dan riwayat saat kamu mencatat
-          bareng orang lain.
-        </p>
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
-          <div className="flex-1">
-            <Label htmlFor="display-name" className="text-xs font-bold">
-              Nama
-            </Label>
-            <Input
-              id="display-name"
-              value={name}
-              maxLength={NAME_MAX_LENGTH}
-              autoComplete="nickname"
-              onChange={(event) => setNameDraft(event.target.value)}
-              className="mt-2"
-            />
-            <p className="mt-1.5 text-[11px] font-medium text-muted-foreground">
-              Maksimal {NAME_MAX_LENGTH} huruf.
-            </p>
-          </div>
-          <Button
-            type="button"
-            onClick={() => void handleSave()}
-            disabled={isSaving || !isDirty}
-            className="h-11 sm:w-32"
-          >
-            {isSaving ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              "Simpan"
-            )}
-          </Button>
-        </div>
-      </section>
-
-      {/* Tampilan */}
-      <section className="clay p-5 sm:p-6">
-        <h2 className="font-display text-lg font-extrabold">Tampilan</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Pilih tema terang, gelap, atau ikuti pengaturan perangkat.
-        </p>
-        <div className="clay-sunken mt-4 grid grid-cols-3 gap-1.5 p-1.5">
-          {([
-            { value: "light", label: "Terang", Icon: Sun },
-            { value: "dark", label: "Gelap", Icon: Moon },
-            { value: "system", label: "Sistem", Icon: null },
-          ] as const).map((item) => {
-            const active = theme === item.value;
-            return (
-              <button
-                key={item.value}
-                type="button"
-                onClick={() => setTheme(item.value)}
-                className={cn(
-                  "flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 text-xs font-bold transition-colors sm:text-sm",
-                  active
-                    ? "clay-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {item.Icon && <item.Icon className="size-4" />}
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Akun */}
-      <section className="clay p-5 sm:p-6">
-        <h2 className="font-display text-lg font-extrabold">Akun</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {profile.isAnonymous
-            ? "Kamu masuk sebagai tamu. Catatanmu tetap tersimpan di perangkat sesi ini."
-            : "Masuk pakai email dan kode enam digit."}
-        </p>
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="truncate text-sm font-semibold">
-            {profile.email ?? "Tanpa email"}
-          </p>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => void handleSignOut()}
-            disabled={isLeaving}
-            className="text-destructive hover:text-destructive sm:w-32"
-          >
-            {isLeaving ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <>
-                <LogOut className="size-4" />
-                Keluar
-              </>
-            )}
-          </Button>
-        </div>
-
-        {hasEmail && (
-          <form onSubmit={handleSetPassword} className="clay-mt-5 mt-5 border-t border-border pt-5">
-            <h3 className="text-sm font-bold">Kata sandi</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Kalau mau, buat kata sandi supaya bisa masuk cukup pakai email
-              dan kata sandi — tanpa kode.
-            </p>
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-              <div className="flex-1">
-                <Label htmlFor="pw" className="text-xs font-bold">
-                  Kata sandi baru
-                </Label>
-                <Input
-                  id="pw"
-                  type="password"
-                  autoComplete="new-password"
-                  value={pw}
-                  minLength={8}
-                  required
-                  onChange={(event) => setPw(event.target.value)}
-                  className="mt-2"
-                />
-              </div>
-              <div className="flex-1">
-                <Label htmlFor="pw-confirm" className="text-xs font-bold">
-                  Ulangi kata sandi
-                </Label>
-                <Input
-                  id="pw-confirm"
-                  type="password"
-                  autoComplete="new-password"
-                  value={pwConfirm}
-                  minLength={8}
-                  required
-                  onChange={(event) => setPwConfirm(event.target.value)}
-                  className="mt-2"
-                />
-              </div>
-            </div>
-            {pwConfirm && pw !== pwConfirm && (
-              <p className="mt-2 text-xs font-medium text-destructive">
-                Kata sandinya belum sama.
-              </p>
-            )}
-            <Button
-              type="submit"
-              className="mt-4"
-              disabled={isSettingPassword || pw.length < 8 || pw !== pwConfirm}
-            >
-              {isSettingPassword ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                "Buat kata sandi"
-              )}
-            </Button>
-          </form>
-        )}
-      </section>
-
-      {/* Zona bahaya */}
-      <section className="clay border border-destructive/20 p-5 sm:p-6">
-        <h2 className="font-display text-lg font-extrabold text-destructive">
-          Zona bahaya
+      <section>
+        <h2 className="mb-2 px-1 font-display text-base font-extrabold">
+          Bantu kami berkembang
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Menghapus akun akan menghilangkan semua data secara permanen. Tindakan
-          ini tidak bisa dibatalkan.
-        </p>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => void handleDeleteAccount()}
-          disabled={isDeleting}
-          className="mt-4 text-destructive hover:bg-destructive/10 hover:text-destructive"
-        >
-          {isDeleting ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
+        <div className="overflow-hidden rounded-[1.5rem] bg-card">
+          {row(
+            "Kirim feedback",
+            "Cerita apa yang perlu diperbaiki",
+            MessageCircle,
+            () => setFeedbackOpen(true),
+          )}
+          {row(
+            "Dukung Ronds Pocket",
+            "Bantu aplikasi ini terus berjalan",
+            Heart,
+            () => setDonateOpen(true),
+          )}
+        </div>
+      </section>
+      <section className="overflow-hidden rounded-[1.5rem] bg-card">
+        {row("Keluar", "Keluar dari akun ini", LogOut, () => void signOutNow())}
+        {row(
+          "Hapus akun",
+          "Hapus data akun secara permanen",
+          Trash2,
+          () => void deleteNow(),
+        )}
+      </section>
+
+      <Dialog
+        open={panel !== null}
+        onOpenChange={(open) => {
+          if (!open) setPanel(null);
+        }}
+      >
+        <SlideUpDialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl">
+              {panel === "avatar"
+                ? "Pilih avatar"
+                : panel === "name"
+                  ? "Nama tampilan"
+                  : panel === "theme"
+                    ? "Tampilan"
+                    : panel === "password"
+                      ? "Kata sandi"
+                      : "Bantuan"}
+            </DialogTitle>
+            <DialogDescription>
+              {panel === "avatar"
+                ? "Pilih hewan yang mewakili kamu di kantong bersama."
+                : panel === "name"
+                  ? "Nama ini terlihat oleh anggota kantong bersama."
+                  : panel === "theme"
+                    ? "Pilih tampilan yang nyaman dipakai."
+                    : panel === "password"
+                      ? "Buat kata sandi minimal 8 karakter."
+                      : "Panduan singkat menggunakan Ronds Pocket."}
+            </DialogDescription>
+          </DialogHeader>
+          {panel === "avatar" && (
             <>
-              <Trash2 className="size-4" />
-              Hapus akun
+              <div className="grid grid-cols-4 gap-2">
+                {ANIMAL_AVATARS.map((item) => (
+                  <button
+                    key={item.emoji}
+                    type="button"
+                    aria-label={item.label}
+                    aria-pressed={(avatar ?? profile.avatar) === item.emoji}
+                    onClick={() => setAvatar(item.emoji)}
+                    className={cn(
+                      "grid aspect-square place-items-center rounded-2xl bg-secondary text-2xl",
+                      (avatar ?? profile.avatar) === item.emoji &&
+                        "ring-2 ring-primary",
+                    )}
+                  >
+                    {item.emoji}
+                  </button>
+                ))}
+              </div>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  disabled={busy || !avatar}
+                  onClick={() => void update("avatar")}
+                >
+                  Simpan avatar
+                </Button>
+              </DialogFooter>
             </>
           )}
-        </Button>
-      </section>
+          {panel === "name" && (
+            <>
+              <Label htmlFor="profile-name">Nama tampilan</Label>
+              <Input
+                id="profile-name"
+                maxLength={24}
+                value={name ?? profile.name}
+                onChange={(event) => setName(event.target.value)}
+              />
+              <DialogFooter>
+                <Button
+                  type="button"
+                  disabled={busy || !name?.trim()}
+                  onClick={() => void update("name")}
+                >
+                  Simpan nama
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+          {panel === "theme" && (
+            <div className="grid grid-cols-3 gap-2">
+              {(
+                [
+                  { value: "light", label: "Terang", icon: Sun },
+                  { value: "dark", label: "Gelap", icon: Moon },
+                  { value: "system", label: "Sistem", icon: ShieldCheck },
+                ] as const
+              ).map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.value}
+                    type="button"
+                    aria-pressed={theme === item.value}
+                    onClick={() => setTheme(item.value)}
+                    className={cn(
+                      "flex min-h-20 flex-col items-center justify-center gap-2 rounded-2xl bg-secondary text-xs font-bold",
+                      theme === item.value && "ring-2 ring-primary",
+                    )}
+                  >
+                    <Icon className="size-5 text-primary" />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {panel === "password" && (
+            <form onSubmit={savePassword} className="space-y-3">
+              <Label htmlFor="profile-password">Kata sandi baru</Label>
+              <Input
+                id="profile-password"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                value={password}
+                onChange={(event) => setPasswordDraft(event.target.value)}
+              />
+              <Label htmlFor="profile-password-again">Ulangi kata sandi</Label>
+              <Input
+                id="profile-password-again"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                value={passwordAgain}
+                onChange={(event) => setPasswordAgain(event.target.value)}
+              />
+              {passwordAgain && password !== passwordAgain && (
+                <p className="text-xs text-destructive">
+                  Kata sandinya belum sama.
+                </p>
+              )}
+              <Button
+                type="submit"
+                disabled={
+                  busy || password.length < 8 || password !== passwordAgain
+                }
+              >
+                Simpan kata sandi
+              </Button>
+            </form>
+          )}
+          {panel === "help" && (
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Mulai dari Beranda untuk melihat saldo dan transaksi harian. Pilih
+              kantong aktif untuk mengganti kantong, mengatur anggota, atau
+              membuat kantong baru. Butuh bantuan lain? Kirim feedback dari menu
+              Profil.
+            </p>
+          )}
+        </SlideUpDialogContent>
+      </Dialog>
+      <BookManagement open={managing} onOpenChange={setManaging} />
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
+      <DonateDialog open={donateOpen} onOpenChange={setDonateOpen} />
     </div>
   );
 }

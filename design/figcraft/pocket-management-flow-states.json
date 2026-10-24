@@ -1,0 +1,36 @@
+[
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "VariableID:13",
+      "ids": [
+        2356
+      ],
+      "field": "characters"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "variable": "Light/text",
+      "ids": [
+        2356
+      ],
+      "field": "fill"
+    }
+  },
+  {
+    "command": "proto.flow.add",
+    "params": {
+      "name": "Kantong bersama · tampilan anggota",
+      "start": 2191
+    }
+  },
+  {
+    "command": "proto.flow.add",
+    "params": {
+      "name": "Kantong terakhir · hapus terkunci",
+      "start": 2190
+    }
+  }
+]

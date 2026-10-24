@@ -1,0 +1,48 @@
+[
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1948
+      ],
+      "field": "fill",
+      "variable": "Light/text"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1949
+      ],
+      "field": "fill",
+      "variable": "Light/muted"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1950
+      ],
+      "field": "fill",
+      "variable": "Light/text"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        1951
+      ],
+      "field": "fill",
+      "variable": "Light/muted"
+    }
+  },
+  {
+    "command": "page.select",
+    "params": {
+      "id": 97
+    }
+  }
+]

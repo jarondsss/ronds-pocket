@@ -1,4 +1,7 @@
-import { BackToHome } from "@/components/BackToHome";
+import {
+  AppPageHeader,
+  AppSummaryCard,
+} from "@/components/dashboard/AppPageHeader";
 import {
   SavingsDialog,
   type SavingsSession,
@@ -34,13 +37,11 @@ import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import {
-  CalendarDays,
   History,
   Loader2,
   PencilLine,
   PiggyBank,
   Plus,
-  TrendingUp,
   Trash2,
 } from "@/components/icons";
 import { useRef, useState } from "react";
@@ -244,6 +245,9 @@ export default function Savings() {
   const [moveSession, setMoveSession] = useState<MoveSession | null>(null);
   const [moving, setMoving] = useState<SavingsRow | null>(null);
   const [historyFor, setHistoryFor] = useState<SavingsRow | null>(null);
+  const [expandedAccountId, setExpandedAccountId] = useState<string | null>(
+    null,
+  );
 
   const confirm = useConfirm();
 
@@ -282,23 +286,7 @@ export default function Savings() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <div>
-            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-              Tabungan
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Deposito, reksa dana, emas: catat semuanya beserta bunganya.
-            </p>
-          </div>
-        </div>
-        <Button type="button" onClick={() => startForm(null)}>
-          <Plus className="size-4" />
-          Tabungan baru
-        </Button>
-      </header>
+      <AppPageHeader title="Tabungan" subtitle="Simpan untuk hari nanti." />
 
       {data === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
@@ -326,33 +314,33 @@ export default function Savings() {
         </div>
       ) : (
         <>
-          <div className="rounded-[1.6rem] bg-card p-5 sm:p-6">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                Total tabungan
-              </p>
-              <p className="mt-1 font-display text-3xl font-extrabold">
-                {formatRupiah(data.total)}
-              </p>
-            </div>
-            <div className="mt-5 grid grid-cols-2 gap-4 border-t border-border pt-4">
-              <div>
-                <p className="text-[11px] font-bold text-muted-foreground">
-                  Potensi bunga setahun
-                </p>
-                <p className="mt-1 font-display text-lg font-extrabold text-income">
-                  {formatRupiah(data.potentialInterest)}
-                </p>
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-muted-foreground">
-                  Proyeksi setahun
-                </p>
-                <p className="mt-1 font-display text-lg font-extrabold">
-                  {formatRupiah(data.total + data.potentialInterest)}
-                </p>
-              </div>
-            </div>
+          <AppSummaryCard
+            label="Total tabungan"
+            value={formatRupiah(data.total)}
+          >
+            <p className="mt-4 text-xs text-muted-foreground">
+              Potensi bunga setahun
+            </p>
+            <p className="mt-1 font-display text-xl font-extrabold text-income">
+              +{formatRupiah(data.potentialInterest)} / tahun
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Estimasi setahun lagi{" "}
+              {formatRupiah(data.total + data.potentialInterest)}
+            </p>
+          </AppSummaryCard>
+
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-base font-extrabold">
+              Tempat menyimpan
+            </h2>
+            <button
+              type="button"
+              onClick={() => startForm(null)}
+              className="min-h-11 px-2 text-sm font-bold text-primary"
+            >
+              Tambah
+            </button>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -364,93 +352,97 @@ export default function Savings() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="clay flex flex-col gap-3 p-4 sm:p-5"
+                  className="flex flex-col gap-3 rounded-[1.5rem] bg-card p-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]"
                 >
-                  <div className="flex items-start gap-3">
-                    <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-secondary text-xl">
-                      {kind.icon}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedAccountId(
+                        expandedAccountId === account._id ? null : account._id,
+                      )
+                    }
+                    aria-expanded={expandedAccountId === account._id}
+                    className="flex min-h-8 items-center gap-3 text-left"
+                  >
+                    <PiggyBank className="size-5 shrink-0 text-primary" />
+                    <span className="truncate text-sm font-medium">
+                      {account.name}
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-display text-base font-extrabold">
-                        {account.name}
-                      </span>
-                      <span className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-                        <span className="rounded-full bg-primary/12 px-2 py-0.5 text-[10px] font-bold text-primary">
-                          {kind.label}
-                        </span>
-                        <span className="flex items-center gap-1 font-bold text-income">
-                          <TrendingUp className="size-3" />
-                          {account.interest_rate}% / tahun
-                        </span>
-                      </span>
-                    </span>
-                  </div>
+                  </button>
 
                   <div>
-                    <p className="font-display text-xl font-extrabold">
+                    <p className="font-display text-[1.75rem] font-extrabold">
                       {formatRupiah(account.balance)}
                     </p>
-                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
-                      <span>Saldo awal {formatRupiah(account.principal)}</span>
-                      {account.deposited > 0 && (
-                        <span>Setoran {formatRupiah(account.deposited)}</span>
-                      )}
-                      {account.withdrawn > 0 && (
-                        <span>Penarikan {formatRupiah(account.withdrawn)}</span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <CalendarDays className="size-3" />
-                        {formatShortDate(account.started_at)}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-xs font-semibold text-income">
-                      Proyeksi setahun {formatRupiah(account.projected)}
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      {kind.label}
+                    </p>
+                    <p className="mt-3 text-sm font-semibold text-income">
+                      {account.interest_rate}% / tahun · estimasi
+                    </p>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      +
+                      {formatRupiah(
+                        Math.max(account.projected - account.balance, 0),
+                      )}{" "}
+                      dalam setahun
+                    </p>
+                    <p className="mt-2 text-xs font-semibold">
+                      Setahun lagi {formatRupiah(account.projected)}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => {
-                        sessionKey.current += 1;
-                        setMoveSession({
-                          key: sessionKey.current,
-                          direction: "deposit",
-                          today: toDateInput(Date.now()),
-                        });
-                        setMoving(account);
-                      }}
-                    >
-                      <Plus className="size-4" />
-                      Setor / tarik
-                    </Button>
-                    <button
-                      type="button"
-                      aria-label={`Riwayat ${account.name}`}
-                      onClick={() => setHistoryFor(account)}
-                      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
-                    >
-                      <History className="size-4" />
-                    </button>
-                    <button
-                      type="button"
-                      aria-label={`Ubah ${account.name}`}
-                      onClick={() => startForm(account)}
-                      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
-                    >
-                      <PencilLine className="size-4" />
-                    </button>
-                    <button
-                      type="button"
-                      aria-label={`Hapus ${account.name}`}
-                      onClick={() => void handleDelete(account)}
-                      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-destructive"
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
-                  </div>
+                  {expandedAccountId === account._id && (
+                    <div className="space-y-3 border-t border-border pt-3">
+                      <p className="text-xs text-muted-foreground">
+                        Saldo awal {formatRupiah(account.principal)} · Mulai{" "}
+                        {formatShortDate(account.started_at)}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => {
+                            sessionKey.current += 1;
+                            setMoveSession({
+                              key: sessionKey.current,
+                              direction: "deposit",
+                              today: toDateInput(Date.now()),
+                            });
+                            setMoving(account);
+                          }}
+                        >
+                          <Plus className="size-4" />
+                          Setor / tarik
+                        </Button>
+                        <button
+                          type="button"
+                          aria-label={`Riwayat ${account.name}`}
+                          onClick={() => setHistoryFor(account)}
+                          className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
+                        >
+                          <History className="size-4" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={`Ubah ${account.name}`}
+                          onClick={() => startForm(account)}
+                          className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
+                        >
+                          <PencilLine className="size-4" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={`Hapus ${account.name}`}
+                          onClick={() => void handleDelete(account)}
+                          className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </motion.article>
               );
             })}

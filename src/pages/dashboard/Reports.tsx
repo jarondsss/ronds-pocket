@@ -1,4 +1,7 @@
-import { BackToHome } from "@/components/BackToHome";
+import {
+  AppPageHeader,
+  AppSummaryCard,
+} from "@/components/dashboard/AppPageHeader";
 import { ClayLoader } from "@/components/ClayLoader";
 import { CategoryChart } from "@/components/dashboard/CategoryChart";
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
@@ -41,10 +44,7 @@ export default function Reports() {
     api.transactions.summary,
     bookId ? { bookId, ...range } : "skip",
   );
-  const all = useQuery(
-    api.transactions.list,
-    bookId ? { bookId } : "skip",
-  );
+  const all = useQuery(api.transactions.list, bookId ? { bookId } : "skip");
 
   const trend = useMemo(() => {
     const rows = all ?? [];
@@ -60,7 +60,8 @@ export default function Reports() {
         else expense += row.amount;
       }
       return { label: monthShortLabel(key), income, expense };
-    });    }, [all, currentKey]);
+    });
+  }, [all, currentKey]);
 
   const highlight = useMemo(() => {
     const rows = (all ?? []).filter(
@@ -143,30 +144,23 @@ export default function Reports() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <div>
-            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-              Rekap uangmu
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Lihat ke mana uangmu pergi bulan ini.
-            </p>
-          </div>
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleExportCsv}
-          disabled={!all}
-          className="shrink-0"
-        >
-          <Download className="size-4" />
-          <span className="hidden sm:inline">Ekspor CSV</span>
-        </Button>
-      </header>
+      <AppPageHeader
+        title="Rekap"
+        subtitle="Gambaran uang bulan ini."
+        action={
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleExportCsv}
+            disabled={!all}
+            className="shrink-0"
+          >
+            <Download className="size-4" />
+            <span className="hidden sm:inline">Ekspor CSV</span>
+          </Button>
+        }
+      />
 
       <MonthNavigator monthKey={monthKey} onChange={setMonthKey} />
 
@@ -176,12 +170,17 @@ export default function Reports() {
         </div>
       ) : (
         <>
-          <div className="clay p-4 sm:p-5">
+          <AppSummaryCard
+            label="Selisih arus uang"
+            value={formatRupiah(summary.balance)}
+            detail="Pemasukan dikurangi pengeluaran."
+          />
+          <h2 className="font-display text-base font-extrabold">
+            Tren enam bulan
+          </h2>
+          <div className="rounded-[1.5rem] bg-card p-4 shadow-[0_14px_30px_-24px_var(--clay-dark)] sm:p-5">
             <div className="flex items-baseline justify-between gap-3">
               <div>
-                <h3 className="font-display text-base font-extrabold">
-                  Tren enam bulan
-                </h3>
                 <p className="text-xs text-muted-foreground">
                   Masuk dan keluar, dari bulan ke bulan
                 </p>
@@ -246,6 +245,38 @@ export default function Reports() {
               </ResponsiveContainer>
             </div>
           </div>
+
+          <section className="space-y-3">
+            <h2 className="font-display text-base font-extrabold">
+              Pengeluaran terbesar
+            </h2>
+            <ul className="space-y-4 rounded-[1.5rem] bg-card p-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
+              {summary.expenseByCategory.length === 0 ? (
+                <li className="text-sm text-muted-foreground">
+                  Belum ada pengeluaran bulan ini.
+                </li>
+              ) : (
+                summary.expenseByCategory.slice(0, 3).map((item) => (
+                  <li key={item.category}>
+                    <div className="flex justify-between gap-3 text-sm font-semibold">
+                      <span>{item.category}</span>
+                      <span className="text-expense">
+                        {formatRupiah(item.total)}
+                      </span>
+                    </div>
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{
+                          width: `${summary.expense > 0 ? (item.total / summary.expense) * 100 : 0}%`,
+                        }}
+                      />
+                    </div>
+                  </li>
+                ))
+              )}
+            </ul>
+          </section>
 
           <CategoryChart
             title="Pengeluaran per kategori"

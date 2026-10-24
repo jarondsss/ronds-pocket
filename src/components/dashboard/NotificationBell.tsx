@@ -77,7 +77,7 @@ export function NotificationBell() {
           aria-label={
             unread > 0 ? `Notifikasi, ${unread} belum dibaca` : "Notifikasi"
           }
-          className="clay-sm clay-press relative grid size-8 place-items-center text-muted-foreground hover:text-primary"
+          className="relative grid size-10 place-items-center rounded-xl text-muted-foreground hover:bg-card hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
         >
           <Bell className="size-4" />
           {unread > 0 && (
@@ -119,22 +119,22 @@ export function NotificationBell() {
                     row.read_at === undefined && "bg-primary/10",
                   )}
                 >
-                <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/12 text-xs font-black text-primary">
-                  {row.actor_name.charAt(0).toUpperCase()}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm leading-snug">
-                    <span className="font-bold">{row.actor_name}</span>{" "}
-                    <span className="text-muted-foreground">
-                      {row.message}
+                  <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/12 text-xs font-black text-primary">
+                    {row.actor_name.charAt(0).toUpperCase()}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm leading-snug">
+                      <span className="font-bold">{row.actor_name}</span>{" "}
+                      <span className="text-muted-foreground">
+                        {row.message}
+                      </span>
+                    </span>
+                    <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                      {row.label}
+                      {row.detail ? ` · ${row.detail}` : ""} ·{" "}
+                      {waktuLalu(row.created_at)}
                     </span>
                   </span>
-                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                    {row.label}
-                    {row.detail ? ` · ${row.detail}` : ""} ·{" "}
-                    {waktuLalu(row.created_at)}
-                  </span>
-                </span>
                 </Link>
               </li>
             ))}

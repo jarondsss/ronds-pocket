@@ -11,7 +11,7 @@ export function BackToHome() {
     <Link
       to="/dashboard"
       aria-label="Kembali ke Beranda"
-      className="clay-sm clay-press grid size-9 shrink-0 place-items-center rounded-full text-muted-foreground hover:text-primary"
+      className="grid size-11 shrink-0 place-items-center rounded-2xl bg-card text-foreground transition-colors hover:bg-accent hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
     >
       <ArrowLeft className="size-4" />
     </Link>

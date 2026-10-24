@@ -30,6 +30,7 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { AiDraft } from "@/convex/ai";
 import { useBooks } from "@/lib/book-context";
+import { useProfile } from "@/hooks/use-profile";
 import {
   dayRange,
   monthRange,
@@ -94,6 +95,17 @@ const HOME_GRID: {
 
 export default function Ledger() {
   const { activeBook } = useBooks();
+  const profile = useProfile();
+  const [greeting] = useState(() => {
+    const hour = new Date().getHours();
+    return hour < 11
+      ? "Selamat pagi"
+      : hour < 15
+        ? "Selamat siang"
+        : hour < 18
+          ? "Selamat sore"
+          : "Selamat malam";
+  });
   // Beranda mengikuti satu hari, bukan satu bulan. Snapshot "hari ini"
   // dipakai untuk label dan tombol kembali ke hari berjalan.
   const [day, setDay] = useState(() => startOfDay(Date.now()));
@@ -257,7 +269,9 @@ export default function Ledger() {
     <div className="flex flex-col gap-4">
       <header className="flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs text-muted-foreground">Selamat datang di</p>
+          <p className="text-xs text-muted-foreground">
+            {greeting}, {profile.name}
+          </p>
           <h1 className="truncate font-display text-2xl font-extrabold tracking-tight">
             {activeBook.name}
           </h1>
@@ -366,6 +380,13 @@ export default function Ledger() {
           }}
         />
       )}
+
+      <NavLink
+        to="/dashboard/fitur"
+        className="self-end px-2 text-xs font-bold text-primary focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        Lihat semua fitur
+      </NavLink>
 
       {/* Daftar transaksi hari ini */}
       <section className="flex flex-col gap-2">

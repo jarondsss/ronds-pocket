@@ -1,4 +1,4 @@
-import { BackToHome } from "@/components/BackToHome";
+import { AppPageHeader } from "@/components/dashboard/AppPageHeader";
 import { ClayLoader } from "@/components/ClayLoader";
 import {
   TransactionDialog,
@@ -43,11 +43,6 @@ import { useMemo, useRef, useState } from "react";
 
 type TypeFilter = "all" | "expense" | "income";
 
-const dayFullFormat = new Intl.DateTimeFormat("id-ID", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-});
 const weekdayFormat = new Intl.DateTimeFormat("id-ID", { weekday: "long" });
 
 const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
@@ -58,7 +53,11 @@ const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
 
 function startOfDay(timestamp: number) {
   const date = new Date(timestamp);
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  ).getTime();
 }
 
 /** "Hari ini" / "Kemarin" / nama hari, seperti daftar transaksi sehari-hari. */
@@ -250,7 +249,8 @@ export default function Transactions() {
   const categoryOptions = useMemo(() => {
     const names = new Set<string>();
     for (const item of categories ?? []) names.add(item.name);
-    for (const tx of transactions ?? []) if (tx.category) names.add(tx.category);
+    for (const tx of transactions ?? [])
+      if (tx.category) names.add(tx.category);
     return [...names]
       .sort((a, b) => a.localeCompare(b, "id"))
       .map((name) => ({ value: name, label: name }));
@@ -277,7 +277,8 @@ export default function Transactions() {
 
   const visible = useMemo(() => {
     let rows: LedgerTransaction[] = transactions ?? [];
-    if (typeFilter !== "all") rows = rows.filter((row) => row.type === typeFilter);
+    if (typeFilter !== "all")
+      rows = rows.filter((row) => row.type === typeFilter);
     if (categoryFilter) {
       rows = rows.filter((row) => row.category === categoryFilter);
     }
@@ -370,30 +371,62 @@ export default function Transactions() {
 
   return (
     <div className="flex flex-col gap-4">
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <div>
-            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-              Riwayat transaksi
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Semua catatan masuk dan keluar, urut dari yang paling baru.
-            </p>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={() => downloadCsv(visible, monthKey)}
-          disabled={visible.length === 0}
-          className="clay-sm clay-press flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold disabled:opacity-40"
-        >
-          <Download className="size-4" />
-          Download
-        </button>
-      </header>
+      <AppPageHeader
+        title="Riwayat"
+        subtitle="Semua catatan uangmu."
+        action={
+          <button
+            type="button"
+            onClick={() => downloadCsv(visible, monthKey)}
+            disabled={visible.length === 0}
+            className="grid size-10 shrink-0 place-items-center rounded-2xl bg-card text-primary disabled:opacity-40"
+            aria-label="Unduh riwayat CSV"
+          >
+            <Download className="size-4" />
+          </button>
+        }
+      />
+
+      <label
+        className="-mb-3 text-xs text-muted-foreground"
+        htmlFor="transaction-search"
+      >
+        Cari transaksi
+      </label>
+
+      <div className="flex min-h-12 items-center gap-2 rounded-2xl bg-secondary px-4">
+        <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
+        <input
+          id="transaction-search"
+          ref={searchRef}
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Cari catatan atau kategori"
+          className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
+        />
+      </div>
 
       <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center rounded-full bg-card text-xs font-semibold text-primary">
+          <button
+            type="button"
+            aria-label="Bulan sebelumnya"
+            onClick={() => setMonthKey(shiftMonthKey(monthKey, -1))}
+            className="grid size-9 place-items-center"
+          >
+            <ChevronLeft className="size-3.5" />
+          </button>
+          <span>{monthKeyLabel(monthKey)}</span>
+          <button
+            type="button"
+            aria-label="Bulan berikutnya"
+            onClick={() => setMonthKey(shiftMonthKey(monthKey, 1))}
+            className="grid size-9 place-items-center"
+          >
+            <ChevronRight className="size-3.5" />
+          </button>
+        </div>
         <FilterPill
           label="Jenis"
           value={typeFilter === "all" ? null : typeFilter}
@@ -415,7 +448,9 @@ export default function Transactions() {
           value={walletFilter}
           allLabel="Semua dompet"
           options={walletOptions}
-          onSelect={(value) => setWalletFilter((value ?? null) as Id<"wallets"> | null)}
+          onSelect={(value) =>
+            setWalletFilter((value ?? null) as Id<"wallets"> | null)
+          }
         />
         {hasFilter && (
           <button
@@ -429,7 +464,7 @@ export default function Transactions() {
         )}
       </div>
 
-      <section className="clay flex flex-col gap-3 p-4">
+      <section className="hidden rounded-[1.5rem] bg-card p-4 sm:flex sm:flex-col sm:gap-3">
         <div className="flex items-center gap-3">
           <span className="clay-sunken grid size-10 shrink-0 place-items-center rounded-2xl text-primary">
             <ChartPie className="size-5" />
@@ -465,7 +500,9 @@ export default function Transactions() {
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border pt-3 text-xs font-bold">
           <span className="text-muted-foreground">
             Pengeluaran:{" "}
-            <span className="text-expense">-{formatRupiah(totals.expense)}</span>
+            <span className="text-expense">
+              -{formatRupiah(totals.expense)}
+            </span>
           </span>
           <span aria-hidden className="h-3.5 w-px bg-border" />
           <span className="text-muted-foreground">
@@ -474,31 +511,6 @@ export default function Transactions() {
           </span>
         </div>
       </section>
-
-      <div className="clay-sm flex items-center gap-2 px-3 py-2">
-        <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
-        <input
-          ref={searchRef}
-          type="text"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Cari catatan, kategori, dompet..."
-          className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/60"
-        />
-        {search && (
-          <button
-            type="button"
-            aria-label="Hapus pencarian"
-            onClick={() => {
-              setSearch("");
-              searchRef.current?.focus();
-            }}
-            className="grid size-5 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
-          >
-            <X className="size-3" />
-          </button>
-        )}
-      </div>
 
       {transactions === undefined ? (
         <div className="grid min-h-[24vh] place-items-center">
@@ -534,18 +546,18 @@ export default function Transactions() {
               delay: Math.min(groupIndex * 0.04, 0.2),
               ease: EASE,
             }}
-            className="clay overflow-hidden"
+            className="space-y-3"
           >
-            <header className="flex items-baseline gap-2 px-4 pb-2 pt-4 sm:px-5">
+            <header className="flex items-baseline justify-between gap-2">
               <h3 className="font-display text-sm font-extrabold">
                 {relativeDayLabel(group.day, now)}
               </h3>
-              <span className="text-xs font-semibold text-muted-foreground">
-                {dayFullFormat.format(group.day)}
+              <span className="text-xs font-semibold text-primary">
+                {group.items.length} catatan
               </span>
             </header>
 
-            <ul className="px-2 pb-2 sm:px-3">
+            <ul className="overflow-hidden rounded-[1.5rem] bg-card px-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
               {group.items.map((tx) => (
                 <li
                   key={tx._id}
@@ -554,10 +566,10 @@ export default function Transactions() {
                   <button
                     type="button"
                     onClick={() => openEdit(tx)}
-                    className="flex w-full items-center gap-3 rounded-2xl px-2 py-3 text-left transition-colors hover:bg-secondary/60"
+                    className="flex min-h-17 w-full items-center gap-3 py-3 text-left transition-colors hover:bg-secondary/60"
                   >
                     <span
-                      className="grid size-10 shrink-0 place-items-center rounded-full text-lg shadow-[0_0.25rem_0.6rem_-0.2rem_var(--clay-dark)]"
+                      className="grid size-10 shrink-0 place-items-center rounded-2xl text-lg"
                       style={{
                         backgroundColor: toneBackground(
                           categoryTone(tx.category || tx.type),
@@ -581,9 +593,7 @@ export default function Transactions() {
                       <span
                         className={cn(
                           "block font-display text-sm font-extrabold sm:text-base",
-                          tx.type === "income"
-                            ? "text-income"
-                            : "text-expense",
+                          tx.type === "income" ? "text-income" : "text-expense",
                         )}
                       >
                         {tx.type === "income" ? "+" : "−"}

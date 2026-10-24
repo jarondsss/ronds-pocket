@@ -1,4 +1,4 @@
-import { BackToHome } from "@/components/BackToHome";
+import { AppPageHeader } from "@/components/dashboard/AppPageHeader";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,10 +31,7 @@ export default function Partner() {
   const confirm = useConfirm();
   const bookId = activeBook?._id;
 
-  const members = useQuery(
-    api.books.members,
-    bookId ? { bookId } : "skip",
-  );
+  const members = useQuery(api.books.members, bookId ? { bookId } : "skip");
   const invites = useQuery(
     api.books.invites,
     bookId && isOwner ? { bookId } : "skip",
@@ -152,53 +149,43 @@ export default function Partner() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Bagikan kantongmu
-          </h1>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          Opsional banget. Kalau nanti mau mencatat bareng orang lain, undang
-          mereka ke kantong ini. Teman boleh menambah catatan sendiri, tapi yang
-          bukan miliknya cuma bisa disentuh pemiliknya.
-        </p>
-      </header>
+      <AppPageHeader title="Partner" subtitle="Catat bareng, tetap jelas." />
 
-      <section className="clay p-4 sm:p-5">
+      <section className="rounded-[1.5rem] bg-card p-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
         <div className="flex items-center gap-2">
-          <span className="grid size-9 place-items-center rounded-xl bg-primary/12 text-primary">
-            <Users className="size-4" />
-          </span>
-          <h3 className="font-display text-base font-extrabold">
-            Siapa saja di kantong ini ({members?.length ?? 0})
-          </h3>
+          <Users className="size-7 text-primary" />
         </div>
+        <h3 className="mt-3 font-display text-xl font-extrabold">
+          {activeBook.name}
+        </h3>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {members?.length ?? 0} anggota · Kamu sebagai{" "}
+          {isOwner ? "pemilik" : "anggota"}
+        </p>
 
-        <ul className="mt-4 flex flex-col gap-3">
+        <ul className="mt-4 grid grid-cols-2 gap-3">
           {(members ?? []).map((member) => (
             <motion.li
               key={member.userId}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
-              className="clay-sunken flex items-center gap-3 rounded-2xl px-3 py-3"
+              className="flex min-h-28 flex-col items-start gap-1 rounded-2xl bg-secondary p-4"
             >
-              <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-card text-sm font-black text-primary">
+              <span className="text-xl font-black text-primary">
                 {member.name.charAt(0).toUpperCase()}
               </span>
-              <span className="min-w-0 flex-1">
+              <span className="min-w-0 w-full flex-1">
                 <span className="block truncate text-sm font-bold">
                   {member.name}
                 </span>
                 <span className="block truncate text-xs text-muted-foreground">
-                  {member.email ?? (isOwner ? "Tidak ada email" : "Temanmu")}
+                  {member.role === "owner" ? "Pemilik" : "Anggota"}
                 </span>
               </span>
               <span
                 className={cn(
-                  "flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold",
+                  "sr-only",
                   member.role === "owner"
                     ? "bg-primary/15 text-primary"
                     : "bg-income/15 text-income",
@@ -215,9 +202,7 @@ export default function Partner() {
                 <button
                   type="button"
                   aria-label={`Keluarkan ${member.name}`}
-                  onClick={() =>
-                    void handleRemove(member.userId, member.name)
-                  }
+                  onClick={() => void handleRemove(member.userId, member.name)}
                   className="grid size-8 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-destructive"
                 >
                   <UserMinus className="size-4" />
@@ -231,8 +216,7 @@ export default function Partner() {
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-border px-4 py-3">
             <p className="text-xs text-muted-foreground">
               Kamu masuk sebagai teman di pocket ini. Mau berhenti catatan
-              bareng? Keluar saja, catatan yang sudah ada tetap milik
-              pemilik.
+              bareng? Keluar saja, catatan yang sudah ada tetap milik pemilik.
             </p>
             <Button
               type="button"
@@ -245,13 +229,14 @@ export default function Partner() {
               ) : (
                 <LogOut className="size-4" />
               )}
-              Keluar dari Pocket            </Button>
+              Keluar dari Pocket{" "}
+            </Button>
           </div>
         )}
       </section>
 
       {isOwner && (
-        <section className="clay p-4 sm:p-5">
+        <section className="rounded-[1.5rem] bg-card p-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <span className="grid size-9 place-items-center rounded-xl bg-accent/50 text-accent-foreground">
@@ -259,14 +244,18 @@ export default function Partner() {
               </span>
               <div>
                 <h3 className="font-display text-base font-extrabold">
-                  Bikin kode undangan
+                  Undang anggota
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Buat kode, lalu kirim ke orang yang mau kamu ajak.
+                  Bagikan kode ini ke orang yang kamu undang.
                 </p>
               </div>
             </div>
-            <Button type="button" onClick={handleCreateInvite} disabled={creating}>
+            <Button
+              type="button"
+              onClick={handleCreateInvite}
+              disabled={creating}
+            >
               {creating ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
@@ -285,7 +274,7 @@ export default function Partner() {
               (invites ?? []).map((invite) => (
                 <li
                   key={invite._id}
-                  className="clay-sunken flex items-center gap-3 rounded-2xl px-4 py-3"
+                  className="flex items-center gap-3 rounded-2xl bg-secondary px-4 py-3"
                 >
                   <span className="min-w-0 flex-1">
                     <span
@@ -338,17 +327,19 @@ export default function Partner() {
         </section>
       )}
 
-      <section className="clay p-4 sm:p-5">
+      <section className="rounded-[1.5rem] bg-card p-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
         <div className="flex items-center gap-2">
           <span className="grid size-9 place-items-center rounded-xl bg-income/15 text-income">
             <UserPlus className="size-4" />
           </span>
-          <div>                <h3 className="font-display text-base font-extrabold">
-                  Gabung ke kantong orang lain
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  Punya kode undangan? Tempel di sini.
-                </p>
+          <div>
+            {" "}
+            <h3 className="font-display text-base font-extrabold">
+              Gabung ke kantong orang lain
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Punya kode undangan? Tempel di sini.
+            </p>
           </div>
         </div>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -371,15 +362,10 @@ export default function Partner() {
             />
           </div>
           <Button type="button" onClick={handleRedeem} disabled={joining}>
-            {joining ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              "Gabung"
-            )}
+            {joining ? <Loader2 className="size-4 animate-spin" /> : "Gabung"}
           </Button>
         </div>
       </section>
-
-      </div>
+    </div>
   );
 }

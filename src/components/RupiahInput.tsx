@@ -12,6 +12,7 @@ export function RupiahInput({
   placeholder = "0",
   size = "md",
   className,
+  showPrefix = true,
 }: {
   id?: string;
   value: number;
@@ -19,17 +20,20 @@ export function RupiahInput({
   placeholder?: string;
   size?: "md" | "lg";
   className?: string;
+  showPrefix?: boolean;
 }) {
   return (
     <div className="relative">
-      <span
-        className={cn(
-          "absolute left-4 top-1/2 -translate-y-1/2 font-bold text-muted-foreground",
-          size === "lg" ? "text-base" : "text-sm",
-        )}
-      >
-        Rp
-      </span>
+      {showPrefix && (
+        <span
+          className={cn(
+            "absolute left-4 top-1/2 -translate-y-1/2 font-bold text-muted-foreground",
+            size === "lg" ? "text-base" : "text-sm",
+          )}
+        >
+          Rp
+        </span>
+      )}
       <Input
         id={id}
         inputMode="numeric"
@@ -41,7 +45,7 @@ export function RupiahInput({
           onChange(Number(digits.slice(0, MAX_DIGITS)) || 0);
         }}
         className={cn(
-          "pl-11 font-semibold",
+          showPrefix ? "pl-11 font-semibold" : "pl-4 font-semibold",
           size === "lg" && "h-14 font-display text-2xl font-extrabold",
           className,
         )}

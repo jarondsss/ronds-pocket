@@ -11,7 +11,6 @@ import {
 } from "@/components/dashboard/TransactionDialog";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
-import { useProfile } from "@/hooks/use-profile";
 import { BooksProvider, useBooks } from "@/lib/book-context";
 import { SaveStatusProvider } from "@/lib/save-status";
 import { cn } from "@/lib/utils";
@@ -66,13 +65,9 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
   const half = BOTTOM_TABS.length / 2;
   const left = BOTTOM_TABS.slice(0, half);
   const right = BOTTOM_TABS.slice(half);
-  // Tab Profil pakai wajah penggunanya sendiri, bukan ikon orang generik:
-  // satu tempat yang jelas buat "ini akunku".
-  const profile = useProfile();
 
   const renderTab = (tab: (typeof BOTTOM_TABS)[number]) => {
     const Icon = tab.icon;
-    const isProfile = tab.to === "/dashboard/profil";
     return (
       <NavLink
         key={tab.to}
@@ -96,17 +91,7 @@ function BottomNav({ onAdd }: { onAdd: () => void }) {
               transition={{ type: "spring", stiffness: 420, damping: 18 }}
               className="grid size-8 place-items-center rounded-xl transition-all"
             >
-              {isProfile ? (
-                <span className="grid size-6 place-items-center rounded-lg bg-accent text-[13px] leading-none text-accent-foreground">
-                  {profile.avatar ?? (
-                    <span className="text-[11px] font-black">
-                      {profile.initial}
-                    </span>
-                  )}
-                </span>
-              ) : (
-                <Icon className="size-5" />
-              )}
+              <Icon className="size-5" />
             </motion.span>
             {tab.label}
           </>
@@ -210,6 +195,25 @@ function Shell() {
   const { isLoading: authLoading } = useAuth();
   const authReady = !authLoading;
   const location = useLocation();
+  const [statusTime, setStatusTime] = useState(() =>
+    new Date().toLocaleTimeString("id-ID", {
+      hour: "numeric",
+      minute: "2-digit",
+    }),
+  );
+  useEffect(() => {
+    const timer = window.setInterval(
+      () =>
+        setStatusTime(
+          new Date().toLocaleTimeString("id-ID", {
+            hour: "numeric",
+            minute: "2-digit",
+          }),
+        ),
+      60_000,
+    );
+    return () => window.clearInterval(timer);
+  }, []);
   const outlet = useOutlet();
   const bookId = activeBook?._id;
 
@@ -263,13 +267,9 @@ function Shell() {
 
         <main className="min-w-0 flex-1">
           <header className="mb-4 flex items-center justify-between gap-2 lg:hidden">
-            {location.pathname === "/dashboard" ? (
-              <span className="text-xs font-bold text-muted-foreground">
-                Ronds Pocket
-              </span>
-            ) : (
-              <Brand compact />
-            )}
+            <span className="text-xs font-bold text-foreground">
+              {statusTime}
+            </span>
             <div className="flex items-center gap-1.5">
               <span className="hidden sm:block">
                 <SupportActions />

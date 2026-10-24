@@ -1,5 +1,11 @@
-import { BackToHome } from "@/components/BackToHome";
-import { GoalDialog, type GoalSession } from "@/components/dashboard/GoalDialog";
+import {
+  AppPageHeader,
+  AppSummaryCard,
+} from "@/components/dashboard/AppPageHeader";
+import {
+  GoalDialog,
+  type GoalSession,
+} from "@/components/dashboard/GoalDialog";
 import { RupiahInput } from "@/components/RupiahInput";
 import { SlideUpDialogContent } from "@/components/SlideUpDialog";
 import { useConfirm } from "@/components/ConfirmDialog";
@@ -38,7 +44,6 @@ import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
 import {
   CalendarClock,
-  Coins,
   Loader2,
   PencilLine,
   Plus,
@@ -86,7 +91,8 @@ function FundDialog({
         adjust({
           id: goal._id,
           amount: direction === "add" ? amount : -amount,
-          wallet_id: walletId === "none" ? undefined : (walletId as Id<"wallets">),
+          wallet_id:
+            walletId === "none" ? undefined : (walletId as Id<"wallets">),
         }),
       );
       toast.success(
@@ -116,56 +122,60 @@ function FundDialog({
             </DialogDescription>
           </DialogHeader>
 
-        <div className="flex flex-col gap-5">
-          <div className="clay-sunken grid grid-cols-2 gap-2 p-2">
-            {(
-              [
-                { value: "add", label: "Setor dana" },
-                { value: "withdraw", label: "Tarik dana" },
-              ] as const
-            ).map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => setDirection(option.value)}
-                className={cn(
-                  "rounded-2xl px-3 py-2.5 text-sm font-bold transition-colors",
-                  direction === option.value
-                    ? "clay-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+          <div className="flex flex-col gap-5">
+            <div className="clay-sunken grid grid-cols-2 gap-2 p-2">
+              {(
+                [
+                  { value: "add", label: "Setor dana" },
+                  { value: "withdraw", label: "Tarik dana" },
+                ] as const
+              ).map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setDirection(option.value)}
+                  className={cn(
+                    "rounded-2xl px-3 py-2.5 text-sm font-bold transition-colors",
+                    direction === option.value
+                      ? "clay-primary"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="fund-amount">Nominal</Label>
-            <RupiahInput id="fund-amount" value={amount} onChange={setAmount} />
-          </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="fund-amount">Nominal</Label>
+              <RupiahInput
+                id="fund-amount"
+                value={amount}
+                onChange={setAmount}
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <Label>Ambil dari dompet (opsional)</Label>
-            <Select value={walletId} onValueChange={setWalletId}>
-              <SelectTrigger className="h-11 w-full">
-                <SelectValue placeholder="Tanpa dompet" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Tanpa dompet</SelectItem>
-                {wallets.map((wallet) => (
-                  <SelectItem key={wallet._id} value={wallet._id}>
-                    <span className="mr-1.5">{wallet.icon}</span>
-                    {wallet.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground">
-              Kalau dipilih, saldo dompetnya ikut disesuaikan.
-            </p>
+            <div className="flex flex-col gap-2">
+              <Label>Ambil dari dompet (opsional)</Label>
+              <Select value={walletId} onValueChange={setWalletId}>
+                <SelectTrigger className="h-11 w-full">
+                  <SelectValue placeholder="Tanpa dompet" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Tanpa dompet</SelectItem>
+                  {wallets.map((wallet) => (
+                    <SelectItem key={wallet._id} value={wallet._id}>
+                      <span className="mr-1.5">{wallet.icon}</span>
+                      {wallet.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Kalau dipilih, saldo dompetnya ikut disesuaikan.
+              </p>
+            </div>
           </div>
-        </div>
 
           <DialogFooter>
             <Button
@@ -205,6 +215,7 @@ export default function Goals() {
     setFormOpen(true);
   };
   const [fundSession, setFundSession] = useState<FundSession | null>(null);
+  const [expandedGoalId, setExpandedGoalId] = useState<string | null>(null);
 
   const confirm = useConfirm();
 
@@ -240,23 +251,7 @@ export default function Goals() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <div>
-            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-              Goals
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Tulis targetnya, lalu lihat seberapa dekat kamu ke sana.
-            </p>
-          </div>
-        </div>
-        <Button type="button" onClick={() => startForm(null)}>
-          <Plus className="size-4" />
-          Target baru
-        </Button>
-      </header>
+      <AppPageHeader title="Tujuan" subtitle="Biar mimpi makin dekat." />
 
       {goals === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
@@ -271,8 +266,8 @@ export default function Goals() {
             Belum ada target
           </p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Misalnya dana darurat, laptop baru, atau liburan akhir tahun. Tentukan
-            nominalnya dan biarkan progress-nya jalan.
+            Misalnya dana darurat, laptop baru, atau liburan akhir tahun.
+            Tentukan nominalnya dan biarkan progress-nya jalan.
           </p>
           <button
             type="button"
@@ -284,33 +279,40 @@ export default function Goals() {
         </div>
       ) : (
         <>
-          <div className="clay-sm flex items-center gap-3 p-4">
-            <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary/12 text-primary">
-              <Coins className="size-5" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                Terkumpul dari semua target
-              </p>
-              <p className="font-display text-lg font-extrabold">
-                {formatRupiah(totalSaved)}
-                <span className="text-sm font-semibold text-muted-foreground">
-                  {" "}
-                  / {formatRupiah(totalTarget)}
-                </span>
-              </p>
-            </div>
+          <AppSummaryCard
+            label="Terkumpul untuk tujuan"
+            value={formatRupiah(totalSaved)}
+            detail={`${rows.length} tujuan aktif · Target ${formatRupiah(totalTarget)}`}
+          />
+
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-base font-extrabold">
+              Target kamu
+            </h2>
+            <button
+              type="button"
+              onClick={() => startForm(null)}
+              className="min-h-11 px-2 text-sm font-bold text-primary"
+            >
+              Tambah
+            </button>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             {rows.map((goal, index) => {
               const percent =
                 goal.target_amount > 0
-                  ? Math.min((goal.saved_amount / goal.target_amount) * 100, 100)
+                  ? Math.min(
+                      (goal.saved_amount / goal.target_amount) * 100,
+                      100,
+                    )
                   : 0;
               const done = goal.saved_amount >= goal.target_amount;
               const days = daysUntil(goal.deadline);
-              const remaining = Math.max(goal.target_amount - goal.saved_amount, 0);
+              const remaining = Math.max(
+                goal.target_amount - goal.saved_amount,
+                0,
+              );
 
               return (
                 <motion.article
@@ -318,42 +320,29 @@ export default function Goals() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="clay flex flex-col gap-3 p-4 sm:p-5"
+                  className="flex flex-col gap-3 rounded-[1.5rem] bg-card p-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]"
                 >
-                  <div className="flex items-start gap-3">
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-display text-base font-extrabold">
-                        {goal.name}
-                      </span>
-                      <span
-                        className={cn(
-                          "mt-0.5 flex items-center gap-1 text-xs font-semibold",
-                          days < 0 && !done
-                            ? "text-destructive"
-                            : "text-muted-foreground",
-                        )}
-                      >
-                        <CalendarClock className="size-3.5" />
-                        {formatShortDate(goal.deadline)} ·{" "}
-                        {done ? "Tercapai! 🎉" : describeDaysLeft(days)}
-                      </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedGoalId(
+                        expandedGoalId === goal._id ? null : goal._id,
+                      )
+                    }
+                    aria-expanded={expandedGoalId === goal._id}
+                    className="flex min-h-8 items-center gap-3 text-left"
+                  >
+                    <Target className="size-5 shrink-0 text-primary" />
+                    <span className="truncate font-display text-base font-extrabold">
+                      {goal.name}
                     </span>
-                    {done && (
-                      <span className="rounded-full bg-income/15 px-2.5 py-1 text-[11px] font-bold text-income">
-                        100%
-                      </span>
-                    )}
-                  </div>
+                  </button>
 
                   <div>
-                    <p className="font-display text-lg font-extrabold">
+                    <p className="font-display text-[1.75rem] font-extrabold">
                       {formatRupiah(goal.saved_amount)}
-                      <span className="text-sm font-semibold text-muted-foreground">
-                        {" "}
-                        / {formatRupiah(goal.target_amount)}
-                      </span>
                     </p>
-                    <div className="clay-sunken mt-2 h-2.5 overflow-hidden rounded-full">
+                    <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-secondary">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.max(percent, 3)}%` }}
@@ -367,41 +356,57 @@ export default function Goals() {
                       />
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">
-                      {done
-                        ? "Targetnya sudah penuh. Mantap!"
-                        : `Kurang ${formatRupiah(remaining)} lagi`}
+                      dari {formatRupiah(goal.target_amount)} ·{" "}
+                      {Math.round(percent)}% tercapai
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => {
-                        startFund(goal);
-                      }}
-                    >
-                      <Plus className="size-4" />
-                      Tambah dana
-                    </Button>
-                    <button
-                      type="button"
-                      aria-label={`Ubah ${goal.name}`}
-                      onClick={() => startForm(goal)}
-                      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
-                    >
-                      <PencilLine className="size-4" />
-                    </button>
-                    <button
-                      type="button"
-                      aria-label={`Hapus ${goal.name}`}
-                      onClick={() => void handleDelete(goal)}
-                      className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-destructive"
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
-                  </div>
+                  {expandedGoalId === goal._id && (
+                    <div className="flex flex-col gap-3 border-t border-border pt-3">
+                      <p
+                        className={cn(
+                          "flex items-center gap-1 text-xs",
+                          days < 0 && !done
+                            ? "text-destructive"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarClock className="size-3.5" />
+                        {formatShortDate(goal.deadline)} ·{" "}
+                        {done ? "Tercapai" : describeDaysLeft(days)} · Kurang{" "}
+                        {formatRupiah(remaining)}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => {
+                            startFund(goal);
+                          }}
+                        >
+                          <Plus className="size-4" />
+                          Tambah dana
+                        </Button>
+                        <button
+                          type="button"
+                          aria-label={`Ubah ${goal.name}`}
+                          onClick={() => startForm(goal)}
+                          className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-primary"
+                        >
+                          <PencilLine className="size-4" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={`Hapus ${goal.name}`}
+                          onClick={() => void handleDelete(goal)}
+                          className="clay-sm clay-press grid size-8 place-items-center text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </motion.article>
               );
             })}

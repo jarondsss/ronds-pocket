@@ -1,4 +1,7 @@
-import { BackToHome } from "@/components/BackToHome";
+import {
+  AppPageHeader,
+  AppSummaryCard,
+} from "@/components/dashboard/AppPageHeader";
 import {
   CategoryDialog,
   type CategorySession,
@@ -10,18 +13,17 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useBooks } from "@/lib/book-context";
-import {
-  categoryEmoji,
-  categoryTone,
-  toneBackground,
-} from "@/lib/categories";
 import { WRITE_DEBOUNCE_MS, useDebouncedCallback } from "@/lib/debounce";
 import { toastError } from "@/lib/error-message";
-import { formatRupiah, monthRange, toMonthKey } from "@/lib/format";
+import {
+  formatRupiah,
+  monthKeyLabel,
+  monthRange,
+  toMonthKey,
+} from "@/lib/format";
 import { toneValue } from "@/lib/palette";
 import { useSaveTracker } from "@/lib/save-status";
 import type { CategoryRow } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import { EASE } from "@/lib/motion";
 import { motion } from "framer-motion";
@@ -39,14 +41,12 @@ import { toast } from "sonner";
 function BudgetRow({
   bookId,
   category,
-  color,
   amount,
   budgetId,
   spent,
 }: {
   bookId: Id<"books">;
   category: string;
-  color: string;
   amount: number;
   budgetId: Id<"budgets"> | null;
   spent: number;
@@ -56,6 +56,7 @@ function BudgetRow({
   const save = useSaveTracker();
   const [value, setValue] = useState(amount);
   const [syncedAmount, setSyncedAmount] = useState(amount);
+  const [editing, setEditing] = useState(false);
 
   // Ikuti perubahan anggaran dari server tanpa effect (pola "adjust state
   // saat render" dari React: set state hanya kalau props-nya memang berubah).
@@ -84,24 +85,41 @@ function BudgetRow({
   const over = target > 0 && spent > target;
 
   return (
-    <li className="clay p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <span className="flex min-w-0 flex-1 items-center gap-3">
-          <span
-            className="grid size-10 shrink-0 place-items-center rounded-2xl text-lg"
-            style={{ backgroundColor: toneBackground(color) }}
-          >
-            {categoryEmoji(category)}
-          </span>
-          <span className="min-w-0">
-            <span className="block truncate text-sm font-bold">{category}</span>
-            <span className="block text-xs text-muted-foreground">
-              Terpakai {formatRupiah(spent)}
-              {target > 0 && ` dari ${formatRupiah(target)}`}
-            </span>
-          </span>
+    <li className="border-b border-border/70 p-4 last:border-b-0 sm:p-5">
+      <button
+        type="button"
+        onClick={() => setEditing(!editing)}
+        aria-expanded={editing}
+        className="flex w-full items-center justify-between gap-3 text-left"
+      >
+        <span className="truncate text-sm font-bold">{category}</span>
+        <span
+          className={
+            over
+              ? "text-sm font-bold text-destructive"
+              : "text-sm font-bold text-primary"
+          }
+        >
+          {Math.round(percent)}%
         </span>
-        <div className="flex items-center gap-2 sm:w-44">
+      </button>
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.max(percent, target > 0 ? 3 : 0)}%` }}
+          transition={{ duration: 0.4, ease: EASE }}
+          className="h-full rounded-full"
+          style={{
+            backgroundColor: over ? "var(--destructive)" : "var(--primary)",
+          }}
+        />
+      </div>
+      <p className="mt-3 text-xs text-muted-foreground">
+        {formatRupiah(spent)} dari{" "}
+        {target > 0 ? formatRupiah(target) : "belum diatur"}
+      </p>
+      {editing && (
+        <div className="mt-3 flex items-center gap-2">
           <RupiahInput
             value={value}
             onChange={handleChange}
@@ -123,21 +141,7 @@ function BudgetRow({
             </button>
           )}
         </div>
-      </div>
-
-      <div className="clay-sunken mt-3 h-2.5 overflow-hidden rounded-full">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${Math.max(percent, target > 0 ? 3 : 0)}%` }}
-          transition={{ duration: 0.4, ease: EASE }}
-          className="h-full rounded-full"
-          style={{
-            backgroundColor: over
-              ? "var(--destructive)"
-              : toneValue(color),
-          }}
-        />
-      </div>
+      )}
 
       {over && (
         <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-destructive">
@@ -197,7 +201,7 @@ function CategoryShelf({
   );
 
   return (
-    <section className="clay p-4 sm:p-5">
+    <section id="atur-anggaran" className="clay p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="grid size-9 place-items-center rounded-xl bg-primary/12 text-primary">
@@ -324,17 +328,7 @@ export default function Budget() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Anggaran
-          </h1>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          Pasang batas per kategori, biar uangnya tidak bocor diam-diam.
-        </p>
-      </header>
+      <AppPageHeader title="Anggaran" subtitle={monthKeyLabel(monthKey)} />
 
       <MonthNavigator monthKey={monthKey} onChange={setMonthKey} />
 
@@ -344,37 +338,24 @@ export default function Budget() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div className="clay-sm p-4">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                Total anggaran
-              </p>
-              <p className="mt-1 font-display text-lg font-extrabold">
-                {formatRupiah(data.totalBudget)}
-              </p>
-            </div>
-            <div className="clay-sm p-4">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                Terpakai
-              </p>
-              <p className="mt-1 font-display text-lg font-extrabold text-expense">
-                {formatRupiah(data.totalSpent)}
-              </p>
-            </div>
-            <div className="clay-sm col-span-2 p-4 sm:col-span-1">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                Sisa
-              </p>
-              <p
-                className={cn(
-                  "mt-1 font-display text-lg font-extrabold",
-                  remaining < 0 ? "text-destructive" : "text-income",
-                )}
-              >
+          <AppSummaryCard
+            label="Sisa anggaran"
+            value={
+              <span className={remaining < 0 ? "text-destructive" : undefined}>
                 {formatRupiah(remaining)}
-              </p>
+              </span>
+            }
+            detail={`Terpakai ${formatRupiah(data.totalSpent)} dari ${formatRupiah(data.totalBudget)}`}
+          >
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
+              <div
+                className="h-full rounded-full bg-primary"
+                style={{
+                  width: `${data.totalBudget > 0 ? Math.min((data.totalSpent / data.totalBudget) * 100, 100) : 0}%`,
+                }}
+              />
             </div>
-          </div>
+          </AppSummaryCard>
 
           {data.overspent > 0 && (
             <p className="flex items-center gap-2 rounded-2xl bg-destructive/10 px-4 py-3 text-sm font-semibold text-destructive">
@@ -386,26 +367,34 @@ export default function Budget() {
           {data.nearLimit > 0 && data.overspent === 0 && (
             <p className="flex items-center gap-2 rounded-2xl bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-600 dark:text-amber-400">
               <TriangleAlert className="size-4 shrink-0" />
-              {data.nearLimit} kategori sudah mentok 80% anggarannya. Rem sedikit biar nggak kelewat.
+              {data.nearLimit} kategori sudah mentok 80% anggarannya. Rem
+              sedikit biar nggak kelewat.
             </p>
           )}
 
           <section className="flex flex-col gap-3">
-            <h3 className="font-display text-base font-extrabold">
-              Anggaran per kategori
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-display text-base font-extrabold">
+                Jatah per kategori
+              </h3>
+              <a
+                href="#atur-anggaran"
+                className="min-h-11 px-2 text-sm font-bold text-primary"
+              >
+                Atur
+              </a>
+            </div>
             {rows.length === 0 ? (
               <p className="clay rounded-3xl px-4 py-8 text-center text-sm text-muted-foreground">
                 Belum ada anggaran. Isi nominalnya di daftar bawah untuk mulai.
               </p>
             ) : (
-              <ul className="flex flex-col gap-3">
+              <ul className="overflow-hidden rounded-[1.5rem] bg-card shadow-[0_14px_30px_-24px_var(--clay-dark)]">
                 {rows.map((row) => (
                   <BudgetRow
                     key={row._id}
                     bookId={bookId}
                     category={row.category}
-                    color={row.color}
                     amount={row.amount}
                     budgetId={row._id}
                     spent={row.spent}
@@ -430,7 +419,6 @@ export default function Budget() {
                     key={row.category}
                     bookId={bookId}
                     category={row.category}
-                    color={row.color ?? categoryTone(row.category)}
                     amount={0}
                     budgetId={null}
                     spent={row.spent}

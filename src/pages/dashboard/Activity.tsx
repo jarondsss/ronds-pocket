@@ -1,4 +1,5 @@
-import { BackToHome } from "@/components/BackToHome";
+import { AppPageHeader } from "@/components/dashboard/AppPageHeader";
+import { ClayLoader } from "@/components/ClayLoader";
 import { api } from "@/convex/_generated/api";
 import { useBooks } from "@/lib/book-context";
 import type { ActivityAction } from "@/convex/schema";
@@ -82,20 +83,13 @@ export default function Activity() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Riwayat perubahan
-          </h1>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          Jejak siapa ngapain di-pocket ini. Termasuk yang sudah dihapus, jadi
-          kalau ada yang bingung angka berubah, cek di sini dulu.
-        </p>
-      </header>
+      <AppPageHeader title="Riwayat perubahan" subtitle="Siapa mencatat apa" />
 
-      {groups.length === 0 ? (
+      {rows === undefined ? (
+        <div className="grid min-h-40 place-items-center">
+          <ClayLoader label="Memuat perubahan..." />
+        </div>
+      ) : groups.length === 0 ? (
         <section className="clay flex flex-col items-center gap-3 px-6 py-12 text-center">
           <span className="grid size-12 place-items-center rounded-2xl bg-primary/12 text-primary">
             <History className="size-6" />
@@ -105,18 +99,18 @@ export default function Activity() {
               Belum ada jejak
             </h2>
             <p className="mt-1 max-w-xs text-sm text-muted-foreground">
-              Begitu ada yang ditambah, diubah, atau dihapus, jejaknya muncul
-              di halaman ini.
+              Begitu ada yang ditambah, diubah, atau dihapus, jejaknya muncul di
+              halaman ini.
             </p>
           </div>
         </section>
       ) : (
         groups.map((group) => (
-          <section key={group.key} className="clay p-4 sm:p-5">
-            <h2 className="font-display text-sm font-extrabold uppercase tracking-wide text-muted-foreground">
+          <section key={group.key} className="space-y-3">
+            <h2 className="font-display text-base font-extrabold">
               {group.key}
             </h2>
-            <ul className="mt-3 flex flex-col gap-2">
+            <ul className="divide-y divide-border rounded-[1.5rem] bg-card px-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
               {group.items.map((row, index) => {
                 const style = ACTION_STYLE[row.action];
                 const Icon = style.icon;
@@ -125,12 +119,15 @@ export default function Activity() {
                     key={row._id}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2, delay: Math.min(index * 0.02, 0.2) }}
-                    className="clay-sunken flex items-start gap-3 rounded-2xl px-3 py-3"
+                    transition={{
+                      duration: 0.2,
+                      delay: Math.min(index * 0.02, 0.2),
+                    }}
+                    className="flex min-h-20 items-start gap-3 py-4"
                   >
                     <span
                       className={cn(
-                        "grid size-9 shrink-0 place-items-center rounded-xl",
+                        "grid size-8 shrink-0 place-items-center rounded-xl",
                         style.chip,
                       )}
                     >
@@ -144,7 +141,7 @@ export default function Activity() {
                         </span>{" "}
                         <span className="font-semibold">{row.label}</span>
                       </span>
-                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                      <span className="mt-1 block text-xs text-muted-foreground">
                         {row.target}
                         {row.detail ? ` · ${row.detail}` : ""} ·{" "}
                         {timeLabel(row.created_at)}
@@ -158,8 +155,9 @@ export default function Activity() {
         ))
       )}
 
-      <p className="text-center text-xs text-muted-foreground">
-        Menampilkan 50 perubahan terakhir.
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        Riwayat membantu semua anggota memahami perubahan catatan dalam kantong
+        bersama.
       </p>
     </div>
   );

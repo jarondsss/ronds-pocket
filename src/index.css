@@ -512,6 +512,40 @@
   [data-slot="dialog-content"].sheet-up[data-state="closed"] {
     animation: sheet-up-out 180ms ease-in;
   }
+
+  [data-slot="dialog-content"].transaction-sheet {
+    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    transform: none;
+    border: 0;
+    border-radius: 0;
+    background: var(--background);
+    padding: 1.5rem;
+  }
+}
+
+.transaction-type-tabs {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.transaction-type-tabs button {
+  min-height: 2.75rem;
+  background: var(--card);
+  color: var(--muted-foreground);
+  box-shadow: none;
+}
+
+.transaction-type-tabs button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--primary);
+  box-shadow: none;
 }
 
 /* Landing dan login mengikuti tombol matte pada desain Figcraft. */

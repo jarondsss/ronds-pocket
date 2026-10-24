@@ -1,4 +1,5 @@
 import { useConfirm } from "@/components/ConfirmDialog";
+import { AppPageHeader } from "@/components/dashboard/AppPageHeader";
 import { BookManagement } from "@/components/dashboard/BookManagement";
 import { FeedbackDialog } from "@/components/dashboard/FeedbackDialog";
 import { DonateDialog } from "@/components/dashboard/DonateDialog";
@@ -134,32 +135,40 @@ export default function Profile() {
     detail: string,
     icon: typeof Users,
     action: () => void,
+    compact = false,
   ) => {
     const Icon = icon;
     return (
       <button type="button" onClick={action} className={rowClass}>
-        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary text-primary">
+        <span className="grid size-8 shrink-0 place-items-center text-primary">
           <Icon className="size-[18px]" />
         </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-bold">{label}</span>
-          <span className="block truncate text-xs text-muted-foreground">
+        <span
+          className={cn(
+            "min-w-0 flex-1",
+            compact && "flex items-center justify-between gap-2",
+          )}
+        >
+          <span className="block text-sm font-semibold">{label}</span>
+          <span
+            className={cn(
+              "block truncate text-xs text-muted-foreground",
+              compact && "max-w-[45%] text-right",
+            )}
+          >
             {detail}
           </span>
         </span>
-        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+        {!compact && (
+          <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+        )}
       </button>
     );
   };
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5 pb-8">
-      <header>
-        <h1 className="font-display text-2xl font-extrabold">Profil</h1>
-        <p className="text-sm text-muted-foreground">
-          Atur akun dan kantongmu.
-        </p>
-      </header>
+      <AppPageHeader title="Profil" subtitle="Atur akun dan tampilan." />
       <section className="flex items-center gap-4 rounded-[1.5rem] bg-card p-5">
         <span className="grid size-16 shrink-0 place-items-center rounded-[1.3rem] bg-accent text-3xl">
           {profile.avatar ?? profile.initial}
@@ -180,11 +189,18 @@ export default function Profile() {
           </button>
         </div>
       </section>
+      <h2 className="font-display text-base font-extrabold">Pengaturan</h2>
       <section
         className="overflow-hidden rounded-[1.5rem] bg-card"
         aria-label="Pengaturan profil"
       >
-        {row("Nama tampilan", profile.name, PencilLine, () => setPanel("name"))}
+        {row(
+          "Nama tampilan",
+          profile.name,
+          PencilLine,
+          () => setPanel("name"),
+          true,
+        )}
         {row(
           "Tema",
           theme === "dark"
@@ -194,37 +210,40 @@ export default function Profile() {
               : "Ikuti perangkat",
           Moon,
           () => setPanel("theme"),
+          true,
         )}
-        {row("Kantong aktif", activeBook?.name ?? "-", Users, () =>
-          setManaging(true),
+        {row(
+          "Kantong aktif",
+          activeBook?.name ?? "-",
+          Users,
+          () => setManaging(true),
+          true,
         )}
-        {profile.email &&
-          row("Kata sandi", "Masuk tanpa kode email", Lock, () =>
-            setPanel("password"),
-          )}
-        {row("Bantuan", "Cara menggunakan Ronds Pocket", ShieldCheck, () =>
-          setPanel("help"),
-        )}
+        {row("Bantuan", "Buka", ShieldCheck, () => setPanel("help"), true)}
       </section>
       <section>
         <h2 className="mb-2 px-1 font-display text-base font-extrabold">
-          Bantu kami berkembang
+          Dukungan
         </h2>
         <div className="overflow-hidden rounded-[1.5rem] bg-card">
           {row(
-            "Kirim feedback",
-            "Cerita apa yang perlu diperbaiki",
+            "Kirim masukan",
+            "Bantu kami memperbaiki Ronds Pocket",
             MessageCircle,
             () => setFeedbackOpen(true),
           )}
-          {row(
-            "Dukung Ronds Pocket",
-            "Bantu aplikasi ini terus berjalan",
-            Heart,
-            () => setDonateOpen(true),
+          {row("Donasi", "Bantu aplikasi ini terus berjalan", Heart, () =>
+            setDonateOpen(true),
           )}
         </div>
       </section>
+      {profile.email && (
+        <section className="overflow-hidden rounded-[1.5rem] bg-card">
+          {row("Kata sandi", "Masuk tanpa kode email", Lock, () =>
+            setPanel("password"),
+          )}
+        </section>
+      )}
       <section className="overflow-hidden rounded-[1.5rem] bg-card">
         {row("Keluar", "Keluar dari akun ini", LogOut, () => void signOutNow())}
         {row(

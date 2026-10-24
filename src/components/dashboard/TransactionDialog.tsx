@@ -115,7 +115,7 @@ function TransactionForm({
     initial ? toDateInput(initial.occurred_at) : session.today,
   );
   const [saving, setSaving] = useState(false);
-  
+
   // Split hanya relevan saat mengubah transaksi yang sudah ada (draf AI tidak
   // punya info split).
   const [enableSplit, setEnableSplit] = useState(
@@ -214,70 +214,59 @@ function TransactionForm({
       </DialogHeader>
 
       <div className="flex flex-col gap-5">
-      <SegmentedChips
-        options={[
-          { value: "expense", label: "Pengeluaran", tone: "expense" },
-          { value: "income", label: "Pemasukan", tone: "income" },
-        ]}
-        value={type}
-        onChange={handleTypeChange}
-      />
+        <SegmentedChips
+          className="transaction-type-tabs"
+          options={[
+            { value: "expense", label: "Pengeluaran", tone: "expense" },
+            { value: "income", label: "Pemasukan", tone: "income" },
+          ]}
+          value={type}
+          onChange={handleTypeChange}
+        />
+
+        <div className="rounded-[1.5rem] bg-card p-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
+          <Label htmlFor="tx-amount">Nominal (Rp)</Label>
+          <RupiahInput
+            id="tx-amount"
+            value={amount}
+            onChange={setAmount}
+            size="lg"
+            showPrefix={false}
+            className="mt-3 h-16 border-0 bg-transparent px-0 text-4xl shadow-none focus-visible:ring-0 sm:text-5xl"
+          />
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {QUICK_AMOUNTS.map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setAmount(amount + value)}
+                className="min-h-9 rounded-full bg-secondary px-2 text-xs font-bold text-primary hover:bg-primary/10"
+              >
+                +{value / 1000}rb
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className="flex flex-col gap-2">
-        <Label htmlFor="tx-amount">Nominal (Rp)</Label>
-        <RupiahInput
-          id="tx-amount"
-          value={amount}
-          onChange={setAmount}
-          size="lg"
-        />
-        <div className="flex flex-wrap gap-2">
-          {QUICK_AMOUNTS.map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setAmount(amount + value)}
-              className="clay-sm clay-press px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-primary"
-            >
-              +{value / 1000}rb
-            </button>
-          ))}
-          {amount > 0 && (
-            <button
-              type="button"
-              onClick={() => setAmount(0)}
-              className="px-2 py-1.5 text-xs font-bold text-muted-foreground underline decoration-dotted hover:text-destructive"
-            >
-              kosongkan
-            </button>
-          )}
+          <Label>Dompet</Label>
+          <Select value={walletId} onValueChange={setWalletId}>
+            <SelectTrigger className="h-12 w-full rounded-2xl border-0 bg-secondary">
+              <SelectValue placeholder="Pilih dompet" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={NO_WALLET}>Tanpa dompet</SelectItem>
+              {wallets.map((wallet) => (
+                <SelectItem key={wallet._id} value={wallet._id}>
+                  <span className="mr-1.5">{wallet.icon}</span>
+                  {wallet.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        {amount > 0 && (
-          <p className="text-xs font-semibold text-muted-foreground">
-            {formatRupiah(amount)}
-          </p>
-        )}
-      </div>
 
-      <div className="flex flex-col gap-2">
-        <Label>Dompet</Label>
-        <Select value={walletId} onValueChange={setWalletId}>
-          <SelectTrigger className="h-11 w-full">
-            <SelectValue placeholder="Pilih dompet" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={NO_WALLET}>Tanpa dompet</SelectItem>
-            {wallets.map((wallet) => (
-              <SelectItem key={wallet._id} value={wallet._id}>
-                <span className="mr-1.5">{wallet.icon}</span>
-                {wallet.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <CategoryCombobox
+        <CategoryCombobox
           id="tx-category"
           label="Kategori"
           value={category}
@@ -285,13 +274,14 @@ function TransactionForm({
           options={options}
         />
 
-      <div className="flex flex-col gap-2">
-          <Label htmlFor="tx-note">Catatan</Label>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="tx-note">Catatan (opsional)</Label>
           <Input
             id="tx-note"
             value={note}
             onChange={(event) => setNote(event.target.value)}
-            placeholder="mis. kopi pagi di warung"
+            placeholder="Tulis catatan singkat"
+            className="h-12 rounded-2xl border-0 bg-secondary"
             maxLength={200}
           />
         </div>
@@ -324,9 +314,7 @@ function TransactionForm({
             </div>
             {enableSplit && (
               <div className="flex flex-col gap-2">
-                <Label htmlFor="split-amount">
-                  {partner.name} harus bayar
-                </Label>
+                <Label htmlFor="split-amount">{partner.name} harus bayar</Label>
                 <RupiahInput
                   id="split-amount"
                   value={splitAmount}
@@ -394,8 +382,17 @@ function TransactionForm({
           >
             Batal
           </Button>
-          <Button type="button" onClick={handleSubmit} disabled={saving}>
-            {saving ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            disabled={saving}
+            className="min-h-12 flex-1 rounded-2xl"
+          >
+            {saving ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              "Simpan catatan"
+            )}
           </Button>
         </div>
       </DialogFooter>
@@ -427,7 +424,7 @@ export function TransactionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <SlideUpDialogContent>
+      <SlideUpDialogContent className="transaction-sheet">
         <TransactionForm
           key={active.key}
           session={active}

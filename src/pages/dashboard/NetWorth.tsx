@@ -1,28 +1,28 @@
-import { BackToHome } from "@/components/BackToHome";
-import { LiabilityDialog, type LiabilitySession } from "@/components/dashboard/LiabilityDialog";
+import {
+  AppPageHeader,
+  AppSummaryCard,
+} from "@/components/dashboard/AppPageHeader";
+import {
+  LiabilityDialog,
+  type LiabilitySession,
+} from "@/components/dashboard/LiabilityDialog";
 import { ClayLoader } from "@/components/ClayLoader";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useConfirm } from "@/components/ConfirmDialog";
 import { useBooks } from "@/lib/book-context";
-import {
-  formatRupiah,
-  formatShortDate,
-} from "@/lib/format";
+import { formatRupiah, formatShortDate } from "@/lib/format";
 import { toastError } from "@/lib/error-message";
 import { useSaveTracker } from "@/lib/save-status";
 import type { LiabilityRow, NetWorthSummary } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { EASE } from "@/lib/motion";
 import { useMutation, useQuery } from "convex/react";
-import { motion } from "framer-motion";
 import {
   Check,
   Landmark,
   Loader2,
   PencilLine,
   PiggyBank,
-  Plus,
   RotateCcw,
   Scale,
   Target,
@@ -105,7 +105,11 @@ function LiabilityRowCard({
             isUtang ? "bg-expense/12 text-expense" : "bg-income/12 text-income",
           )}
         >
-          {isUtang ? <Scale className="size-5" /> : <Landmark className="size-5" />}
+          {isUtang ? (
+            <Scale className="size-5" />
+          ) : (
+            <Landmark className="size-5" />
+          )}
         </span>
         <span className="min-w-0">
           <span className="block truncate text-sm font-bold">{row.name}</span>
@@ -131,7 +135,9 @@ function LiabilityRowCard({
         </span>
         <button
           type="button"
-          aria-label={settled ? `Buka lagi ${row.name}` : `Tandai lunas ${row.name}`}
+          aria-label={
+            settled ? `Buka lagi ${row.name}` : `Tandai lunas ${row.name}`
+          }
           onClick={() => void toggleSettled()}
           disabled={busy}
           className="grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-primary disabled:opacity-50"
@@ -192,23 +198,10 @@ export default function NetWorth() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <BackToHome />
-          <div>
-            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-              Net Worth
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Dompet, tabungan, tujuan, utang, dan piutang dalam satu angka.
-            </p>
-          </div>
-        </div>
-        <Button type="button" onClick={() => startForm(null)}>
-          <Plus className="size-4" />
-          Catat utang / piutang
-        </Button>
-      </header>
+      <AppPageHeader
+        title="Kekayaan bersih"
+        subtitle="Semua aset, dikurangi kewajiban."
+      />
 
       {data === undefined ? (
         <div className="grid min-h-[30vh] place-items-center">
@@ -216,58 +209,46 @@ export default function NetWorth() {
         </div>
       ) : (
         <>
-          <motion.section
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE }}
-            className="clay-primary p-6 text-center sm:p-8"
-          >
-            <p className="text-[11px] font-bold uppercase tracking-wider text-white/80">
-              Kekayaan bersih
-            </p>
-            <p className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
-              {formatRupiah(summary?.netWorth ?? 0)}
-            </p>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold text-white/85">
-              <span className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-income" />
-                Aset{" "}
-                {formatRupiah(
-                  (summary?.wallets ?? 0) +
-                    (summary?.savings ?? 0) +
-                    (summary?.goals ?? 0) +
-                    (summary?.piutang ?? 0),
-                )}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-expense" />
-                Utang {formatRupiah(summary?.utang ?? 0)}
-              </span>
-            </div>
-          </motion.section>
+          <AppSummaryCard
+            label="Kekayaan bersih"
+            value={formatRupiah(summary?.netWorth ?? 0)}
+            detail="Dari dompet, tabungan, tujuan, dan utang."
+          />
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+          <h2 className="font-display text-base font-extrabold">Rinciannya</h2>
+          <div className="overflow-hidden rounded-[1.5rem] bg-card px-5 shadow-[0_14px_30px_-24px_var(--clay-dark)]">
             {BREAKDOWN.map((item) => {
               const Icon = item.icon;
               const value = summary?.[item.key] ?? 0;
               return (
-                <div key={item.key} className="clay-sm p-4">
-                  <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                    <Icon
-                      className={cn(
-                        "size-3.5",
-                        item.positive ? "text-income" : "text-expense",
-                      )}
-                    />
+                <div
+                  key={item.key}
+                  className="flex min-h-14 items-center justify-between gap-3 border-b border-border/70 py-3 last:border-b-0"
+                >
+                  <p className="flex items-center gap-2 text-sm font-medium">
+                    <Icon className="size-4 text-primary" />
                     {item.label}
                   </p>
-                  <p className="mt-1 font-display text-sm font-extrabold">
+                  <p className="max-w-[45%] break-all text-right text-sm text-muted-foreground">
+                    {item.positive ? "" : "−"}
                     {formatRupiah(value)}
                   </p>
                 </div>
               );
             })}
           </div>
+
+          <Button
+            type="button"
+            onClick={() => startForm(null)}
+            className="min-h-12 w-full rounded-2xl"
+          >
+            Catat utang atau piutang
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            Perubahan nilai aset mengikuti angka yang kamu catat, bukan harga
+            pasar otomatis.
+          </p>
 
           <section className="flex flex-col gap-3">
             <h3 className="font-display text-base font-extrabold">
@@ -285,7 +266,11 @@ export default function NetWorth() {
             ) : (
               <ul className="flex flex-col gap-3">
                 {utangRows.map((row) => (
-                  <LiabilityRowCard key={row._id} row={row} onEdit={startForm} />
+                  <LiabilityRowCard
+                    key={row._id}
+                    row={row}
+                    onEdit={startForm}
+                  />
                 ))}
               </ul>
             )}
@@ -307,7 +292,11 @@ export default function NetWorth() {
             ) : (
               <ul className="flex flex-col gap-3">
                 {piutangRows.map((row) => (
-                  <LiabilityRowCard key={row._id} row={row} onEdit={startForm} />
+                  <LiabilityRowCard
+                    key={row._id}
+                    row={row}
+                    onEdit={startForm}
+                  />
                 ))}
               </ul>
             )}
@@ -323,7 +312,11 @@ export default function NetWorth() {
               </h3>
               <ul className="flex flex-col gap-3">
                 {settledRows.map((row) => (
-                  <LiabilityRowCard key={row._id} row={row} onEdit={startForm} />
+                  <LiabilityRowCard
+                    key={row._id}
+                    row={row}
+                    onEdit={startForm}
+                  />
                 ))}
               </ul>
             </section>

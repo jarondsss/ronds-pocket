@@ -11,7 +11,7 @@ crons.interval(
 
 crons.daily(
   "process bill reminders",
-  { hourUTC: 1, minuteUTC: 0 }, // 1 AM UTC setiap hari
+  { hourUTC: 17, minuteUTC: 0 }, // 5 PM UTC = midnight WIB
   internal.billReminders.processReminders,
 );
 

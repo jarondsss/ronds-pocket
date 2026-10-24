@@ -23,6 +23,29 @@ function describeTransaction(category?: string, note?: string) {
 
 const MAX_AMOUNT = 1_000_000_000_000; // 1 triliun rupiah, guard against typos
 
+/**
+ * Hitung total pengeluaran kategori tertentu di bulan tertentu.
+ * Lebih efisien dari load semua transaksi lalu filter manual.
+ */
+async function getMonthlySpending(
+  ctx: QueryCtx,
+  bookId: Id<"books">,
+  category: string,
+  monthStart: number,
+  monthEnd: number,
+): Promise<number> {
+  const transactions = await ctx.db
+    .query("transactions")
+    .withIndex("by_book_occurred", (q) =>
+      q.eq("book_id", bookId).gte("occurred_at", monthStart).lt("occurred_at", monthEnd),
+    )
+    .collect();
+
+  return transactions
+    .filter((tx) => tx.type === "expense" && tx.category === category)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+}
+
 async function assertWalletInBook(
   ctx: QueryCtx,
   bookId: Id<"books">,
@@ -40,19 +63,24 @@ async function loadTransactions(
   bookId: Id<"books">,
   from?: number,
   to?: number,
+  limit?: number,
 ): Promise<Doc<"transactions">[]> {
+  const maxResults = limit ?? 500; // default max 500 transaksi
+  
   if (from !== undefined && to !== undefined) {
     return await ctx.db
       .query("transactions")
       .withIndex("by_book_occurred", (q) =>
         q.eq("book_id", bookId).gte("occurred_at", from).lt("occurred_at", to),
       )
-      .collect();
+      .order("desc")
+      .take(maxResults);
   }
   return await ctx.db
     .query("transactions")
     .withIndex("by_book_occurred", (q) => q.eq("book_id", bookId))
-    .collect();
+    .order("desc")
+    .take(maxResults);
 }
 
 function cleanAmount(amount: number) {
@@ -75,10 +103,11 @@ export const list = query({
     bookId: v.id("books"),
     from: v.optional(v.number()),
     to: v.optional(v.number()),
+    limit: v.optional(v.number()),
   },
-  handler: async (ctx, { bookId, from, to }) => {
+  handler: async (ctx, { bookId, from, to, limit }) => {
     await requireMember(ctx, bookId);
-    const rows = await loadTransactions(ctx, bookId, from, to);
+    const rows = await loadTransactions(ctx, bookId, from, to, limit);
 
     const people = new Map<string, { name: string; avatar: string | null }>();
     const readPerson = async (userId: Id<"users">) => {
@@ -276,19 +305,13 @@ export const create = mutation({
             0,
           ).getTime();
 
-          const monthTransactions = await ctx.db
-            .query("transactions")
-            .withIndex("by_book_occurred", (q) =>
-              q
-                .eq("book_id", args.bookId)
-                .gte("occurred_at", monthStart)
-                .lt("occurred_at", monthEnd),
-            )
-            .collect();
-
-          const spent = monthTransactions
-            .filter((tx) => tx.type === "expense" && tx.category === category)
-            .reduce((sum, tx) => sum + tx.amount, 0);
+          const spent = await getMonthlySpending(
+            ctx,
+            args.bookId,
+            category,
+            monthStart,
+            monthEnd,
+          );
 
           if (spent > budget.amount) {
             const excess = spent - budget.amount;

@@ -709,15 +709,16 @@ export const cleanupOldData = internalMutation({
     const inviteAttemptsCutoff = now - INVITE_ATTEMPTS_RETENTION_MS;
 
     // Delete old activity log entries
-    const oldActivity = await ctx.db
-      .query("activity_log")
-      .withIndex("by_created_at", (q) => q.lt("created_at", activityCutoff))
+    const allActivity = await ctx.db
+      .query("activity")
       .collect();
     
     let deletedActivity = 0;
-    for (const activity of oldActivity) {
-      await ctx.db.delete(activity._id);
-      deletedActivity++;
+    for (const activity of allActivity) {
+      if (activity.created_at < activityCutoff) {
+        await ctx.db.delete(activity._id);
+        deletedActivity++;
+      }
     }
 
     // Delete old invite attempts

@@ -514,18 +514,29 @@
   }
 
   [data-slot="dialog-content"].transaction-sheet {
+    /* Sheet penuh layar: menempel ke pojok kiri atas, bukan digeser ke tengah
+       seperti dialog biasa. */
     inset: 0;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     max-width: none;
     height: 100dvh;
     max-height: 100dvh;
+    /* Tailwind v4 memindahkan `translate-x/y` ke properti `translate`, jadi
+       `transform: none` saja tidak cukup: tanpa `translate: none` sheet tetap
+       tergeser -50%/-50% dari pojok kiri atas dan form-nya nyangkut di luar
+       layar. */
+    translate: none;
     transform: none;
     border: 0;
     border-radius: 0;
     background: var(--background);
     padding: 1.5rem;
+    /* Isi sheet lebih tinggi dari layar: gulir dimulai dari atas, bukan
+       terpotong di tengah. */
+    align-content: start;
+    overflow-y: auto;
   }
 }
 

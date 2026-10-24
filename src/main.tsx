@@ -122,7 +122,39 @@ function RouteSyncer() {
   return null;
 }
 
-createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root")!;
+
+/**
+ * Lepas splash layar pertama (markup ada di index.html) begitu React menempelkan
+ * konten pertamanya. Dipicu MutationObserver, bukan timer buta, supaya layar
+ * tunggu tidak hilang sebelum ada isi yang bisa dilihat — di perangkat lambat
+ * splash itu justru yang paling dibutuhkan.
+ */
+function releaseBootSplash() {
+  const splash = document.getElementById("boot-splash");
+  if (!splash) return;
+  splash.dataset.hidden = "true";
+  window.setTimeout(() => splash.remove(), 320);
+}
+
+const splashObserver = new MutationObserver(() => {
+  if (rootElement.childElementCount === 0) return;
+  splashObserver.disconnect();
+  window.requestAnimationFrame(() =>
+    window.requestAnimationFrame(releaseBootSplash),
+  );
+});
+
+splashObserver.observe(rootElement, { childList: true });
+
+// Jaring pengaman: kalau root tetap kosong, jangan biarkan splash menutupi
+// layar selamanya.
+window.setTimeout(() => {
+  splashObserver.disconnect();
+  releaseBootSplash();
+}, 8000);
+
+createRoot(rootElement).render(
   <StrictMode>
     <RootErrorBoundary>
       <ToolbarErrorBoundary>

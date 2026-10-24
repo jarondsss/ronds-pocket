@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { MutationCtx } from "./_generated/server";
 import { action, internalMutation } from "./_generated/server";
+import { sanitizeInput } from "./books";
 import { isProduction } from "./env";
 
 const MIN_MESSAGE = 4;
@@ -73,7 +74,7 @@ async function insertFeedback(
     throw new Error("Kamu perlu masuk dulu ya.");
   }
 
-  const isi = args.message.trim();
+  const isi = sanitizeInput(args.message);
   if (isi.length < MIN_MESSAGE) {
     throw new Error("Tulis masukanmu sedikit lebih panjang ya.");
   }
@@ -95,14 +96,14 @@ async function insertFeedback(
     );
   }
 
-  const contact = args.contact?.trim().slice(0, MAX_CONTACT) || undefined;
+  const contact = sanitizeInput(args.contact).slice(0, MAX_CONTACT) || undefined;
 
   await ctx.db.insert("feedback", {
     user_id: userId,
     message: isi,
     mood: args.mood,
     contact,
-    page: args.page?.slice(0, 120) || undefined,
+    page: sanitizeInput(args.page).slice(0, 120) || undefined,
     created_at,
   });
 

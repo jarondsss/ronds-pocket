@@ -4,6 +4,7 @@ import {
   logActivity,
   requireMember,
   requireOwnerOrCreator,
+  sanitizeInput,
 } from "./books";
 
 export const list = query({
@@ -34,7 +35,7 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const { userId } = await requireMember(ctx, args.bookId);
-    const name = args.name.trim();
+    const name = sanitizeInput(args.name);
     if (!name) {
       throw new Error("Nama kategorinya jangan dikosongkan ya.");
     }
@@ -81,7 +82,7 @@ export const update = mutation({
       category.book_id,
       category.created_by,
     );
-    const name = args.name.trim();
+    const name = sanitizeInput(args.name);
     if (!name) {
       throw new Error("Nama kategorinya jangan dikosongkan ya.");
     }

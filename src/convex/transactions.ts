@@ -11,6 +11,7 @@ import {
   requireMember,
   requireOwnerOrCreator,
   rupiah,
+  sanitizeInput,
 } from "./books";
 
 /** Nama singkat buat jejak riwayat: catatannya dulu, lalu kategorinya. */
@@ -237,6 +238,12 @@ export const create = mutation({
     const splitAmount = args.split_amount
       ? cleanAmount(args.split_amount)
       : undefined;
+    
+    // Validasi: kalau split_with diisi, split_amount wajib
+    if (args.split_with && !splitAmount) {
+      throw new Error("Isi berapa yang harus dibayar temanmu.");
+    }
+    
     if (splitAmount !== undefined && splitAmount > amount) {
       throw new Error("Bagian yang dibagi tidak boleh lebih besar dari totalnya.");
     }
@@ -304,8 +311,8 @@ export const create = mutation({
       wallet_id: args.wallet_id,
       type: args.type,
       amount,
-      category: (args.category ?? "").trim().slice(0, 40),
-      note: (args.note ?? "").trim().slice(0, 200),
+      category: sanitizeInput(args.category).slice(0, 40),
+      note: sanitizeInput(args.note).slice(0, 200),
       occurred_at: cleanTimestamp(args.occurred_at),
       created_by: userId,
       created_at: Date.now(),
@@ -421,8 +428,8 @@ export const update = mutation({
       wallet_id: args.wallet_id,
       type: args.type,
       amount,
-      category: (args.category ?? "").trim().slice(0, 40),
-      note: (args.note ?? "").trim().slice(0, 200),
+      category: sanitizeInput(args.category).slice(0, 40),
+      note: sanitizeInput(args.note).slice(0, 200),
       occurred_at: cleanTimestamp(args.occurred_at),
       paid_by: args.paid_by,
       split_with: args.split_with,

@@ -15,4 +15,10 @@ crons.daily(
   internal.billReminders.processReminders,
 );
 
+crons.weekly(
+  "cleanup old data",
+  { hourUTC: 3, minuteUTC: 0, dayOfWeek: "sunday" }, // 3 AM UTC Sunday = 10 AM WIB Sunday
+  internal.books.cleanupOldData,
+);
+
 export default crons;

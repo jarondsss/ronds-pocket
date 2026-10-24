@@ -2,7 +2,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import type { ActivityAction } from "./schema";
 
 type Ctx = QueryCtx | MutationCtx;
@@ -14,8 +14,20 @@ const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // satu minggu
 const REDEEM_WINDOW_MS = 15 * 60 * 1000;
 const REDEEM_MAX_ATTEMPTS = 8;
 const NOTIFICATION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // satu bulan
+const ACTIVITY_LOG_RETENTION_MS = 6 * 30 * 24 * 60 * 60 * 1000; // 6 bulan
+const INVITE_ATTEMPTS_RETENTION_MS = 30 * 24 * 60 * 60 * 1000; // 1 bulan
 const EARLIEST_TIMESTAMP = Date.UTC(2000, 0, 1);
-const FURTHEST_AHEAD_MS = 10 * 365 * 24 * 60 * 60 * 1000; // 10 tahun ke depan
+const FURTHEST_AHEAD_MS = 365 * 24 * 60 * 60 * 1000; // 1 tahun ke depan (prevent data entry errors)
+
+/**
+ * Strip HTML tags dari user input (XSS protection).
+ * Dipakai untuk note, category, feedback, dan text input lain.
+ */
+export function sanitizeInput(input: string | undefined): string {
+  if (!input) return "";
+  // Strip HTML tags, trim whitespace
+  return input.replace(/<[^>]*>/g, "").trim();
+}
 
 /** Every request must resolve to a signed-in user. */
 export async function requireUserId(ctx: Ctx): Promise<Id<"users">> {
@@ -678,5 +690,55 @@ export const removeMember = mutation({
       detail: "Dikeluarkan dari kantong ini",
     });
     await ctx.db.delete(membership._id);
+  },
+});
+
+/**
+ * Cleanup old data to prevent database bloat.
+ * Runs weekly via cron (Sunday 3 AM UTC = 10 AM WIB).
+ * 
+ * Deletes:
+ * - Activity log older than 6 months
+ * - Invite attempts older than 1 month
+ */
+export const cleanupOldData = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const activityCutoff = now - ACTIVITY_LOG_RETENTION_MS;
+    const inviteAttemptsCutoff = now - INVITE_ATTEMPTS_RETENTION_MS;
+
+    // Delete old activity log entries
+    const oldActivity = await ctx.db
+      .query("activity_log")
+      .withIndex("by_created_at", (q) => q.lt("created_at", activityCutoff))
+      .collect();
+    
+    let deletedActivity = 0;
+    for (const activity of oldActivity) {
+      await ctx.db.delete(activity._id);
+      deletedActivity++;
+    }
+
+    // Delete old invite attempts
+    const oldInviteAttempts = await ctx.db
+      .query("invite_attempts")
+      .collect(); // No index, manual filter
+    
+    let deletedInviteAttempts = 0;
+    for (const attempt of oldInviteAttempts) {
+      if (attempt.at < inviteAttemptsCutoff) {
+        await ctx.db.delete(attempt._id);
+        deletedInviteAttempts++;
+      }
+    }
+
+    return {
+      deletedActivity,
+      deletedInviteAttempts,
+      activityCutoffDate: new Date(activityCutoff).toISOString(),
+      inviteAttemptsCutoffDate: new Date(inviteAttemptsCutoff).toISOString(),
+      timestamp: now,
+    };
   },
 });

@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { useConvexConnectionState } from "convex/react";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 /**
  * Kalau browser tidak pernah berhasil membuka websocket ke deployment Convex,
@@ -12,6 +13,7 @@ import { useEffect, useState } from "react";
  * saat koneksi sempat hidup lalu putus sebentar.
  */
 export function ConnectionBanner() {
+  const location = useLocation();
   const { isLoading } = useAuth();
   const { isWebSocketConnected, hasEverConnected } = useConvexConnectionState();
   const stalled = !isWebSocketConnected && !hasEverConnected;
@@ -23,7 +25,8 @@ export function ConnectionBanner() {
     return () => window.clearTimeout(timer);
   }, [stalled]);
 
-  if (!show || !stalled) return null;
+  if (!show || !stalled || !location.pathname.startsWith("/dashboard"))
+    return null;
 
   return (
     <div

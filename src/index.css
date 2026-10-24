@@ -513,3 +513,25 @@
     animation: sheet-up-out 180ms ease-in;
   }
 }
+
+/* Landing dan login mengikuti tombol matte pada desain Figcraft. */
+.public-design [data-slot="button"][data-variant="default"] {
+  background: var(--primary);
+  box-shadow: none;
+  border-radius: 1rem;
+}
+.public-design
+  [data-slot="button"][data-variant="default"]:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--primary) 90%, var(--foreground));
+}
+.public-design [data-slot="button"][data-variant="secondary"] {
+  background: var(--card);
+  color: var(--primary);
+  box-shadow: none;
+  border-radius: 1rem;
+}
+.public-design [data-slot="input"] {
+  background: var(--secondary);
+  border-color: transparent;
+  box-shadow: none;
+}

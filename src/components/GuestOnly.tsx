@@ -1,7 +1,6 @@
-import { ClayPageLoader } from "@/components/ClayLoader";
-import { useAuth } from "@/hooks/use-auth";
 import type { ReactNode } from "react";
 import { Navigate } from "react-router";
+import { useConvexAuth } from "convex/react";
 
 /**
  * Untuk halaman publik (landing). Kalau ternyata user sudah masuk, langsung
@@ -16,13 +15,9 @@ export function GuestOnly({
   /** Halaman tujuan kalau user sudah punya sesi. */
   redirectTo?: string;
 }) {
-  const { isLoading, isAuthenticated } = useAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
 
-  if (isLoading) {
-    return <ClayPageLoader label="Sebentar ya..." />;
-  }
-
-  if (isAuthenticated) {
+  if (!isLoading && isAuthenticated) {
     return <Navigate to={redirectTo} replace />;
   }
 

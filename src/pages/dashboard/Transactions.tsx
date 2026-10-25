@@ -13,6 +13,7 @@ import { useBooks } from "@/lib/book-context";
 import { categoryEmoji, categoryTone, toneBackground } from "@/lib/categories";
 import {
   formatRupiah,
+  formatShortDate,
   monthKeyLabel,
   monthRange,
   shiftMonthKey,
@@ -549,8 +550,13 @@ export default function Transactions() {
             className="space-y-3"
           >
             <header className="flex items-baseline justify-between gap-2">
+              {/* Tanggal mendampingi "Hari ini"/"Kemarin"/nama hari supaya
+                  pengguna tidak perlu menebak tanggalnya saat menggulir. */}
               <h3 className="font-display text-sm font-extrabold">
                 {relativeDayLabel(group.day, now)}
+                <span className="ml-1.5 font-sans text-xs font-semibold text-muted-foreground">
+                  · {formatShortDate(group.day)}
+                </span>
               </h3>
               <span className="text-xs font-semibold text-primary">
                 {group.items.length} catatan

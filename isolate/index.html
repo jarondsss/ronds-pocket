@@ -25,7 +25,209 @@
     rel="stylesheet"
   />
   <title>Ronds Pocket — Kantong Kecil Buat Uangmu</title>
-  <script type="module" crossorigin src="/assets/index-g2UXeVYn.js"></script>
+
+  <!--
+    Splash layar pertama ditulis inline, bukan lewat Tailwind: `index.css` baru
+    ikut termuat bersama bundle JS, sedangkan layar ini harus sudah terlihat
+    sejak byte HTML pertama tiba. Warna di bawah disalin dari token tema di
+    src/index.css (light + dark) supaya serah-terimanya tidak terasa pindah
+    palet.
+  -->
+  <style>
+    #boot-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 1.5rem;
+      background: #eceefb;
+      color: #242034;
+      font-family: "Baloo 2", "Plus Jakarta Sans", ui-sans-serif, system-ui,
+        sans-serif;
+      opacity: 1;
+      transition: opacity 240ms ease, visibility 240ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Dilepas oleh main.tsx begitu React menempelkan konten pertamanya. */
+    #boot-splash[data-hidden="true"] {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #boot-splash .boot-glow {
+      position: absolute;
+      top: 6%;
+      left: 50%;
+      width: min(22rem, 90vw);
+      height: min(22rem, 90vw);
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: rgba(98, 81, 217, 0.16);
+      filter: blur(60px);
+    }
+
+    #boot-splash .boot-card {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      gap: 0.3rem;
+      padding: 1.75rem 2rem 1.6rem;
+      border-radius: 1.85rem;
+      background: #f8f7fe;
+      text-align: center;
+      box-shadow:
+        0 22px 45px -26px rgba(84, 92, 176, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    #boot-splash .boot-mark {
+      display: grid;
+      place-items: center;
+      width: 4rem;
+      height: 4rem;
+      margin-bottom: 0.55rem;
+      overflow: hidden;
+      border-radius: 1.25rem;
+      background: #ffffff;
+      box-shadow:
+        0 10px 20px -14px rgba(84, 92, 176, 0.55),
+        inset 0 1px 0 #ffffff;
+    }
+
+    #boot-splash .boot-mark img {
+      width: 3.25rem;
+      height: 3.25rem;
+      display: block;
+    }
+
+    #boot-splash .boot-name {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    #boot-splash .boot-tag {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #696378;
+    }
+
+    #boot-splash .boot-dots {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      height: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    #boot-splash .boot-dots span {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 999px;
+      background: #6251d9;
+      opacity: 0.55;
+      animation: boot-bounce 1.15s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+    }
+
+    #boot-splash .boot-dots span:nth-child(2) {
+      animation-delay: 0.13s;
+    }
+
+    #boot-splash .boot-dots span:nth-child(3) {
+      animation-delay: 0.26s;
+    }
+
+    #boot-splash .boot-label {
+      margin: 0.7rem 0 0;
+      font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #696378;
+    }
+
+    @keyframes boot-bounce {
+      0%,
+      60%,
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.55;
+      }
+      20% {
+        transform: translateY(-6px) scale(1.06);
+        opacity: 1;
+      }
+      40% {
+        transform: translateY(0) scale(0.92);
+        opacity: 0.85;
+      }
+    }
+
+    /* Gerak tidak wajib: titik tetap terlihat sebagai indikator menunggu. */
+    @media (prefers-reduced-motion: reduce) {
+      #boot-splash,
+      #boot-splash .boot-dots span {
+        transition: none;
+        animation: none;
+      }
+    }
+
+    html.dark #boot-splash {
+      background: #181724;
+      color: #f6f4ff;
+    }
+
+    html.dark #boot-splash .boot-glow {
+      background: rgba(181, 168, 255, 0.14);
+    }
+
+    html.dark #boot-splash .boot-card {
+      background: #242233;
+      box-shadow:
+        0 22px 45px -26px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    html.dark #boot-splash .boot-mark {
+      background: #2f2c40;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    html.dark #boot-splash .boot-tag,
+    html.dark #boot-splash .boot-label {
+      color: #bab4cd;
+    }
+
+    html.dark #boot-splash .boot-dots span {
+      background: #b5a8ff;
+    }
+  </style>
+
+  <!--
+    next-themes baru memasang class `dark` setelah React jalan. Dibaca lebih
+    awal supaya pengguna yang sudah memilih tema gelap tidak melihat kilatan
+    splash terang. Tanpa pilihan tersimpan, app ini memang terang secara default.
+  -->
+  <script>
+    try {
+      var storedTheme = localStorage.getItem("theme");
+      var prefersDark =
+        storedTheme === "dark" ||
+        (storedTheme === "system" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+      if (prefersDark) document.documentElement.classList.add("dark");
+    } catch (error) {
+      /* localStorage bisa diblokir; tampil terang saja. */
+    }
+  </script>
+  <script type="module" crossorigin src="/assets/index-CINGr9-i.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/radix-ui-DMJsuHMW.js">
   <link rel="modulepreload" crossorigin href="/assets/charts-CTW7TMjm.js">
   <link rel="modulepreload" crossorigin href="/assets/framer-motion-67fMbNYd.js">
@@ -35,6 +237,21 @@
 
 
 <body>
+  <div id="boot-splash" role="status" aria-live="polite">
+    <div class="boot-glow" aria-hidden="true"></div>
+    <div class="boot-card">
+      <span class="boot-mark">
+        <img src="/apple-touch-icon.png" alt="" width="52" height="52" fetchpriority="high" />
+      </span>
+      <p class="boot-name">Ronds Pocket</p>
+      <p class="boot-tag">Kantong kecil buat uangmu</p>
+      <div class="boot-dots" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <p class="boot-label">Menyiapkan kantongmu...</p>
+    </div>
+  </div>
+
   <div id="root"></div>
 </body>
 
